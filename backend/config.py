@@ -9,7 +9,7 @@ class Config:
 
 class DefConfig(Config):
     DEBUG=True
-    SQLALCHEMY_DATABASE_URI=""+os.path.join(BASE_DIR, 'app.db')
+    SQLALCHEMY_DATABASE_URI="mysql+mysqldb://root:root@localhost:3306/music_streaming"
     SQLACHEMY_ECHO=True
 
 class ProdConfig(Config):
