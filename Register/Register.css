@@ -1,0 +1,128 @@
+/* thẻ chứa back và background-mode */
+.register-mode-switch-container {
+    margin: 50px;
+    display: flex;
+    justify-content: space-between;
+}
+/* Nút back */
+.register-icon {
+    color: var(--fontColor);
+    width: 48px;
+    height: 48px;
+}
+/* Nút chuyển chế độ background */
+.mode-switch {
+    position: relative;
+    display: inline-block;
+    width: 80px;
+    height: 34px;
+}
+.mode-switch-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--fontColor);
+  transition: 0.4s;
+  border-radius: 34px;
+}
+
+.mode-switch-slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: var(--backgroundColor);
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .mode-switch-slider {
+  background-color: var(--backgroundColor);
+}
+input:checked + .mode-switch-slider {
+  background-color: var(--backgroundColor);
+}
+
+input:checked + .mode-switch-slider:before {
+  transform: translateX(46px);
+}
+.register-title {
+  font-size: 40px;
+  text-align: center;
+}
+.register-form-container {
+    position: relative;
+    display: flex;
+    font-size: 32px;
+    font-weight: 500;
+}
+.register-form-left {
+    margin-left: 50px;
+    flex-basis: 50%;
+}
+.register-form-right {
+    margin-right: 50px;
+    flex-basis: 50%;
+}
+.register-form-label {
+    margin-top: 40px;
+    display: block;
+}
+.register-form-control {
+    margin-top: 10px;
+    width: 640px;
+    height: 72px;
+    font-size: 28px; 
+    font-weight: 500;
+    background-color: transparent;
+    border: 2px solid var(--fontColor);
+    border-radius: 5px;
+}
+.register-gender-form-container {
+    margin-top: 10px;
+    width: 640px;
+    height: 72px;
+    font-size: 28px; 
+    font-weight: 500;
+    background-color: transparent;
+    /* border: 2px solid var(--fontColor);
+    border-radius: 5px; */
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.register-gender-form-control {
+    width: 30px;
+    height: 30px;
+}
+.btnRegister-container {
+    margin: 50px;
+    display: flex;
+    justify-content: flex-end;
+}
+.btnRegister {
+    width: 194px;
+    height: 96px;
+    color: var(--fontColor);
+    font-size: 28px;
+    font-weight: 750;
+    background-color: transparent;
+    border: 2px solid var(--btnColor);
+    border-radius: 5px;
+    cursor: pointer;
+    transition-duration: 0.3s;
+}
+.btnRegister:hover {
+    background-color: var(--btnColor);
+}
+.register-error-feedback {
+    display: inline;
+    color: red;
+    font-size: 10px;
+    font-weight: 500;
+}
