@@ -7,7 +7,7 @@ class Config:
     SECRET_KEY=config('SECRET_KEY')
     SQLALCHEMY_TRACK_MODIFICATIONS=config('SQLALCHEMY_TRACK_MODIFICATIONS',cast=bool)
 
-class DefConfig(Config):
+class DevConfig(Config):
     DEBUG=True
     SQLALCHEMY_DATABASE_URI="mysql+mysqldb://root:root@localhost:3306/music_streaming"
     SQLACHEMY_ECHO=True
@@ -16,4 +16,6 @@ class ProdConfig(Config):
     pass
 
 class TestConfig(Config):
-    pass
+    SQLALCHEMY_DATABASE_URI="mysql+mysqldb://root:root@localhost:3306/testdb"
+    SQLACHEMY_ECHO=False
+    TESTING=True
