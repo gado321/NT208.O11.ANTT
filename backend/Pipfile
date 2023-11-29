@@ -28,6 +28,7 @@ sqlalchemy = "==2.0.23"
 typing-extensions = "==4.8.0"
 werkzeug = "==2.3.7"
 flask-migrate = "*"
+flask-cors = "*"
 
 [dev-packages]
 

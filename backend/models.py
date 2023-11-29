@@ -47,7 +47,6 @@ class Artist(db.Model):
     name = db.Column(db.String(255), nullable=False)
     picture_path = db.Column(db.String(255))
 
-    users = db.relationship('User', secondary='user_artist', backref=db.backref('artists', lazy='dynamic'))
     songs = db.relationship('Song', secondary='song_artist', backref=db.backref('artists', lazy='dynamic'))
 
     def __repr__(self):
@@ -75,6 +74,8 @@ class Album(db.Model):
     artist_id = db.Column(db.Integer, db.ForeignKey('artists.id'), nullable=False)
     name = db.Column(db.String(255), nullable=False)
     release_date = db.Column(db.Date)
+
+    songs = db.relationship('Song', secondary='album_song', backref=db.backref('albums', lazy='dynamic'))
 
     def __repr__(self):
         return f"<Album {self.name}>"
@@ -107,8 +108,8 @@ class Song(db.Model):
     picture_path = db.Column(db.String(255))
     release_date = db.Column(db.Date)
 
-    artists = db.relationship('Artist', secondary='song_artist', backref=db.backref('songs', lazy='dynamic'))
     playlists = db.relationship('Playlist', secondary='playlist_song', backref=db.backref('songs', lazy='dynamic'))
+    genres = db.relationship('Genre', secondary='song_genre', backref=db.backref('songs', lazy='dynamic'))
 
     def __repr__(self):
         return f"<Song {self.name}>"
@@ -142,8 +143,6 @@ class Playlist(db.Model):
     picture_path = db.Column(db.String(255))
     thumbnail_path = db.Column(db.String(255))
 
-    songs = db.relationship('Song', secondary='playlist_song', backref=db.backref('playlists', lazy='dynamic'))
-
     def __repr__(self):
         return f"<Playlist {self.name}>"
     
@@ -169,8 +168,6 @@ class Genre(db.Model):
     __tablename__ = 'genres'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False)
-
-    users = db.relationship('User', secondary='user_genre', backref=db.backref('genres', lazy='dynamic'))
 
     def __repr__(self):
         return f"<Genre {self.name}>"
@@ -213,4 +210,14 @@ class UserArtist(db.Model):
 class UserSong(db.Model):
     __tablename__ = 'user_song'
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+    song_id = db.Column(db.Integer, db.ForeignKey('songs.id'), primary_key=True)
+
+class SongGenre(db.Model):
+    __tablename__ = 'song_genre'
+    song_id = db.Column(db.Integer, db.ForeignKey('songs.id'), primary_key=True)
+    genre_id = db.Column(db.Integer, db.ForeignKey('genres.id'), primary_key=True)
+
+class AlbumSong(db.Model):
+    __tablename__ = 'album_song'
+    album_id = db.Column(db.Integer, db.ForeignKey('albums.id'), primary_key=True)
     song_id = db.Column(db.Integer, db.ForeignKey('songs.id'), primary_key=True)
