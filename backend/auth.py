@@ -6,6 +6,8 @@ from flask_jwt_extended import JWTManager, create_access_token, create_refresh_t
 
 auth_ns = Namespace('auth', description='Authentication related operations')
 
+bcrypt = Bcrypt()
+
 signup_model=auth_ns.model(
     "SignUp",
     {
