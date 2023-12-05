@@ -1,0 +1,43 @@
+import React, {useState ,useEffect} from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+import PageLoading from './PageLoading/PageLoading';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+
+function LoadingMessage() {
+  return <PageLoading/>;
+}
+function MainApp() {
+  // Use a state to track whether the app is loaded or not
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    // Simulate an asynchronous operation (e.g., fetching data)
+    const fetchData = async () => {
+      // For demonstration purposes, use setTimeout to simulate delay
+      setTimeout(() => {
+        // After the task is complete, update the loading state
+        setIsLoaded(true);
+      }, 2000); // Adjust the time as needed
+    };
+
+    fetchData(); // Call the asynchronous function
+  }, []);
+
+  return (
+    <React.StrictMode>
+      {/* Render LoadingMessage while the app is not loaded */}
+      {isLoaded ? <App /> : <LoadingMessage />}
+    </React.StrictMode>
+  );
+}
+
+// Render the MainApp component after a delay
+setTimeout(() => {
+  root.render(<MainApp />);
+}, 100);
+
+reportWebVitals();
