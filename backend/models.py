@@ -12,9 +12,10 @@ class User(db.Model):
     picture_path = db.Column(db.String(255))
     gender = db.Column(db.String(255))
     date_of_birth = db.Column(db.Date)
-
-    artists = db.relationship('Artist', secondary='user_artist', backref=db.backref('users', lazy='dynamic'))
+    
     genres = db.relationship('Genre', secondary='user_genre', backref=db.backref('users', lazy='dynamic'))
+    liked_songs = db.relationship('Song', secondary='user_song', backref=db.backref('liked_users', lazy='dynamic'))
+    liked_artists = db.relationship('Artist', secondary='user_artist', backref=db.backref('liked_users', lazy='dynamic'))
 
     def __repr__(self):
         return f"<User {self.name}>"
@@ -40,6 +41,58 @@ class User(db.Model):
         self.date_of_birth = date_of_birth
         db.session.commit()
         return self
+
+    # add and remove liked song to user
+    def add_liked_song(self, song):
+        if not self.is_liked_song_added(song):
+            self.liked_songs.append(song)
+            db.session.commit()
+    
+    def remove_liked_song(self, song):
+        if self.is_liked_song_added(song):
+            self.liked_songs.remove(song)
+            db.session.commit()
+            return {"status": "success"}
+        else:
+            return {"status": "info"}
+    
+    def is_liked_song_added(self, song):
+        return any(s.id == song.id for s in self.liked_songs)
+
+    # add and remove liked artist to user
+    def add_liked_artist(self, artist):
+        if not self.is_liked_artist_added(artist):
+            self.liked_artists.append(artist)
+            db.session.commit()
+    
+    def remove_liked_artist(self, artist):
+        if self.is_liked_artist_added(artist):
+            self.liked_artists.remove(artist)
+            db.session.commit()
+            return {"status": "success"}
+        else:
+            return {"status": "info"}
+    
+    def is_liked_artist_added(self, artist):
+        return any(a.id == artist.id for a in self.liked_artists)
+    
+    # add and remove genre to user
+    def add_genre(self, genre):
+        if not self.is_genre_added(genre):
+            self.genres.append(genre)
+            db.session.commit()
+
+    def remove_genre(self, genre):
+        if self.is_genre_added(genre):
+            self.genres.remove(genre)
+            db.session.commit()
+            return {"status": "success"}
+        else:
+            return {"status": "info"}
+    
+    def is_genre_added(self, genre):
+        return any(g.id == genre.id for g in self.genres)
+    
 
 class Artist(db.Model):
     __tablename__ = 'artists'
@@ -67,6 +120,38 @@ class Artist(db.Model):
         self.picture_path = picture_path
         db.session.commit()
         return self
+
+    # add and remove song to artist
+    def add_song(self, song):
+        if not self.is_song_added(song):
+            self.songs.append(song)
+            db.session.commit()
+
+    def remove_song(self, song):
+        if self.is_song_added(song):
+            self.songs.remove(song)
+            db.session.commit()
+
+    def is_song_added(self, song):
+        return any(a.id == song.id for a in self.songs)
+
+    # add and remove liked user to artist
+    def add_liked_user(self, user):
+        if not self.is_liked_user_added(user):
+            self.liked_users.append(user)
+            db.session.commit()
+    
+    def remove_liked_user(self, user):
+        if self.is_liked_user_added(user):
+            self.liked_users.remove(user)
+            db.session.commit()
+            return {"status": "success"}
+        else:
+            return {"status": "info"}
+    
+    def is_liked_user_added(self, user):
+        return any(u.id == user.id for u in self.liked_users)
+    
 
 class Album(db.Model):
     __tablename__ = 'albums'
@@ -97,10 +182,32 @@ class Album(db.Model):
         db.session.commit()
         return self
 
+    # add and remove song to album
+    def add_song(self, song):
+        if song.artists and any(artist.id == self.artist_id for artist in song.artists):
+            if not self.is_song_added(song):
+                self.songs.append(song)
+                db.session.commit()
+                return {"status": "success"}
+            else:
+                return {"status": "info"}
+        else:
+            return {"status": "error"}
+
+    def remove_song(self, song):
+        if self.is_song_added(song):
+            self.songs.remove(song)
+            db.session.commit()
+            return {"status": "success"}
+        else:
+            return {"status": "info"}
+
+    def is_song_added(self, song):
+        return any(a.id == song.id for a in self.songs)
+
 class Song(db.Model):
     __tablename__ = 'songs'
     id = db.Column(db.Integer, primary_key=True)
-    album_id = db.Column(db.Integer, db.ForeignKey('albums.id'), nullable=False)
     name = db.Column(db.String(255), nullable=False)
     likes = db.Column(db.Integer)
     play_count = db.Column(db.Integer)
@@ -124,8 +231,7 @@ class Song(db.Model):
         db.session.commit()
         return self
     
-    def update(self, album_id, name, likes, play_count, path, picture_path, release_date):
-        self.album_id = album_id
+    def update(self, name, likes, play_count, path, picture_path, release_date):
         self.name = name
         self.likes = likes
         self.play_count = play_count
@@ -134,6 +240,74 @@ class Song(db.Model):
         self.release_date = release_date
         db.session.commit()
         return self
+
+    # add and remove artist to song
+    def add_artist(self, artist):
+        if not self.is_artist_added(artist):
+            self.artists.append(artist)
+            db.session.commit()
+
+    def remove_artist(self, artist):
+        if self.is_artist_added(artist):
+            self.artists.remove(artist)
+            db.session.commit()
+            return {"status": "success"}
+        else:
+            return {"status": "info"}
+
+    def is_artist_added(self, artist):
+        return any(a.id == artist.id for a in self.artists)
+
+    # add and remove genre to song
+    def add_genre(self, genre):
+        if not self.is_genre_added(genre):
+            self.genres.append(genre)
+            db.session.commit()
+
+    def remove_genre(self, genre):
+        if self.is_genre_added(genre):
+            self.genres.remove(genre)
+            db.session.commit()
+            return {"status": "success"}
+        else:
+            return {"status": "info"}
+    
+    def is_genre_added(self, genre):
+        return any(g.id == genre.id for g in self.genres)
+
+    # add and remove album to song
+    def add_album(self, album):
+        if not self.is_album_added(album):
+            self.albums.append(album)
+            db.session.commit()
+
+    def remove_album(self, album):
+        if self.is_album_added(album):
+            self.albums.remove(album)
+            db.session.commit()
+            return {"status": "success"}
+        else:
+            return {"status": "info"}
+    
+    def is_album_added(self, album):
+        return any(a.id == album.id for a in self.albums)
+
+    # add and remove liked user to song
+    def add_liked_user(self, user):
+        if not self.is_liked_user_added(user):
+            self.liked_users.append(user)
+            db.session.commit()
+    
+    def remove_liked_user(self, user):
+        if self.is_liked_user_added(user):
+            self.liked_users.remove(user)
+            db.session.commit()
+            return {"status": "success"}
+        else:
+            return {"status": "info"}
+    
+    def is_liked_user_added(self, user):
+        return any(u.id == user.id for u in self.liked_users)
 
 class Playlist(db.Model):
     __tablename__ = 'playlists'
@@ -164,6 +338,23 @@ class Playlist(db.Model):
         db.session.commit()
         return self
 
+    # add and remove song to playlist
+    def add_song(self, song):
+        if not self.is_song_added(song):
+            self.songs.append(song)
+            db.session.commit()
+    
+    def remove_song(self, song):
+        if self.is_song_added(song):
+            self.songs.remove(song)
+            db.session.commit()
+            return {"status": "success"}
+        else:
+            return {"status": "info"}
+    
+    def is_song_added(self, song):
+        return any(s.id == song.id for s in self.songs)
+
 class Genre(db.Model):
     __tablename__ = 'genres'
     id = db.Column(db.Integer, primary_key=True)
@@ -187,6 +378,41 @@ class Genre(db.Model):
         db.session.commit()
         return self
 
+    # add and remove song to genre
+    def add_song(self, song):
+        if not self.is_song_added(song):
+            self.songs.append(song)
+            db.session.commit()
+    
+    def remove_song(self, song):
+        if self.is_song_added(song):
+            self.songs.remove(song)
+            db.session.commit()
+            return {"status": "success"}
+        else:
+            return {"status": "info"}
+    
+    def is_song_added(self, song):
+        return any(s.id == song.id for s in self.songs)
+
+    # add and remove user to genre
+    def add_user(self, user):
+        if not self.is_user_added(user):
+            self.users.append(user)
+            db.session.commit()
+    
+    def remove_user(self, user):
+        if self.is_user_added(user):
+            self.users.remove(user)
+            db.session.commit()
+            return {"status": "success"}
+        else:
+            return {"status": "info"}
+    
+    def is_user_added(self, user):
+        return any(u.id == user.id for u in self.users)
+    
+
 class SongArtist(db.Model):
     __tablename__ = 'song_artist'
     song_id = db.Column(db.Integer, db.ForeignKey('songs.id'), primary_key=True)
@@ -202,11 +428,13 @@ class UserGenre(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
     genre_id = db.Column(db.Integer, db.ForeignKey('genres.id'), primary_key=True)
 
+# Liked artists by user
 class UserArtist(db.Model):
     __tablename__ = 'user_artist'
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
     artist_id = db.Column(db.Integer, db.ForeignKey('artists.id'), primary_key=True)
 
+# Liked song by user
 class UserSong(db.Model):
     __tablename__ = 'user_song'
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
