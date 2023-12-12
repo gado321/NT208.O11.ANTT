@@ -3,7 +3,7 @@ from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required
 from models import Song
 
-song_ns = Namespace('song', description='Song related operations')
+song_ns = Namespace('api', description='Song related operations')
 
 # Model for the Song endpoints
 #===============================================================================
@@ -47,7 +47,7 @@ class SongResource(Resource):
         new_song.save()
         return new_song,201
 
-@song_ns.route('/song/<int:id>')
+@song_ns.route('/songs/<int:id>')
 class SongResource(Resource):
     @song_ns.marshal_with(song_model)
     def get(self,id):

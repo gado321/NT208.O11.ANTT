@@ -3,7 +3,7 @@ from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required
 from models import Playlist
 
-playlist_ns = Namespace('playlist', description='Playlist related operations')
+playlist_ns = Namespace('api', description='Playlist related operations')
 
 # Model for the Playlist endpoints
 #===============================================================================
@@ -41,7 +41,7 @@ class PlaylistResource(Resource):
         new_playlist.save()
         return new_playlist,201
 
-@playlist_ns.route('/playlist/<int:id>')
+@playlist_ns.route('/playlists/<int:id>')
 class PlaylistResource(Resource):
     @playlist_ns.marshal_with(playlist_model)
     def get(self,id):

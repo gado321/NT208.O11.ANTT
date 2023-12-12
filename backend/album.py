@@ -3,7 +3,7 @@ from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required
 from models import Album
 
-album_ns = Namespace('album', description='Album related operations')
+album_ns = Namespace('api', description='Album related operations')
 
 # Model for the Album endpoints
 #===============================================================================
@@ -39,7 +39,7 @@ class AlbumResource(Resource):
         new_album.save()
         return new_album,201
 
-@album_ns.route('/album/<int:id>')
+@album_ns.route('/albums/<int:id>')
 class AlbumResource(Resource):
     @album_ns.marshal_with(album_model)
     def get(self,id):
