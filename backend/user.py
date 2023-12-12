@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required
-from models import User
+from models import User, Artist, Song, Genre
 
 user_ns = Namespace('api', description='User related operations')
 
@@ -87,3 +87,72 @@ class UserResource(Resource):
         user_to_delete=User.query.get_or_404(id)
         user_to_delete.delete()
         return user_to_delete
+
+@user_ns.route('/users/<int:id>/artists/<int:artist_id>')
+class UserArtistResource(Resource):
+    @jwt_required()
+    def post(self, id, artist_id):
+        """Like an artist"""
+        user = User.query.get_or_404(id)
+        artist = Artist.query.get_or_404(artist_id)
+
+        user.add_liked_artist(artist)
+        return {'message': f'User {user.name} likes artist {artist.name}'},201
+
+    @jwt_required()
+    def delete(self, id, artist_id):
+        """Unlike an artist"""
+        user = User.query.get_or_404(id)
+        artist = Artist.query.get_or_404(artist_id)
+
+        user.remove_liked_artist(artist)
+        if response['status']=='success':
+            return {'message': f'User {user.name} unlikes artist {artist.name}'}, 201
+        elif response['status']=='info':
+            return {'message': 'User is not liked the artist before.'}, 200
+
+@user_ns.route('/users/<int:id>/songs/<int:song_id>')
+class UserSongResource(Resource):
+    @jwt_required()
+    def post(self, id, song_id):
+        """Like a song"""
+        user = User.query.get_or_404(id)
+        song = Song.query.get_or_404(song_id)
+
+        user.add_liked_song(song)
+        return {'message': f'User {user.name} likes song {song.name}'},201
+
+    @jwt_required()
+    def delete(self, id, song_id):
+        """Unlike a song"""
+        user = User.query.get_or_404(id)
+        song = Song.query.get_or_404(song_id)
+
+        user.remove_liked_song(song)
+        if response['status']=='success':
+            return {'message': f'User {user.name} unlikes song {song.name}'}, 201
+        elif response['status']=='info':
+            return {'message': 'User is not liked the song before.'}, 200
+
+@user_ns.route('/users/<int:id>/genres/<int:genre_id>')
+class UserGenreResource(Resource):
+    @jwt_required()
+    def post(self, id, genre_id):
+        """Like a genre"""
+        user = User.query.get_or_404(id)
+        genre = Genre.query.get_or_404(genre_id)
+
+        user.add_genre(genre)
+        return {'message': f'User {user.name} likes genre {genre.name}'},201
+
+    @jwt_required()
+    def delete(self, id, genre_id):
+        """Unlike a genre"""
+        user = User.query.get_or_404(id)
+        genre = Genre.query.get_or_404(genre_id)
+
+        user.remove_genre(genre)
+        if response['status']=='success':
+            return {'message': f'User {user.name} unlikes genre {genre.name}'}, 201
+        elif response['status']=='info':
+            return {'message': 'User is not liked the genre before.'}, 200

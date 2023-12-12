@@ -70,3 +70,29 @@ class PlaylistResource(Resource):
         playlist_to_delete=Playlist.query.get_or_404(id)
         playlist_to_delete.delete()
         return playlist_to_delete
+
+@playlist_ns.route('/playlists/<int:id>/songs<int:song_id>')
+class PlaylistSongResource(Resource):
+    @jwt_required()
+    def put(self,id,song_id):
+        """Add a song to a playlist"""
+        playlist=Playlist.query.get_or_404(id)
+        song=Song.query.get_or_404(song_id)
+        
+        response=playlist.add_song(song)
+        if response['status']=='success':
+            return {'message': f'Song {song.name} added to playlist {album.name}'}, 201
+        elif response['status']=='info':
+            return {'message': 'Song is already in the album.'}, 200
+
+    @jwt_required()
+    def delete(self,id,song_id):
+        """Remove a song from a playlist"""
+        playlist=Playlist.query.get_or_404(id)
+        song=Song.query.get_or_404(song_id)
+
+        response=playlist.remove_song(song)
+        if response['status']=='success':
+            return {'message': f'Song {song.name} removed from playlist {album.name}'}, 201
+        elif response['status']=='info':
+            return {'message': 'Song is not in the playlist.'}, 200

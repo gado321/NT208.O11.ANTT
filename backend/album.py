@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required
-from models import Album
+from models import Album, Song
 
 album_ns = Namespace('api', description='Album related operations')
 
@@ -67,3 +67,33 @@ class AlbumResource(Resource):
         album_to_delete=Album.query.get_or_404(id)
         album_to_delete.delete()
         return album_to_delete
+
+@album_ns.route('/albums/<int:id>/songs/<int:song_id>')
+class AlbumSongResource(Resource):
+    @jwt_required()
+    def post(self, id, song_id):
+        """Add a song to an album"""
+        album=Album.query.get_or_404(id)
+        song=Song.query.get_or_404(song_id)
+        
+        response=album.add_song(song)
+
+        if response['status']=='success':
+            return {'message': f'Song {song.name} added to album {album.name}'}, 201
+        elif response['status']=='info':
+            return {'message': 'Song is already in the album.'}, 200
+        else :
+            return {'message': 'Cannot add this song to the album. Artist ID does not match.'}, 200
+
+    @jwt_required()
+    def delete(self,id,song_id):
+        """Remove a song from an album"""
+        album=Album.query.get_or_404(id)
+        song=Song.query.get_or_404(song_id)
+
+        response=album.remove_song(song)
+
+        if response['status']=='success':
+            return {'message': f'Song {song.name} removed from album {album.name}'}, 201
+        elif response['status']=='info':
+            return {'message': 'Song is not in the album.'}, 200
