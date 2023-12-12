@@ -71,10 +71,10 @@ class PlaylistResource(Resource):
         playlist_to_delete.delete()
         return playlist_to_delete
 
-@playlist_ns.route('/playlists/<int:id>/songs<int:song_id>')
+@playlist_ns.route('/playlists/<int:id>/songs/<int:song_id>')
 class PlaylistSongResource(Resource):
     @jwt_required()
-    def put(self,id,song_id):
+    def post(self,id,song_id):
         """Add a song to a playlist"""
         playlist=Playlist.query.get_or_404(id)
         song=Song.query.get_or_404(song_id)
