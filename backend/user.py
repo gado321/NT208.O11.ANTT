@@ -3,7 +3,7 @@ from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required
 from models import User
 
-user_ns = Namespace('user', description='User related operations')
+user_ns = Namespace('api', description='User related operations')
 
 # Model for all the endpoints (serializers)
 # Model for the User endpoints
@@ -52,7 +52,7 @@ class UserResource(Resource):
         new_user.save()
         return new_user,201
 
-@user_ns.route('/user/<int:id>')
+@user_ns.route('/users/<int:id>')
 class UserResource(Resource):
     @user_ns.marshal_with(user_model)
     def get(self,id):

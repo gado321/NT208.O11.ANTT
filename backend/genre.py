@@ -3,7 +3,7 @@ from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required
 from models import Genre
 
-genre_ns = Namespace('genre', description='Genre related operations')
+genre_ns = Namespace('api', description='Genre related operations')
 
 # Model for the Genre endpoints
 #===============================================================================
@@ -35,7 +35,7 @@ class GenreResource(Resource):
         new_genre.save()
         return new_genre,201
 
-@genre_ns.route('/genre/<int:id>')
+@genre_ns.route('/genres/<int:id>')
 class GenreResource(Resource):
     @genre_ns.marshal_with(genres_model)
     def get(self,id):
