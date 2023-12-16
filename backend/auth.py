@@ -77,10 +77,15 @@ class Login(Resource):
             access_token=create_access_token(identity=db_user.email)
             refresh_token=create_refresh_token(identity=db_user.email)
 
-            return jsonify({
+            return make_response(jsonify({
                 "access_token":access_token,
-                "refresh_token":refresh_token
-            })
+                "refresh_token":refresh_token,
+                "email": db_user.email
+            }), 200)
+        else: return make_response(jsonify({
+                "message":"Invalid"
+            }), 401)
+
 
 # Refresh token is used to get a new access token when the old one expires
 @auth_ns.route('/refresh')
@@ -90,4 +95,4 @@ class Refresh(Resource):
     def post(self):
         current_user=get_jwt_identity()
         new_access_token=create_access_token(identity=current_user)
-        return make_response(jsonify({"access_token":new_access_token}), 200) 
+        return make_response(jsonify({"access_token":new_access_token}), 200)
