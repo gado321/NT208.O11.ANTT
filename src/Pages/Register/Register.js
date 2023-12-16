@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./Register.css";
-import { Icon } from '@iconify/react';
+// import { Icon } from '@iconify/react';
 
 export default function RegisterPage() {
     const initUserName = {
@@ -117,9 +117,9 @@ export default function RegisterPage() {
                                 name="email"
                                 onChange={handleChangeUser}
                             />
-                                <p className="register-error-feedback">
-                                    {formError.email}
-                                </p>
+                            <p className="register-error-feedback">
+                                {formError.email}
+                            </p>
                         </div>
                         <div>
                             <label htmlFor="register-password" className="register-form-label">

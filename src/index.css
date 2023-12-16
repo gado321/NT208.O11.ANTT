@@ -1,6 +1,9 @@
+/*Import font 'New Rocker'*/
+@import url('https://fonts.googleapis.com/css2?family=New+Rocker&display=swap');
+
 :root {
   --backgroundColor: #D4D1E5;
-  --fontColor: #0B0A0A;
+  --fontColor: #1A1054;
   --btnColor: #6F65A9;
 }
 body {
@@ -10,21 +13,20 @@ body {
 
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+    sans-serif, 'New Rocker';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 /* test */
   /* thẻ chứa back và background-mode */
-.register-mode-switch-container {
+.mode-switch-container {
   margin: 10px;
   display: flex;
   justify-content: space-between;
 }
-/* Nút back */
-.goback-icon {
-  display: none;
-  color: var(--fontColor);
+.music-logo {
+  width: 64px;
+  height: 64px;
 }
 /* Nút chuyển chế độ background */
 .mode-switch {

@@ -1,43 +1,41 @@
-import React, {useState ,useEffect} from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import PageLoading from './PageLoading/PageLoading';
+import musical_sound_music_logo from "./Pages/Icon/musical-sound-music-logo.svg"
+import HomePage from './Pages/Home/Home';
+import LoginPage from './Pages/Login/Login';
+import RegisterPage from './Pages/Register/Register';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
 
-function LoadingMessage() {
-  return <PageLoading/>;
-}
-function MainApp() {
-  // Use a state to track whether the app is loaded or not
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  useEffect(() => {
-    // Simulate an asynchronous operation (e.g., fetching data)
-    const fetchData = async () => {
-      // For demonstration purposes, use setTimeout to simulate delay
-      setTimeout(() => {
-        // After the task is complete, update the loading state
-        setIsLoaded(true);
-      }, 2000); // Adjust the time as needed
-    };
-
-    fetchData(); // Call the asynchronous function
-  }, []);
-
+function App() {
   return (
-    <React.StrictMode>
-      {/* Render LoadingMessage while the app is not loaded */}
-      {isLoaded ? <App /> : <LoadingMessage />}
-    </React.StrictMode>
+    <>
+      <div className="mode-switch-container">
+          <a href="/">
+              <img className="music-logo" src={musical_sound_music_logo} alt="logo"/>
+          </a>
+          <label className="mode-switch" onClick="">
+              <input type="checkbox"/>
+              <span className="mode-switch-slider"></span>
+          </label>
+      </div>
+      <React.StrictMode>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+          </Routes>
+        </BrowserRouter>
+      </React.StrictMode>
+
+    </>
   );
 }
 
-// Render the MainApp component after a delay
-setTimeout(() => {
-  root.render(<MainApp />);
-}, 100);
+const root = ReactDOM.createRoot(document.getElementById('root'));
 
-reportWebVitals();
+root.render(
+  <App />
+);

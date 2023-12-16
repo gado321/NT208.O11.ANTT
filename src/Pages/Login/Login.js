@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "./Login.css";
-import { Icon } from '@iconify/react';
 
 export default function LoginPage() {
 
@@ -57,7 +56,7 @@ export default function LoginPage() {
     // Trả về html
     return (
         <div className="login-page">
-            <div className="login-mode-switch-container">
+            {/* <div className="login-mode-switch-container">
                 <a href="./Register/register">
                     <Icon className="login-icon" icon="bx:arrow-back" />
                 </a>
@@ -65,7 +64,7 @@ export default function LoginPage() {
                     <input type="checkbox" onclick="toggleDarkMode()"/>
                     <span class="mode-switch-slider"></span>
                 </label>
-            </div>
+            </div> */}
             <h1 className="login-title">Log In</h1>
             <div className="login-form-container">
                 <form onSubmit={handleSubmit}>
@@ -82,9 +81,9 @@ export default function LoginPage() {
                             value={UserName.username}
                             onChange={handleChangeUser}
                         />
-                        {formError.username && (
-                            <p className="login-error-feedback">{formError.username}</p>
-                        )}
+                        <p className="login-error-feedback">
+                            {formError.username}
+                        </p>
                     </div>
                     <div>
                         <label
@@ -100,9 +99,9 @@ export default function LoginPage() {
                             value={UserName.password}
                             onChange={handleChangeUser}
                         />
-                        {formError.password && (
-                            <p className="login-error-feedback">{formError.password}</p>
-                        )}
+                        <p className="login-error-feedback">
+                            {formError.password}
+                        </p>
                     </div>
                     <div className="forgot-password">
                         <a href="./ForgotPassword/forgotpassword">
