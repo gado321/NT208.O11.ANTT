@@ -1,31 +1,47 @@
-import React, {useEffect, useState} from 'react';
-import ReactDOM from 'react-dom';
-import { createRoot } from 'react-dom/client';
+import React, {useState ,useEffect} from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+import PageLoading from './PageLoading/PageLoading';
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-const App = () => {
+const root = ReactDOM.createRoot(document.getElementById('root'));
 
-    // Demo of how to use useEffect to fetch data from an API
-    useEffect(
-        () => {
-            fetch('/auth/hello') // fetch data from the api
-                .then(res => res.json()) // convert response to json
-                .then(data => {console.log(data)
-                    setMessage(data.message) // set data in state
-                }) // set data in state
-                .catch(err => console.log(err)) // catch errors
-            
-            
-        }, []
-    )
+function LoadingMessage() {
+  return <PageLoading/>;
+}
+function MainApp() {
+  // Use a state to track whether the app is loaded or not
+  const [isLoaded, setIsLoaded] = useState(false);
 
-    const [message, setMessage] = useState(''); // set initial state to an empty string
-    
-    return (
-        <div className="container">
-            <h1>{message}</h1>
-        </div>
-    )    
+  useEffect(() => {
+    // Simulate an asynchronous operation (e.g., fetching data)
+    const fetchData = async () => {
+      // For demonstration purposes, use setTimeout to simulate delay
+      setTimeout(() => {
+        // After the task is complete, update the loading state
+        setIsLoaded(true);
+      }, 2000); // Adjust the time as needed
+    };
+
+    fetchData(); // Call the asynchronous function
+  }, []);
+
+  return (
+    <React.StrictMode>
+        <Router>
+            {/* Render LoadingMessage while the app is not loaded */}
+            {isLoaded ? <App /> : <LoadingMessage />}
+        </Router>
+    </React.StrictMode>
+  );
 }
 
-const root = createRoot(document.getElementById('root'));
-root.render(<App />);
+// Render the MainApp component after a delay
+setTimeout(() => {
+  root.render(<MainApp />);
+}, 100);
+
+reportWebVitals();

@@ -156,3 +156,19 @@ class UserGenreResource(Resource):
             return {'message': f'User {user.name} unlikes genre {genre.name}'}, 201
         elif response['status']=='info':
             return {'message': 'User is not liked the genre before.'}, 200
+
+@user_ns.route('/users/<int:id>/like_songs')
+class UserLikedSongsResource(Resource):
+    @jwt_required()
+    def get(self,id):
+        """Get all liked songs by user"""
+        user=User.query.get_or_404(id)
+        return user.liked_songs, 200
+
+@user_ns.route('/users/<int:id>/like_artists')
+class UserLikedArtistsResource(Resource):
+    @jwt_required()
+    def get(self,id):
+        """Get all liked artists by user"""
+        user=User.query.get_or_404(id)
+        return user.liked_artists, 200

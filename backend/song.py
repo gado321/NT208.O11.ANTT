@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required
 from models import Song, Artist, Genre, User
+import urllib.parse
 
 song_ns = Namespace('api', description='Song related operations')
 
@@ -124,3 +125,13 @@ class SongGenreResource(Resource):
             return {'message': f'Genre {genre.name} removed from song {song.name}'}, 201
         elif response['status']=='info':
             return {'message': 'Genre is not in the song.'}, 200
+
+# route for search songs by grep name
+@song_ns.route('/songs/search/<string:name>')
+class SongSearchResource(Resource):
+    @song_ns.marshal_list_with(song_model)
+    def get(self,name):
+        """Get all songs"""
+        search_term = urllib.parse.unquote(name)
+        songs=Song.query.filter(Song.name.like(f'%{search_term}%')).all()
+        return songs

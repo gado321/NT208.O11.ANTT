@@ -59,6 +59,9 @@ class User(db.Model):
     def is_liked_song_added(self, song):
         return any(s.id == song.id for s in self.liked_songs)
 
+    def get_liked_songs(self):
+        return self.liked_songs
+
     # add and remove liked artist to user
     def add_liked_artist(self, artist):
         if not self.is_liked_artist_added(artist):
@@ -75,6 +78,9 @@ class User(db.Model):
     
     def is_liked_artist_added(self, artist):
         return any(a.id == artist.id for a in self.liked_artists)
+
+    def get_liked_artists(self):
+        return self.liked_artists
     
     # add and remove genre to user
     def add_genre(self, genre):
@@ -411,6 +417,10 @@ class Genre(db.Model):
     
     def is_user_added(self, user):
         return any(u.id == user.id for u in self.users)
+
+    # get all song by genre
+    def get_songs(self):
+        return self.songs
     
 
 class SongArtist(db.Model):
