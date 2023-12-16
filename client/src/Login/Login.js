@@ -5,7 +5,7 @@ import { Icon } from '@iconify/react';
 export default function LoginPage() {
 
     const initUserName = {
-        username: "",
+        email: "",
         password: "",
     };
 
@@ -32,8 +32,8 @@ export default function LoginPage() {
     // Kiểm tra giá trị của form có hợp lệ hay không
     const validateForm = () => {
         const error = {};
-        if (isEmptyvalue(UserName.username)) {
-            error.username = "Please enter your email address or username";
+        if (isEmptyvalue(UserName.email)) {
+            error.email = "Please enter your email address or username";
         }
         if (isEmptyvalue(UserName.password)) {
             error.password = "Please enter your password";
@@ -44,21 +44,36 @@ export default function LoginPage() {
     // Xác nhận dữ liệu khi đăng nhập và in ra console
     const handleSubmit = (event) => {
         event.preventDefault();
-        
-        if (validateForm()) {
-            console.log("Form valid");
-        }
-        else {
-            console.log("Form invalid");
-        }
-        console.log("User value: ", UserName);
-        console.log("Remember me: ", rememberMe);
-    };
+        const loginData = {
+          email: UserName.email,
+          password: UserName.password,
+        };
+    
+        fetch("http://localhost:5000/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(loginData),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            // Xử lý phản hồi từ API
+            console.log(data);
+            // Lưu access_token và refresh_token vào Session Storage
+            sessionStorage.setItem('access_token', data.access_token);
+            sessionStorage.setItem('refresh_token', data.refresh_token);
+          })
+          .catch((error) => {
+            // Xử lý lỗi
+            console.error(error);
+          });
+      };
     // Trả về html
     return (
         <div className="login-page">
             <div className="login-mode-switch-container">
-                <a href="./Register/register">
+                <a href="./register">
                     <Icon className="login-icon" icon="bx:arrow-back" />
                 </a>
                 <label class="mode-switch">
@@ -77,13 +92,13 @@ export default function LoginPage() {
                             type="text"
                             id="login-username"
                             className="login-form-control"
-                            name="username"
+                            name="email"
                             placeholder="   Email address or Username"
-                            value={UserName.username}
+                            value={UserName.email}
                             onChange={handleChangeUser}
                         />
-                        {formError.username && (
-                            <p className="login-error-feedback">{formError.username}</p>
+                        {formError.email && (
+                            <p className="login-error-feedback">{formError.email}</p>
                         )}
                     </div>
                     <div>

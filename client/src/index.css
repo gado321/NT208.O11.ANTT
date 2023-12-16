@@ -67,7 +67,6 @@ background-color: var(--backgroundColor);
 input:checked + .mode-switch-slider:before {
 transform: translateX(46px);
 }
-/* test */
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
