@@ -1,24 +1,4 @@
-.admin-login-container {
-    background-color: #0B0A0A;
-    color: #ffffff; /* Set the text color to white for better contrast */
-  }
-  
-  /* If you want to apply styles to the input fields */
-  .admin-login-input {
-    background-color: #1A1A1A; /* Example: dark background for the inputs */
-    border: 1px solid #333; /* Example: darker border for the inputs */
-    color: #ffffff; /* White text for the input fields */
-  }
-  
-  /* Style for the button if needed */
-  .admin-login-btn {
-    /* Button styles */
-
-  }
-  
-  /* If you want to override link color */
-  .admin-login-link {
-    color: #ffffff;
-  }
-  
-  /* Any other styles you wish to apply to elements within your component */
+.form {
+  margin: auto;
+  width: 50%;
+}

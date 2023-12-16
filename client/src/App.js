@@ -11,7 +11,6 @@ import AdminLogin from './components/admin/Login/Login';
 function App() {
   return (
     <div className='App'>
-      <Router>
         <Routes>
             <Route path='/' element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
@@ -21,7 +20,6 @@ function App() {
             {/* Redirect all unknown routes to home */}
             {/* <Route path='*' element={<Navigate replace to="/" />} /> */}
         </Routes>
-      </Router>
     </div>
   );
 }
