@@ -1,0 +1,89 @@
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+.loading-title {
+  text-align: center;
+  color: var(--primary-color-light-mode-1100, #080519);
+  font-family: 'New Rocker';
+  font-size: 50px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  text-transform: uppercase;
+}
+.home-page {
+  /* margin-top: 100px; */
+  padding: 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.home-logo {
+  width: 630px;
+  height: 630px;
+}
+.home-laptop-img-container {
+  position: relative;
+  width: 350px;
+  height: 250px;
+}
+
+.laptop-20-regular {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.file-earmark-music-fill {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -55%);
+  width: 30%;
+  height: 30%;
+}
+.home-content {
+  width: 625px;
+  flex-wrap: wrap;
+  text-align: center;
+  font-size: 32px;
+  font-weight: 500;
+  color:var(--fontColor);
+}
+.home-btn-register {
+  width: 332px;
+  height: 96px;
+  color: var(--fontColor);
+  font-size: 28px;
+  font-weight: 750;
+  background-color: transparent;
+  border: 2px solid var(--btnColor);
+  border-radius: 5px;
+  cursor: pointer;
+  transition-duration: 0.3s;
+}
+.icon-google {
+  width: 64px;
+  height: 64px;
+  margin: 10px;
+}
+.home-btn-login {
+  width: 194px;
+  height: 96px;
+  color: var(--fontColor);
+  font-size: 28px;
+  font-weight: 750;
+  background-color: transparent;
+  border: 2px solid var(--btnColor);
+  border-radius: 5px;
+  cursor: pointer;
+  transition-duration: 0.3s;
+}
+.home-btn-register:hover, .home-btn-login:hover {
+  background-color: var(--btnColor);
+}

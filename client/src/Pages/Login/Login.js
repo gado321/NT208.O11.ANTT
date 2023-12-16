@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import "./Login.css";
-import { Icon } from '@iconify/react';
 
 export default function LoginPage() {
 
     const initUserName = {
-        email: "",
+        username: "",
         password: "",
     };
 
@@ -32,8 +31,8 @@ export default function LoginPage() {
     // Kiểm tra giá trị của form có hợp lệ hay không
     const validateForm = () => {
         const error = {};
-        if (isEmptyvalue(UserName.email)) {
-            error.email = "Please enter your email address or username";
+        if (isEmptyvalue(UserName.username)) {
+            error.username = "Please enter your email address or username";
         }
         if (isEmptyvalue(UserName.password)) {
             error.password = "Please enter your password";
@@ -44,43 +43,28 @@ export default function LoginPage() {
     // Xác nhận dữ liệu khi đăng nhập và in ra console
     const handleSubmit = (event) => {
         event.preventDefault();
-        const loginData = {
-          email: UserName.email,
-          password: UserName.password,
-        };
-    
-        fetch("http://localhost:5000/auth/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(loginData),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            // Xử lý phản hồi từ API
-            console.log(data);
-            // Lưu access_token và refresh_token vào Session Storage
-            sessionStorage.setItem('access_token', data.access_token);
-            sessionStorage.setItem('refresh_token', data.refresh_token);
-          })
-          .catch((error) => {
-            // Xử lý lỗi
-            console.error(error);
-          });
-      };
+        
+        if (validateForm()) {
+            console.log("Form valid");
+        }
+        else {
+            console.log("Form invalid");
+        }
+        console.log("User value: ", UserName);
+        console.log("Remember me: ", rememberMe);
+    };
     // Trả về html
     return (
         <div className="login-page">
-            <div className="login-mode-switch-container">
-                <a href="./register">
+            {/* <div className="login-mode-switch-container">
+                <a href="./Register/register">
                     <Icon className="login-icon" icon="bx:arrow-back" />
                 </a>
                 <label class="mode-switch">
                     <input type="checkbox" onclick="toggleDarkMode()"/>
                     <span class="mode-switch-slider"></span>
                 </label>
-            </div>
+            </div> */}
             <h1 className="login-title">Log In</h1>
             <div className="login-form-container">
                 <form onSubmit={handleSubmit}>
@@ -92,14 +76,14 @@ export default function LoginPage() {
                             type="text"
                             id="login-username"
                             className="login-form-control"
-                            name="email"
+                            name="username"
                             placeholder="   Email address or Username"
-                            value={UserName.email}
+                            value={UserName.username}
                             onChange={handleChangeUser}
                         />
-                        {formError.email && (
-                            <p className="login-error-feedback">{formError.email}</p>
-                        )}
+                        <p className="login-error-feedback">
+                            {formError.username}
+                        </p>
                     </div>
                     <div>
                         <label
@@ -115,9 +99,9 @@ export default function LoginPage() {
                             value={UserName.password}
                             onChange={handleChangeUser}
                         />
-                        {formError.password && (
-                            <p className="login-error-feedback">{formError.password}</p>
-                        )}
+                        <p className="login-error-feedback">
+                            {formError.password}
+                        </p>
                     </div>
                     <div className="forgot-password">
                         <a href="./ForgotPassword/forgotpassword">
