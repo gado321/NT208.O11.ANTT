@@ -14,7 +14,59 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+/* test */
+  /* thẻ chứa back và background-mode */
+.register-mode-switch-container {
+  margin: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+/* Nút back */
+.goback-icon {
+  display: none;
+  color: var(--fontColor);
+}
+/* Nút chuyển chế độ background */
+.mode-switch {
+  position: relative;
+  display: inline-block;
+  width: 80px;
+  height: 34px;
+}
+.mode-switch-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--fontColor);
+  transition: 0.4s;
+  border-radius: 34px;
+}
 
+.mode-switch-slider:before {
+position: absolute;
+content: "";
+height: 26px;
+width: 26px;
+left: 4px;
+bottom: 4px;
+background-color: var(--backgroundColor);
+transition: 0.4s;
+border-radius: 50%;
+}
+
+input:checked + .mode-switch-slider {
+background-color: var(--backgroundColor);
+}
+input:checked + .mode-switch-slider {
+background-color: var(--backgroundColor);
+}
+
+input:checked + .mode-switch-slider:before {
+transform: translateX(46px);
+}
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
