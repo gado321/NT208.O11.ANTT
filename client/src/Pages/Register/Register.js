@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import "./Register.css";
-import { Icon } from '@iconify/react';
+// import { Icon } from '@iconify/react';
 
 export default function RegisterPage() {
     const initUserName = {
@@ -12,8 +11,7 @@ export default function RegisterPage() {
         birthday: "",
         gender: "",
     };
-    const [registerMessage, setRegisterMessage] = useState("");
-    const navigate = useNavigate(); // Sử dụng useNavigate để chuyển hướng trang
+
     const [UserName, setUserName] = useState(initUserName);
     const [formError, setFormError] = useState({});
     
@@ -84,49 +82,25 @@ export default function RegisterPage() {
         event.preventDefault();
         
         if (validateForm()) {
-            // Gửi yêu cầu POST đến API Python
-            fetch('http://localhost:5000/auth/signup', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    name: UserName.username,
-                    email: UserName.email,
-                    password: UserName.password,
-                    gender: UserName.gender,
-                    date_of_birth: UserName.birthday
-                })
-            })
-            .then(response => {
-                if (response.ok) {
-                    setRegisterMessage("Registration successful!");
-                    navigate("/login");
-                } else {
-                    setRegisterMessage("Registration failed! Please try again.");
-                    
-                }
-            })
-            .catch(error => {
-                setRegisterMessage("Registration failed! Please try again.");
-            });
+            console.log("Form valid");
         }
         else {
-            setRegisterMessage("Registration failed! Please try again.");
+            console.log("Form invalid");
         }
+        console.log("User value: ", UserName);
     };
     // Trả về html
     return (
         <div className="register-page">
-            <div className="register-mode-switch-container">
-            <a href="/home">
+            {/* <div className="register-mode-switch-container">
+                <a href="/home">
                     <Icon className="register-icon" icon="bx:arrow-back" />
                 </a>
-                <label class="mode-switch">
+                <label className="mode-switch">
                     <input type="checkbox" onclick="toggleDarkMode()"/>
-                    <span class="mode-switch-slider"></span>
+                    <span className="mode-switch-slider"></span>
                 </label>
-            </div>
+            </div> */}
             <h1 className="register-title">Sign Up</h1>
             <form onSubmit={handleSubmit}>
                 <div className="register-form-container">
@@ -143,9 +117,9 @@ export default function RegisterPage() {
                                 name="email"
                                 onChange={handleChangeUser}
                             />
-                            {formError.email && (
-                                <p className="login-error-feedback">{formError.email}</p>
-                            )}
+                            <p className="register-error-feedback">
+                                {formError.email}
+                            </p>
                         </div>
                         <div>
                             <label htmlFor="register-password" className="register-form-label">
@@ -159,9 +133,9 @@ export default function RegisterPage() {
                                 name="password"
                                 onChange={handleChangeUser}
                             />
-                            {formError.password && (
-                                <p className="login-error-feedback">{formError.password}</p>
-                            )}
+                            <p className="register-error-feedback">
+                                {formError.password}
+                            </p>
                         </div>
                         <div>
                             <label htmlFor="register-confirm-password" className="register-form-label">
@@ -175,9 +149,9 @@ export default function RegisterPage() {
                                 name="confirmpassword"
                                 onChange={handleChangeUser}
                             />
-                            {formError.confirmpassword && (
-                                <p className="login-error-feedback">{formError.confirmpassword}</p>
-                            )}
+                            <p className="register-error-feedback">
+                                {formError.confirmpassword}
+                            </p>
                         </div>
                     </div>
                     <div className="register-form-right">
@@ -193,9 +167,9 @@ export default function RegisterPage() {
                                 name="username"
                                 onChange={handleChangeUser}
                             />
-                            {formError.username && (
-                                <p className="login-error-feedback">{formError.username}</p>
-                            )}
+                            <p className="register-error-feedback">
+                                {formError.username}
+                            </p>
                         </div>
                         <div>
                             <label htmlFor="register-birthday" className="register-form-label">
@@ -209,9 +183,9 @@ export default function RegisterPage() {
                                 name="birthday"
                                 onChange={handleChangeUser}
                             />
-                            {formError.birthday && (
-                                <p className="login-error-feedback">{formError.birthday}</p>
-                            )}
+                            <p className="register-error-feedback">
+                                {formError.birthday}
+                            </p>
                         </div>
                         <div>
                             <label htmlFor="register-gender" className="register-form-label">
@@ -243,19 +217,17 @@ export default function RegisterPage() {
                                     onChange={handleChangeUser}
                                 />Other
                             </div>
-                            {formError.registergender && (
-                                <p className="login-error-feedback">{formError.registergender}</p>
-                            )}
+                            <p className="register-error-feedback">
+                                {formError.gender}
+                            </p>
                         </div>
-                        {registerMessage && <p>{registerMessage}</p>}
                     </div>
                 </div>
                 <div className="btnRegister-container">
                     <button type="submit" className="btnRegister">
-                        SIGN UP
+                        SIGN IN
                     </button>
                 </div>
-                
             </form>
         </div>
     );
