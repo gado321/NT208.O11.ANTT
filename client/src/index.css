@@ -5,6 +5,7 @@
   --backgroundColor: #D4D1E5;
   --fontColor: #1A1054;
   --btnColor: #6F65A9;
+  --navbarColor: #ce8fff
 }
 body {
   margin: 0;
@@ -73,4 +74,25 @@ transform: translateX(46px);
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.header{
+  display: grid;
+  grid-area: right-top;
+}
+.header-content{
+  display: flex;
+  align-items:flex-end; 
+  justify-content: flex-end; 
+  align-items: flex-start;
+}
+.header-content img{
+  width: 10%;
+  align-items: center;  
+  padding: 0;
+  padding-top: 1.5%;
+}
+.nav-bar{
+  grid-area: left;
+  background-color: var(--backgroundColor);
 }
