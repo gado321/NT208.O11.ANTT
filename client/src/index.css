@@ -5,9 +5,11 @@
   --backgroundColor: #D4D1E5;
   --fontColor: #1A1054;
   --btnColor: #6F65A9;
+  --navbarColor: #ce8fff
 }
-body {
+html, body {
   margin: 0;
+  height: 100%;
   background-color: var(--backgroundColor);
   color: var(--fontColor);
 
@@ -19,8 +21,7 @@ body {
 }
 /* test */
   /* thẻ chứa back và background-mode */
-.mode-switch-container {
-  margin: 10px;
+.container {
   display: flex;
   justify-content: space-between;
 }
@@ -29,6 +30,10 @@ body {
   height: 64px;
 }
 /* Nút chuyển chế độ background */
+.button-mode {
+  display: flex;
+  padding-top: 1.5%;
+}
 .mode-switch {
   position: relative;
   display: inline-block;
@@ -73,4 +78,30 @@ transform: translateX(46px);
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.header{
+  display: grid;
+  grid-area: right-top;
+}
+.header-content{
+  display: flex;
+  align-items:flex-end; 
+  justify-content: flex-end; 
+  align-items: flex-start;
+}
+.header-content img{
+  width: 10%;
+  align-items: center;  
+  padding: 0;
+  padding-top: 1.5%;
+}
+.nav-bar{
+  grid-area: left;
+  background-color: var(--backgroundColor);
+}
+.nav-bar a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

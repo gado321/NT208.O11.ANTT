@@ -7,19 +7,28 @@ import HomePage from './Pages/Home/Home';
 import LoginPage from './Pages/Login/Login';
 import RegisterPage from './Pages/Register/Register';
 import AdminLogin from './components/admin/Login/Login';
+import Dashboard from './Pages/Dashboard/Dashboard'
 
 
 function App() {
   return (
     <>
-      <div className="mode-switch-container">
-          <a href="/">
+      <div className="container">
+          <div className='nav-bar'>
+            <a href="/">
               <img className="music-logo" src={musical_sound_music_logo} alt="logo"/>
-          </a>
-          <label className="mode-switch" onClick="">
-              <input type="checkbox"/>
-              <span className="mode-switch-slider"></span>
-          </label>
+            </a>
+          </div>
+          <div className='header'>
+            <div className="header-content">
+              <div className='button-mode'>
+                <label className="mode-switch" onClick="">
+                    <input type="checkbox"/>
+                    <span className="mode-switch-slider"></span>
+                </label>
+              </div>
+            </div>  
+          </div>
       </div>
       <React.StrictMode>
         <BrowserRouter>
@@ -28,6 +37,7 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path='/admin/login' element={<AdminLogin />} />
+            <Route path='/dashboard' element={<Dashboard />} />
           </Routes>
         </BrowserRouter>
       </React.StrictMode>
