@@ -6,6 +6,7 @@ import musical_sound_music_logo from "./Pages/Icon/musical-sound-music-logo.svg"
 import HomePage from './Pages/Home/Home';
 import LoginPage from './Pages/Login/Login';
 import RegisterPage from './Pages/Register/Register';
+import AdminLogin from './components/admin/Login/Login';
 
 
 function App() {
@@ -26,10 +27,10 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path='/admin/login' element={<AdminLogin />} />
           </Routes>
         </BrowserRouter>
       </React.StrictMode>
-
     </>
   );
 }
