@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css';
@@ -13,7 +13,7 @@ import Dashboard from './Pages/Dashboard/Dashboard'
 function App() {
   return (
     <>
-      <div className="mode-switch-container">
+      <div className="container">
           <div className='nav-bar'>
             <a href="/">
               <img className="music-logo" src={musical_sound_music_logo} alt="logo"/>
@@ -21,10 +21,12 @@ function App() {
           </div>
           <div className='header'>
             <div className="header-content">
-              <label className="mode-switch" onClick="">
-                  <input type="checkbox"/>
-                  <span className="mode-switch-slider"></span>
-              </label>
+              <div className='button-mode'>
+                <label className="mode-switch" onClick="">
+                    <input type="checkbox"/>
+                    <span className="mode-switch-slider"></span>
+                </label>
+              </div>
             </div>  
           </div>
       </div>

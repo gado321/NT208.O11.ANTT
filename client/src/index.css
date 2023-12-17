@@ -20,7 +20,7 @@ body {
 }
 /* test */
   /* thẻ chứa back và background-mode */
-.mode-switch-container {
+.container {
   margin: 10px;
   display: flex;
   justify-content: space-between;
@@ -30,6 +30,10 @@ body {
   height: 64px;
 }
 /* Nút chuyển chế độ background */
+.button-mode {
+  display: flex;
+  padding-top: 0.5%;
+}
 .mode-switch {
   position: relative;
   display: inline-block;
@@ -95,4 +99,9 @@ code {
 .nav-bar{
   grid-area: left;
   background-color: var(--backgroundColor);
+}
+.nav-bar a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
