@@ -2,6 +2,9 @@ from flask import Flask, request, jsonify
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required
 from models import User, Artist, Song, Genre
+from flask_bcrypt import Bcrypt
+
+bcrypt = Bcrypt()
 
 user_ns = Namespace('api', description='User related operations')
 
@@ -67,10 +70,9 @@ class UserResource(Resource):
         user_to_update=User.query.get_or_404(id)
         data=request.get_json()
         user_to_update.update(
-            id=data.get('id'),
             name=data.get('name'),
             email=data.get('email'),
-            password=data.get('password'),
+            password=bcrypt.generate_password_hash(data.get('password')).decode('utf-8'),
             is_admin=data.get('is_admin'),
             last_login=data.get('last_login'),
             is_premium=data.get('is_premium'),

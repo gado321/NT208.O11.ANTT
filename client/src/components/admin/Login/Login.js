@@ -3,12 +3,11 @@ import { Link } from "react-router-dom";
 import './Login.css';
 import {Form, Button} from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
-import { login } from '../auth';
+import { login } from '../Auth';
 import { useNavigate } from 'react-router-dom';
 
 const AdminLogin = () => {
-    const { register, handleSubmit, watch, reset, formState:{errors}} = useForm();
-
+    const { register, handleSubmit, reset, formState:{errors}} = useForm();
     const navigate = useNavigate();
 
     const loginAdmin = (data) => {
@@ -16,27 +15,28 @@ const AdminLogin = () => {
 
         const requestOptions = {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         };
 
         fetch('/auth/login', requestOptions)
-        .then(res=>res.json())
-        .then(data=>{
-            console.log(data.access_token)
-            
-            if (data){
-                login(data.access_token)
-                navigate('/admin/dashboard', {replace: true})
-            }
-            else{
-                alert('Invalid username or password')
-            }
+            .then(res => res.json())
+            .then(data => {
+                if (data.is_admin) {
+                    login(data); // Assuming login function takes the whole data object
+                    navigate('/admin/dashboard', {replace: true});
+                } else {
+                    // This else part will handle the situation when the login is successful but the user is not an admin
+                    alert('Invalid username or password');
+                }
+            })
+            .catch(error => {
+                // This catch will handle network errors and also if the server sends an error status code
+                console.error("There was an error!", error);
+                alert('Invalid username or password');
+            });
 
-
-        })
+        // Reset the form after submission
         reset();
     }
 
@@ -44,31 +44,29 @@ const AdminLogin = () => {
         <div className="container">
             <div className="form">
                 <h3>Admin Login</h3>
-                <form>
+                <Form onSubmit={handleSubmit(loginAdmin)}>
                     <Form.Group>
                         <Form.Label>Email address</Form.Label>
                         <Form.Control type="email" 
                             placeholder="Your admin email" 
                             {...register('email', {required: true, maxLength: 50, pattern: /^\S+@\S+$/i})}
                         />
+                        {errors.email && <p style={{color:'red'}}>Please enter a valid email.</p>}
                     </Form.Group>
-                    {errors.email && errors.email.type === "required" && <p style={{color:'red'}}>Email is required</p>}
-                    {errors.email && errors.email.type === "pattern" && <p style={{color:'red'}}>Email is not valid</p>}
                     <br/>
                     <Form.Group>
                         <Form.Label>Password</Form.Label>
                         <Form.Control type="password" 
                             placeholder="Your password" 
-                            {...register('password', {required: true, minLength: 8, maxLength: 50})}
+                            {...register('password', {required: true, minLength: 8})}
                         />
+                        {errors.password && <p style={{color:'red'}}>Password must have at least 8 characters.</p>}
                     </Form.Group>
-                    {errors.password && errors.password.type === "required" && <p style={{color:'red'}}>Password is required</p>}
-                    {errors.password && errors.password.type === "minLength" && <p style={{color:'red'}}>Password must have at least 8 characters</p>}
                     <br/>
                     <Form.Group>
-                        <Button as="sub" variant="primary" onClick={handleSubmit(loginAdmin)}>Login</Button>
+                        <Button variant="primary" type="submit">Login</Button>
                     </Form.Group>
-                </form>                    
+                </Form>                    
                 <p className="text-center">
                     <Link to="/forgot/password">Forgot Password</Link>
                 </p>
