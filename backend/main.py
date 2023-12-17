@@ -46,5 +46,4 @@ def create_app(config):
             "Playlist":Playlist,
             "Genre":Genre
         }
-
     return app

@@ -8,7 +8,7 @@ import LoginPage from './Pages/Login/Login';
 import RegisterPage from './Pages/Register/Register';
 import AdminLogin from './components/admin/Login/Login';
 import Dashboard from './Pages/Dashboard/Dashboard'
-
+import AdminDashboard from './components/admin/Dashboard/Dashboard';
 
 function App() {
   return (
@@ -33,11 +33,16 @@ function App() {
       <React.StrictMode>
         <BrowserRouter>
           <Routes>
+            {/* User route */}
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
-            <Route path='/admin/login' element={<AdminLogin />} />
             <Route path='/dashboard' element={<Dashboard />} />
+            
+            {/* Admin route */}
+            <Route path='/admin/login' element={<AdminLogin />} />
+            <Route path='/admin/dashboard' element={<AdminDashboard />} />
+            
           </Routes>
         </BrowserRouter>
       </React.StrictMode>

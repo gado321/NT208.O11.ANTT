@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "./Login.css";
-import { Icon } from '@iconify/react';
 
 export default function LoginPage() {
 
