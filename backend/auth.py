@@ -80,7 +80,8 @@ class Login(Resource):
             return make_response(jsonify({
                 "access_token":access_token,
                 "refresh_token":refresh_token,
-                "email": db_user.email
+                "email": db_user.email,
+                "id": db_user.id
             }), 200)
         else: return make_response(jsonify({
                 "message":"Invalid"

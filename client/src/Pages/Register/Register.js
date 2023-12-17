@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Register.css";
 // import { Icon } from '@iconify/react';
 
@@ -11,7 +12,8 @@ export default function RegisterPage() {
         birthday: "",
         gender: "",
     };
-
+    const [registerMessage, setRegisterMessage] = useState("");
+    const navigate = useNavigate(); // Sử dụng useNavigate để chuyển hướng trang
     const [UserName, setUserName] = useState(initUserName);
     const [formError, setFormError] = useState({});
     
@@ -80,14 +82,37 @@ export default function RegisterPage() {
     // Xác nhận dữ liệu khi đăng nhập và in ra console
     const handleSubmit = (event) => {
         event.preventDefault();
-        
         if (validateForm()) {
-            console.log("Form valid");
+            // Gửi yêu cầu POST đến API Python
+            fetch('http://localhost:5000/auth/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: UserName.username,
+                    email: UserName.email,
+                    password: UserName.password,
+                    gender: UserName.gender,
+                    date_of_birth: UserName.birthday
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    setRegisterMessage("Registration successful!");
+                    navigate("/login");
+                } else {
+                    setRegisterMessage("Registration failed! Please try again.");
+                    
+                }
+            })
+            .catch(error => {
+                setRegisterMessage("Registration failed! Please try again.");
+            });
         }
         else {
-            console.log("Form invalid");
+            setRegisterMessage("Registration failed! Please try again.");
         }
-        console.log("User value: ", UserName);
     };
     // Trả về html
     return (
@@ -221,6 +246,7 @@ export default function RegisterPage() {
                                 {formError.gender}
                             </p>
                         </div>
+                        {registerMessage && <p>{registerMessage}</p>}
                     </div>
                 </div>
                 <div className="btnRegister-container">
