@@ -92,3 +92,13 @@ class ArtistLikesResource(Resource):
         artist=Artist.query.get_or_404(id)
         likes=Artist.get_like_count(artist)
         return likes
+
+# get all play count of all songs of an artist
+@artist_ns.route('/artists/<int:id>/plays')
+class ArtistPlaysResource(Resource):
+    def get(self,id):
+        """Get the total plays of an artist"""
+        artist=Artist.query.get_or_404(id)
+        plays=Artist.get_play_count(artist)
+        return plays
+        
