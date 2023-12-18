@@ -14,7 +14,7 @@ import AdminSong from './components/admin/Song/Song';
 function App() {
   return (
     <>
-      <div className="container">
+      <div className="container-page">
           <div className='nav-bar'>
             <a href="/">
               <img className="music-logo" src={musical_sound_music_logo} alt="logo"/>
