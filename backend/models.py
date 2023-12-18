@@ -165,6 +165,10 @@ class Artist(db.Model):
     # get all like count of all songs of an artist
     def get_like_count(self):
         return sum(song.likes for song in self.songs)
+
+    # get all play count of all songs of an artist
+    def get_play_count(self):
+        return sum(song.play_count for song in self.songs)
     
 
 class Album(db.Model):
@@ -219,7 +223,8 @@ class Album(db.Model):
     def is_song_added(self, song):
         return any(a.id == song.id for a in self.songs)
 
-    
+    # random album with a liked artist
+
 
 class Song(db.Model):
     __tablename__ = 'songs'
