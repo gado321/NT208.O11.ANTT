@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth ,logout} from '../Auth'
 import './Dashboard.css'
+import 'bootstrap/dist/css/bootstrap.min.css';
 import AdminLoginPage from '../../admin/Login/Login'
 
 const LoggedInLinks = () => {
@@ -11,7 +12,7 @@ const LoggedInLinks = () => {
                 <Link className="nav-link active" to="/admin/user">User</Link>
             </li>
             <li className="nav-item">
-                <Link className="nav-link active" to="/admin/genre">Song</Link>
+                <Link className="nav-link active" to="/admin/song">Song</Link>
             </li>
             <li className="nav-item">
                 <Link className="nav-link active" to="/admin/genre">Genre</Link>
