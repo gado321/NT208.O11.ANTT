@@ -23,7 +23,7 @@ html, body {
   /* thẻ chứa back và background-mode */
 .container {
   display: flex;
-  justify-content: space-between;
+  justify-content: right;
 }
 .music-logo {
   width: 64px;
