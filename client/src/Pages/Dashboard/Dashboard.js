@@ -51,6 +51,7 @@ function Dashboard() {
         addContent();
       } catch (error) {
         // Xử lý lỗi nếu có
+        alert("Error: " + error.message);
         console.error(error);
       }
     };
