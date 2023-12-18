@@ -6,6 +6,7 @@ import search from "../Icon/search.png";
 import setting from "../Icon/setting.png";
 import ring from "../Icon/ring.png";
 import musical_sound_music_logo from "../Icon/musical-sound-music-logo.svg";
+import axios from 'axios';
 
 function Loading() {
   return (
@@ -24,18 +25,58 @@ if (window.location.pathname === '/dashboard') {
 }
 
 function Dashboard() {
+    var id = localStorage.getItem('data');
+    const initialFormState = {
+      id: '',
+      name: '',
+      email: '',
+      password: '',
+      is_admin: '',
+      last_login: '',
+      is_premium: '',
+      picture_path: '',
+      gender: '',
+      date_of_birth: ''
+    };
+    
+    const [dataUser, setDataUser] = useState(initialFormState);
+    
+    // Function to fetch user data
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get(`/api/users/${id}`);
+        const userData = response.data;
+        setDataUser(userData);
+        addHeaderContent(userData);
+        addContent();
+      } catch (error) {
+        // Xử lý lỗi nếu có
+        console.error(error);
+      }
+    };
+
     const [isHeaderAdded, setIsHeaderAdded] = useState(false);
     const headerAddedRef = useRef(false);
-    const addHeaderContent = () => {
-        const headerContent = document.querySelector('.header-content');
+    const addHeaderContent = (userData) => {
+        const hello = document.querySelector('.hello');
+        const avtDiv = document.querySelector('.avt');
         const heading = document.createElement('h2');
-        heading.textContent = 'Hey !';
-        const image = document.createElement('img');
-        image.src = ring;
-        image.alt = 'Music4Life';
+        heading.textContent = 'Hey ' + userData.name +'!';
+        const ringImg = document.createElement('img');
+        ringImg.src = ring;
+        ringImg.alt = 'Music4Life';
+        const avt = document.createElement('img');
+        if(userData.picture_path != null){
+          avt.src = userData.picture_path;
+        }
+        else{
+          avt.src = profile;
+        }
+        avt.alt = 'Music4Life';
 
-        headerContent.append(heading);
-        headerContent.appendChild(image);
+        hello.appendChild(heading);
+        hello.appendChild(ringImg);
+        avtDiv.appendChild(avt);
 
         const modeSwitchContainer = document.querySelector('.nav-bar');
         modeSwitchContainer.appendChild(createNavBar());
@@ -90,20 +131,60 @@ function Dashboard() {
         return ul;
     };
 
+    const listHeadingName = ["Mood Boosters", "Made for Huu Hiep", "Recently played", "Best artists"];
+
+    const addContent = () => {
+      const content = document.querySelector('.content');
+      for(let j=0; j<2; j++){
+        const div = document.createElement('div');
+        div.className = 'music-dashboard';
+        const heading = document.createElement('h2');
+        heading.textContent = listHeadingName[j];
+        div.appendChild(heading);
+
+        const ul = document.createElement('ul');
+        ul.className = 'music-dashboard-list';
+      
+        for (let i = 0; i < 4; i++) {
+
+          const li = document.createElement('li');
+          li.className = 'music-dashboard-item';
+      
+          const imgDiv = document.createElement('div');
+          imgDiv.className = 'music-dashboard-item-img';
+          const img = document.createElement('img');
+          img.src = '../../data/images/anh-chua-thuong-em-den-vay-dau.jpg';
+          img.alt = 'anh-chua-thuong-em-den-vay-dau';
+          imgDiv.appendChild(img);
+      
+          const infoDiv = document.createElement('div');
+          infoDiv.className = 'music-dashboard-item-info';
+          const title = document.createElement('h3');
+          title.textContent = 'Chưa Thương Em Đến Vậy Đâu';
+          const author = document.createElement('p');
+          author.textContent = 'Lady Mây';
+          infoDiv.appendChild(title);
+          infoDiv.appendChild(author);
+      
+          li.appendChild(imgDiv);
+          li.appendChild(infoDiv);
+      
+          ul.appendChild(li);
+        }
+        div.appendChild(ul);
+        content.appendChild(div);
+      }
+    };
     useEffect(() => {
         if (!isHeaderAdded && !headerAddedRef.current) {
-            addHeaderContent();
+            fetchUserData();
             setIsHeaderAdded(true);
             headerAddedRef.current = true;
         }
     }, []);
 
     return (
-        <div >
-            <div className="content">
-                <div className="header-content"></div>
-            </div>
-        </div>
+      <div></div>
     );
 }
 
@@ -113,7 +194,7 @@ function DashboardPage() {
   useEffect(() => {
     const fetchData = setTimeout(() => {
       setIsLoaded(true);
-    }, 5000);
+    }, 1000);
     return () => clearTimeout(fetchData);
   }, []);
 

@@ -117,4 +117,48 @@
 .content{
     grid-area: right-bottom;
 }
+.music-dashboard{
+    padding-left: 2%;
+    padding-right: 2%;
+}
+.music-dashboard-list {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    padding-left: 5%;
+}
+  
+.music-dashboard-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+.music-dashboard-item-img img{
+    width: 75%;
+    border-radius: 8px; /* Đặt bán kính bo gốc */
+}
 
+.music-dashboard-item-info {
+    margin-bottom: 20px;
+}
+
+.music-dashboard-item-info h3 {
+    margin: 0;
+    padding: 0;
+    font-size: 24px; /* Kích thước chữ cho h3 là 24px */
+    text-align: center;
+    white-space: normal; /* Cho phép xuống dòng */
+}
+  
+.music-dashboard-item-info p {
+    margin: 0;
+    padding: 0;
+    font-size: 20px; /* Kích thước chữ cho p là 20px */
+    text-align: center;
+    white-space: normal; /* Cho phép xuống dòng */
+}
+
+.music-dashboard-item:last-child {
+    margin-right: 0;
+}

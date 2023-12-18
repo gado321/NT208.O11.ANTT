@@ -22,14 +22,17 @@ function App() {
           </div>
           <div className='header'>
             <div className="header-content">
+              <div className='hello'></div>
               <div className='button-mode'>
                 <label className="mode-switch" onClick="">
                     <input type="checkbox"/>
                     <span className="mode-switch-slider"></span>
                 </label>
               </div>
+              <div className='avt'></div>
             </div>  
           </div>
+          <div className='content'> </div>
       </div>
       <React.StrictMode>
         <BrowserRouter>
