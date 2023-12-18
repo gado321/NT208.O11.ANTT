@@ -96,3 +96,11 @@ class PlaylistSongResource(Resource):
             return {'message': f'Song {song.name} removed from playlist {album.name}'}, 201
         elif response['status']=='info':
             return {'message': 'Song is not in the playlist.'}, 200
+
+@playlist_ns.route('/playlists/<int:id>/songs')
+class PlaylistSongsResource(Resource):
+    @playlist_ns.marshal_list_with(song_model)
+    def get(self,id):
+        """Get all songs of a playlist"""
+        playlist=Playlist.query.get_or_404(id)
+        return playlist.songs
