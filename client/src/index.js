@@ -9,6 +9,7 @@ import RegisterPage from './Pages/Register/Register';
 import AdminLogin from './components/admin/Login/Login';
 import Dashboard from './Pages/Dashboard/Dashboard'
 import AdminDashboard from './components/admin/Dashboard/Dashboard';
+import AdminSong from './components/admin/Song/Song';
 
 function App() {
   return (
@@ -42,7 +43,8 @@ function App() {
             {/* Admin route */}
             <Route path='/admin/login' element={<AdminLogin />} />
             <Route path='/admin/dashboard' element={<AdminDashboard />} />
-            
+            <Route path='/admin/song' element={<AdminSong />} />
+
           </Routes>
         </BrowserRouter>
       </React.StrictMode>

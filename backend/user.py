@@ -163,7 +163,7 @@ class UserGenreResource(Resource):
 class UserLikedSongsResource(Resource):
     @jwt_required()
     def get(self,id):
-        """Get all liked songs by user"""
+        """Get all liked songs of a user"""
         user=User.query.get_or_404(id)
         return user.liked_songs, 200
 
@@ -171,6 +171,14 @@ class UserLikedSongsResource(Resource):
 class UserLikedArtistsResource(Resource):
     @jwt_required()
     def get(self,id):
-        """Get all liked artists by user"""
+        """Get all liked artists of a user"""
         user=User.query.get_or_404(id)
         return user.liked_artists, 200
+
+@user_ns.route('/users/<int:id>/genres')
+class UserLikedGenresResource(Resource):
+    @jwt_required()
+    def get(self,id):
+        """Get all genres of a user"""
+        user=User.query.get_or_404(id)
+        return user.genres, 200
