@@ -7,6 +7,7 @@ import setting from "../Icon/setting.png";
 import ring from "../Icon/ring.png";
 import musical_sound_music_logo from "../Icon/musical-sound-music-logo.svg";
 import axios from 'axios';
+import { Alert } from "bootstrap";
 
 function Loading() {
   return (
@@ -46,11 +47,18 @@ function Dashboard() {
       try {
         const response = await axios.get(`/api/users/${id}`);
         const userData = response.data;
+        // const responseGenre = await axios.get(`/api/users/${id}/genres/`);
+        // const idGenre = responseGenre.data;
+        // alert(idGenre);
+        // for(let i=0; i<5; i++){
+
+        // }
         setDataUser(userData);
         addHeaderContent(userData);
         addContent();
       } catch (error) {
         // Xử lý lỗi nếu có
+        alert("Error: " + error.message);
         console.error(error);
       }
     };
@@ -67,7 +75,7 @@ function Dashboard() {
         ringImg.alt = 'Music4Life';
         const avt = document.createElement('img');
         if(userData.picture_path != null){
-          avt.src = userData.picture_path;
+          avt.src = "images/default-avatar.jpg";
         }
         else{
           avt.src = profile;
@@ -153,7 +161,7 @@ function Dashboard() {
           const imgDiv = document.createElement('div');
           imgDiv.className = 'music-dashboard-item-img';
           const img = document.createElement('img');
-          img.src = '../../data/images/anh-chua-thuong-em-den-vay-dau.jpg';
+          img.src = "../../data/images/anh-chua-thuong-em-den-vay-dau.jpg";
           img.alt = 'anh-chua-thuong-em-den-vay-dau';
           imgDiv.appendChild(img);
       
