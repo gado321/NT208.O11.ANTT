@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required
 from models import Playlist
+from song import song_model
 
 playlist_ns = Namespace('api', description='Playlist related operations')
 
