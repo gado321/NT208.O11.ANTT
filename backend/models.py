@@ -1,4 +1,5 @@
 from exts import db
+from datetime import datetime
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -16,6 +17,7 @@ class User(db.Model):
     genres = db.relationship('Genre', secondary='user_genre', backref=db.backref('users', lazy='dynamic'))
     liked_songs = db.relationship('Song', secondary='user_song', backref=db.backref('liked_users', lazy='dynamic'))
     liked_artists = db.relationship('Artist', secondary='user_artist', backref=db.backref('liked_users', lazy='dynamic'))
+    histories = db.relationship('History', backref='user', lazy='dynamic')
 
     def __repr__(self):
         return f"<User {self.name}>"
@@ -238,6 +240,7 @@ class Song(db.Model):
 
     playlists = db.relationship('Playlist', secondary='playlist_song', backref=db.backref('songs', lazy='dynamic'))
     genres = db.relationship('Genre', secondary='song_genre', backref=db.backref('songs', lazy='dynamic'))
+    histories = db.relationship('History', backref='song', lazy='dynamic')
 
     def __repr__(self):
         return f"<Song {self.name}>"
@@ -436,7 +439,33 @@ class Genre(db.Model):
     # get all song by genre
     def get_songs(self):
         return self.songs
+
+class History(db.Model):
+    __tablename__ = 'histories'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    song_id = db.Column(db.Integer, db.ForeignKey('songs.id'), nullable=False)
+    played_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f"<History {self.id}>"
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+        return self
     
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+        return self
+    
+    def update(self, user_id, song_id, date):
+        self.user_id = user_id
+        self.song_id = song_id
+        self.date = date
+        db.session.commit()
+        return self
 
 class SongArtist(db.Model):
     __tablename__ = 'song_artist'
