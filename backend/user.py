@@ -2,6 +2,9 @@ from flask import Flask, request, jsonify
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required
 from models import User, Artist, Song, Genre
+from flask_bcrypt import Bcrypt
+
+bcrypt = Bcrypt()
 
 user_ns = Namespace('api', description='User related operations')
 
@@ -67,10 +70,9 @@ class UserResource(Resource):
         user_to_update=User.query.get_or_404(id)
         data=request.get_json()
         user_to_update.update(
-            id=data.get('id'),
             name=data.get('name'),
             email=data.get('email'),
-            password=data.get('password'),
+            password=bcrypt.generate_password_hash(data.get('password')).decode('utf-8'),
             is_admin=data.get('is_admin'),
             last_login=data.get('last_login'),
             is_premium=data.get('is_premium'),
@@ -161,7 +163,7 @@ class UserGenreResource(Resource):
 class UserLikedSongsResource(Resource):
     @jwt_required()
     def get(self,id):
-        """Get all liked songs by user"""
+        """Get all liked songs of a user"""
         user=User.query.get_or_404(id)
         return user.liked_songs, 200
 
@@ -169,6 +171,14 @@ class UserLikedSongsResource(Resource):
 class UserLikedArtistsResource(Resource):
     @jwt_required()
     def get(self,id):
-        """Get all liked artists by user"""
+        """Get all liked artists of a user"""
         user=User.query.get_or_404(id)
         return user.liked_artists, 200
+
+@user_ns.route('/users/<int:id>/genres')
+class UserLikedGenresResource(Resource):
+    @jwt_required()
+    def get(self,id):
+        """Get all genres of a user"""
+        user=User.query.get_or_404(id)
+        return user.genres, 200

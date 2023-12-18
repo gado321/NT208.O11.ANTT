@@ -4,7 +4,7 @@ import "./Login.css";
 export default function LoginPage() {
 
     const initUserName = {
-        username: "",
+        email: "",
         password: "",
     };
 
@@ -31,7 +31,7 @@ export default function LoginPage() {
     // Kiểm tra giá trị của form có hợp lệ hay không
     const validateForm = () => {
         const error = {};
-        if (isEmptyvalue(UserName.username)) {
+        if (isEmptyvalue(UserName.email)) {
             error.username = "Please enter your email address or username";
         }
         if (isEmptyvalue(UserName.password)) {
@@ -43,15 +43,31 @@ export default function LoginPage() {
     // Xác nhận dữ liệu khi đăng nhập và in ra console
     const handleSubmit = (event) => {
         event.preventDefault();
-        
-        if (validateForm()) {
-            console.log("Form valid");
-        }
-        else {
-            console.log("Form invalid");
-        }
-        console.log("User value: ", UserName);
-        console.log("Remember me: ", rememberMe);
+        const loginData = {
+            email: UserName.email,
+            password: UserName.password,
+          };
+      
+          fetch("http://localhost:5000/auth/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(loginData),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              // Xử lý phản hồi từ API
+              console.log(data);
+              // Lưu access_token và refresh_token vào Session Storage
+              localStorage.setItem('access_token', data.access_token);
+              localStorage.setItem('refresh_token', data.refresh_token);
+              localStorage.setItem('data', data.id)
+            })
+            .catch((error) => {
+              // Xử lý lỗi
+              console.error(error);
+            });
     };
     // Trả về html
     return (
@@ -76,13 +92,13 @@ export default function LoginPage() {
                             type="text"
                             id="login-username"
                             className="login-form-control"
-                            name="username"
+                            name="email"
                             placeholder="   Email address or Username"
-                            value={UserName.username}
+                            value={UserName.email}
                             onChange={handleChangeUser}
                         />
                         <p className="login-error-feedback">
-                            {formError.username}
+                            {formError.email}
                         </p>
                     </div>
                     <div>

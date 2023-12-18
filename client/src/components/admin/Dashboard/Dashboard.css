@@ -1,0 +1,43 @@
+/* AdminDashboard.css */
+
+/* Ensures the navbar stretches across the screen */
+.navbar {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+/* Brand logo and nav links */
+.navbar-brand,
+.nav-item .nav-link {
+    color: #fff;
+    margin-right: 1rem;
+    transition: color 0.2s ease-in-out;
+}
+
+/* Active state for nav links */
+.nav-item .nav-link.active,
+.nav-item .nav-link:hover {
+    color: #007bff; /* Bootstrap primary color */
+    background-color: transparent;
+}
+
+/* Logout link styling */
+.nav-item .nav-link.logout-link {
+    color: #dc3545; /* Bootstrap danger color */
+    font-weight: bold;
+}
+
+/* Hover state for all nav links */
+.nav-item .nav-link:hover {
+    text-decoration: none;
+}
+
+/* Navbar layout adjustments */
+.navbar-nav {
+    flex-direction: row;
+}
+
+/* Align items in navbar */
+.navbar-collapse {
+    flex-grow: 0;
+}

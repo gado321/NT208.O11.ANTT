@@ -66,24 +66,40 @@ class Login(Resource):
 
     @auth_ns.expect(login_model)
     def post(self):
-        data=request.get_json()
+        data = request.get_json()
 
-        email=data.get('email')
-        password=data.get('password')
+        email = data.get('email')
+        password = data.get('password')
         
-        db_user=User.query.filter_by(email=email).first()
+        db_user = User.query.filter_by(email=email).first()
         
         if db_user and bcrypt.check_password_hash(db_user.password, password):
-            access_token=create_access_token(identity=db_user.email)
-            refresh_token=create_refresh_token(identity=db_user.email)
-
+            # Check if the user is an admin
+            if db_user.is_admin:
+                # Create tokens with additional claim to indicate the admin role
+                access_token = create_access_token(identity=db_user.email, additional_claims={"is_admin": True})
+                refresh_token = create_refresh_token(identity=db_user.email)
+                return make_response(jsonify({
+                    "access_token": access_token,
+                    "refresh_token": refresh_token,
+                    "email": db_user.email,
+                    "id": db_user.id,
+                    "is_admin": True
+                }), 200)
+            else:
+                # Create tokens without the admin claim
+                access_token = create_access_token(identity=db_user.email)
+                refresh_token = create_refresh_token(identity=db_user.email)
+                return make_response(jsonify({
+                    "access_token": access_token,
+                    "refresh_token": refresh_token,
+                    "email": db_user.email,
+                    "id": db_user.id,
+                    "is_admin": False
+                }), 200)
+        else:
             return make_response(jsonify({
-                "access_token":access_token,
-                "refresh_token":refresh_token,
-                "email": db_user.email
-            }), 200)
-        else: return make_response(jsonify({
-                "message":"Invalid"
+                "message": "Invalid credentials"
             }), 401)
 
 
