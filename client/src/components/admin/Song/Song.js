@@ -95,8 +95,8 @@ const Song = () => {
     useEffect(() => {
         // Fetch artists and genres when the component mounts
         const fetchArtistsAndGenres = async () => {
-            const artistsResponse = await authFetch('/api/artists');
-            const genresResponse = await authFetch('/api/genres');
+            const artistsResponse = await api.get('/api/artists');
+            const genresResponse = await api.get('/api/genres');
             const artistsData = await artistsResponse.json();
             const genresData = await genresResponse.json();
             setArtists(artistsData);
@@ -116,7 +116,7 @@ const Song = () => {
             return;
         }
         try {
-            const response = await authFetch(`/api/songs/search/${encodeURIComponent(searchTerm)}`);
+            const response = await api.get(`/api/songs/search/${encodeURIComponent(searchTerm)}`);
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
@@ -137,13 +137,13 @@ const Song = () => {
     
         try {
             // Fetch the artists for the selected song
-            const artistResponse = await authFetch(`/api/songs/${song.id}/artists`);
+            const artistResponse = await api.get(`/api/songs/${song.id}/artists`);
             const artistsData = await artistResponse.json();
             const artistIds = artistsData.map(artist => artist.id);
             setSelectedArtistIds(artistIds);
     
             // Fetch the genres for the selected song
-            const genreResponse = await authFetch(`/api/songs/${song.id}/genres`);
+            const genreResponse = await api.get(`/api/songs/${song.id}/genres`);
             const genresData = await genreResponse.json();
             const genreIds = genresData.map(genre => genre.id);
             setSelectedGenreIds(genreIds);
@@ -169,12 +169,12 @@ const Song = () => {
     
         // Create an array of promises for the artist POST requests
         const artistPromises = artistIds.map(artistId => 
-            authFetch(`/api/songs/${songId}/artists/${artistId}`, requestOptions)
+            api.post(`/api/songs/${songId}/artists/${artistId}`)
         );
     
         // Create an array of promises for the genre POST requests
         const genrePromises = genreIds.map(genreId => 
-            authFetch(`/api/songs/${songId}/genres/${genreId}`, requestOptions)
+            api.post(`/api/songs/${songId}/genres/${genreId}`)
         );
     
         // Combine the two arrays of promises
@@ -222,26 +222,23 @@ const Song = () => {
         }
       
         const sanitizedSongName = slugifyVietnamese(newSong.name);
-        const getLastIdResponse = await authFetch('/api/songs/last_id');
+        const getLastIdResponse = await api.get('/api/songs/last_id');
         const data = await getLastIdResponse.json();
         const newSongId = data.lastId + 1;
         try {
-            const requestOptions = {
-                method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(
-                    {
-                        name: newSong.name,
-                        path: '../data/songs/' + sanitizedSongName + '-' + newSongId + '.' + getExtension(selectedSongFile.name),
-                        picture_path: '../data/images/song/' + sanitizedSongName + '-' + newSongId + '.' + getExtension(selectedPictureFile.name),
-                        release_date: newSong.release_date
-                    }
-                )
-            };
-
-            const response = await authFetch('/api/songs', requestOptions)
+            const data = JSON.stringify(
+                {
+                    name: newSong.name,
+                    path: '../data/songs/' + sanitizedSongName + '-' + newSongId + '.' + getExtension(selectedSongFile.name),
+                    picture_path: '../data/images/song/' + sanitizedSongName + '-' + newSongId + '.' + getExtension(selectedPictureFile.name),
+                    release_date: newSong.release_date
+                }
+            )
+            const response = await api.post('/api/songs', data, {
+                headers: {
+                  'Content-Type': 'application/json'
+                }
+              });
 
             if (response.status === 201) {
                 const data = await response.json(); // Parse the response body as JSON
@@ -255,10 +252,7 @@ const Song = () => {
                 formData.append('image', selectedPictureFile);
                 formData.append('songId', newSongId)
                 try {
-                    const response = await authFetch('/api/songs/upload', {
-                      method: 'POST',
-                      body: formData,
-                    });
+                    const response = await api.post('/api/songs/upload', formData);
               
                     if (response.ok) {
                       console.log('Song and image uploaded successfully!');
@@ -298,10 +292,7 @@ const Song = () => {
             }
             formData.append('songId', selectedSong.id);
 
-            const uploadResponse = await authFetch('/api/songs/upload', {
-                method: 'POST',
-                body: formData,
-            });
+            const uploadResponse = await api.post('/api/songs/upload', formData);
 
             if (!uploadResponse.ok) {
                 throw new Error('Failed to upload new song or image files.');
@@ -309,26 +300,24 @@ const Song = () => {
         }
 
         try {
-            const putRequest = {
-                method: 'PUT',
-                headers: { 
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(
-                    {
-                        name: selectedSong.name,
-                        path: '../data/songs/' + sanitizedSongName + '-' + selectedSong.id + '.' + getExtension(selectedSongFile.name),
-                        picture_path: '../data/images/song/' + sanitizedSongName + '-' + selectedSong.id + '.' + getExtension(selectedPictureFile.name),
-                        release_date: selectedSong.release_date
-                    }
-                )
-            };
-        
-            const response = await authFetch(`/api/songs/${selectedSong.id}`, putRequest)
+            
+            const putData = JSON.stringify(
+                {
+                    name: selectedSong.name,
+                    path: '../data/songs/' + sanitizedSongName + '-' + selectedSong.id + '.' + getExtension(selectedSongFile.name),
+                    picture_path: '../data/images/song/' + sanitizedSongName + '-' + selectedSong.id + '.' + getExtension(selectedPictureFile.name),
+                    release_date: selectedSong.release_date
+                }
+            );
+            const response = await api.put(`/api/songs/${selectedSong.id}`, putData, {
+                headers: {
+                  'Content-Type': 'application/json'
+                }
+              });
             if (response.status === 201) {
                 // Fetch current artists and genres associated with the song
-                const existingArtistsResponse = await authFetch(`/api/songs/${selectedSong.id}/artists`);
-                const existingGenresResponse = await authFetch(`/api/songs/${selectedSong.id}/genres`);
+                const existingArtistsResponse = await api.get(`/api/songs/${selectedSong.id}/artists`);
+                const existingGenresResponse = await api.get(`/api/songs/${selectedSong.id}/genres`);
     
                 if (!existingArtistsResponse.ok || !existingGenresResponse.ok) {
                     throw new Error('Failed to fetch existing artists or genres.');
@@ -341,17 +330,13 @@ const Song = () => {
                 // Find and remove unselected artists
                 const artistsToRemove = existingArtists.filter(artist => !selectedArtistIds.includes(artist.id));
                 for (const artist of artistsToRemove) {
-                    await authFetch(`/api/songs/${selectedSong.id}/artists/${artist.id}`, {
-                        method: 'DELETE'
-                    });
+                    await api.delete(`/api/songs/${selectedSong.id}/artists/${artist.id}`);
                 }
     
                 // Find and remove unselected genres
                 const genresToRemove = existingGenres.filter(genre => !selectedGenreIds.includes(genre.id));
                 for (const genre of genresToRemove) {
-                    await authFetch(`/api/songs/${selectedSong.id}/genres/${genre.id}`, {
-                        method: 'DELETE'
-                    });
+                    await api.delete(`/api/songs/${selectedSong.id}/genres/${genre.id}`);
                 }
     
                 // Add new artist and genre associations

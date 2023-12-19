@@ -169,17 +169,24 @@ function DashboardPage() {
       divToDisplay.style.display = 'block';
     }
   }
-  // 
+  // Function to show div and remove current div
   function showDivAndRemoveCurrentDiv(divToShow, divToRemove) {
     const divToDisplay = document.querySelector(divToShow);
-    const divToRemove = document.querySelector(divToRemove);
+    const removeDiv = document.querySelector(divToRemove);
   
-    if (divToDisplay && divToRemove) {
+    if (divToDisplay && removeDiv) {
+      // Ẩn đi các div trong .content
+      const content = document.querySelector('.content');
+      const divsToHide = content.querySelectorAll('div');
+      for (let i = 0; i < divsToHide.length; i++) {
+        divsToHide[i].style.display = 'none';
+      }
+  
+      // Hiển thị div được chỉ định và xóa div hiện tại
       divToDisplay.style.display = 'block';
-      divToRemove.parentNode.removeChild(divToRemove);
+      removeDiv.parentNode.removeChild(removeDiv);
     }
   }
-  
 
   useEffect(() => {
     if (!isHeaderAdded && !headerAddedRef.current) {
