@@ -31,7 +31,7 @@ html, body {
   "content content content"
   "content content content";
 }
-.navBar {
+.nav-bar {
   grid-area: navbar;
   background-color: var(--navbarColor);
 }
