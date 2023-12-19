@@ -135,14 +135,14 @@ function SettingPage() {
         const listKeySettingName = Object.keys(dictSettingName);
         for(let j=0; j<listKeySettingName.length; j++){
             const div = document.createElement('div');
-            div.className = 'music-SettingPage';
+            div.className = 'list-SettingUser';
             
             const heading = document.createElement('h2');
             heading.textContent = listKeySettingName[j];
             div.appendChild(heading);
 
             const ul = document.createElement('ul');
-            ul.className = 'music-SettingPage-list';
+            ul.className = 'Setting-list';
 
             const listSettingName = dictSettingName[listKeySettingName[j]];
             for (let i = 0; i < listSettingName.length; i++) {
