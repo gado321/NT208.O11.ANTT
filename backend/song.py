@@ -1,8 +1,10 @@
 from flask import Flask, request, jsonify
 from flask_restx import Namespace, Resource, fields
+from werkzeug.utils import secure_filename
 from flask_jwt_extended import jwt_required
 from models import Song, Artist, Genre, User
 import urllib.parse
+import os
 
 song_ns = Namespace('api', description='Song related operations')
 
@@ -176,4 +178,60 @@ class SongGenresResource(Resource):
                     "name":genre.name
                 } for genre in genres
             ]
+        )
+
+# route to upload a song and picture of a song
+@song_ns.route('/songs/upload')
+class SongUploadResource(Resource):
+    @jwt_required()
+    def post(self):
+        """Upload a song and its image with a custom name"""
+        from flask import current_app
+        
+        # check if the post request has the file part
+        if 'file' not in request.files or 'image' not in request.files:
+            return {'message': 'No data sent'}, 400
+        
+        file = request.files['file']
+        image = request.files['image']
+        song_name = request.form['name']
+        song_id = request.form['songId']
+
+        # if user does not select file, browser also
+        # submit an empty part without filename
+        if file.filename == '':
+            return {'message': 'No selected file'}, 400
+        if image.filename == '':
+            return {'message': 'No selected image'}, 400
+
+        if file and image:
+            # Generate new filenames based on the song name
+            song_extension = os.path.splitext(file.filename)[1]
+            image_extension = os.path.splitext(image.filename)[1]
+            
+            song_filename = song_name + '-' + song_id + song_extension
+            image_filename = song_name + '-' + song_id + image_extension
+
+            secure_song_filename = secure_filename(song_filename)
+            secure_image_filename = secure_filename(image_filename)
+
+            # Save the files
+            file.save(os.path.join('../data/songs', secure_song_filename))
+            image.save(os.path.join('../data/images/song', secure_image_filename))
+            
+            return {'message': 'Data uploaded successfully'}, 201
+        else:
+            return {'message': 'Data upload failed'}, 400
+
+# get last id of song in database
+@song_ns.route('/songs/last_id')
+class SongLastIdResource(Resource):
+    @jwt_required()
+    def get(self):
+        """Get last id of song in database"""
+        song=Song.query.order_by(Song.id.desc()).first()
+        return jsonify(
+            {
+                "lastId":song.id
+            }
         )

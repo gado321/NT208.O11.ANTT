@@ -88,7 +88,7 @@ class Login(Resource):
                 }), 200)
             else:
                 # Create tokens without the admin claim
-                access_token = create_access_token(identity=db_user.email)
+                access_token = create_access_token(identity=db_user.email, fresh=True)
                 refresh_token = create_refresh_token(identity=db_user.email)
                 return make_response(jsonify({
                     "access_token": access_token,
@@ -110,5 +110,5 @@ class Refresh(Resource):
     @jwt_required(refresh=True)
     def post(self):
         current_user=get_jwt_identity()
-        new_access_token=create_access_token(identity=current_user)
+        new_access_token=create_access_token(identity=current_user, fresh=False)
         return make_response(jsonify({"access_token":new_access_token}), 200)
