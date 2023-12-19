@@ -83,3 +83,12 @@ class GenreSongsResource(Resource):
                 } for song in songs
             ]
         )
+
+@genre_ns.route('/genres/search/<string:name>')
+class GenreSearchResource(Resource):
+    @genre_ns.marshal_list_with(genres_model)
+    def get(self,name):
+        """Search genres by name"""
+        search_term = urllib.parse.unquote(name)
+        genres=Genre.query.filter(Genre.name.like(f'%{search_term}%')).all()
+        return genres
