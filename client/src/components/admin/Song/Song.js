@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Dropdown, Badge, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useAuth ,logout, authFetch} from '../Auth'
-import axios from 'axios';
+import api from '../../../api'
 
 const MultiSelectDropdown = ({ items, title, selectedItemIds, setSelectedItemIds }) => {
     const [searchValue, setSearchValue] = useState('');
@@ -77,6 +77,8 @@ const Song = () => {
     const [selectedSong, setSelectedSong] = useState(null);
     const [selectedArtistIds, setSelectedArtistIds] = useState([]);
     const [selectedGenreIds, setSelectedGenreIds] = useState([]);
+    const [selectedSongFile, setSelectedSongFile] = useState(null);
+    const [selectedPictureFile, setSelectedPictureFile] = useState(null);
     const [isCreating, setIsCreating] = useState(false);
 
     // Initialize new song form data
@@ -190,8 +192,39 @@ const Song = () => {
         setIsCreating(true);
     };
 
+    const slugifyVietnamese = (text) => {
+        const from = "áàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵđÁÀẢÃẠĂẮẰẲẴẶÂẤẦẨẪẬÉÈẺẼẸÊẾỀỂỄỆÍÌỈĨỊÓÒỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢÚÙỦŨỤƯỨỪỬỮỰÝỲỶỸỴĐ";
+        const to   = "aaaaaaaaaaaaaaaaaeeeeeeeeeeeiiiiiooooooooooooooooouuuuuuuuuuuyyyyydAAAAAAAAAAAAAAAAAEEEEEEEEEEEIIIIIOOOOOOOOOOOOOOOOOUUUUUUUUUUUYYYYYD";
+    
+        // Replace special Vietnamese characters
+        const newText = text.split('').map((char) => {
+            const index = from.indexOf(char);
+            return index > -1 ? to[index] : char;
+        }).join('');
+    
+        return newText.normalize('NFD') // Normalize to NFD Unicode form
+            .replace(/[\u0300-\u036f]/g, '') // Remove all diacritic marks
+            .toLowerCase()
+            .trim()
+            .replace(/[^a-z0-9 ]/g, '') // Remove invalid chars
+            .replace(/\s+/g, '-'); // Replace spaces with -
+    };
+
+    const getExtension = (filename) => {
+        return filename.split('.').pop();
+    };
+
     const handleCreateSubmit = async (event) => {
         event.preventDefault();
+        if (!selectedSongFile || !selectedPictureFile) {
+            console.error('Please select both a song and an image to upload.');
+            return;
+        }
+      
+        const sanitizedSongName = slugifyVietnamese(newSong.name);
+        const getLastIdResponse = await authFetch('/api/songs/last_id');
+        const data = await getLastIdResponse.json();
+        const newSongId = data.lastId + 1;
         try {
             const requestOptions = {
                 method: 'POST',
@@ -201,8 +234,8 @@ const Song = () => {
                 body: JSON.stringify(
                     {
                         name: newSong.name,
-                        path: newSong.path,
-                        picture_path: newSong.picture_path,
+                        path: '../data/songs/' + sanitizedSongName + '-' + newSongId + '.' + getExtension(selectedSongFile.name),
+                        picture_path: '../data/images/song/' + sanitizedSongName + '-' + newSongId + '.' + getExtension(selectedPictureFile.name),
                         release_date: newSong.release_date
                     }
                 )
@@ -214,6 +247,28 @@ const Song = () => {
                 const data = await response.json(); // Parse the response body as JSON
                 const newSongId = data.id; // Access the song ID from the parsed data
                 await associateArtistsAndGenres(newSongId, selectedArtistIds, selectedGenreIds);
+                
+                // Upload the song and image files
+                const formData = new FormData();
+                formData.append('name', sanitizedSongName);
+                formData.append('file', selectedSongFile);
+                formData.append('image', selectedPictureFile);
+                formData.append('songId', newSongId)
+                try {
+                    const response = await authFetch('/api/songs/upload', {
+                      method: 'POST',
+                      body: formData,
+                    });
+              
+                    if (response.ok) {
+                      console.log('Song and image uploaded successfully!');
+                    } else {
+                      console.error('Failed to upload song and image.');
+                    }
+                  } catch (error) {
+                    console.error('Error uploading files:', error);
+                  }
+
                 setIsCreating(false);
                 // Reset the form
                 setNewSong(initialFormState);
@@ -227,6 +282,32 @@ const Song = () => {
 
     const handleEditSubmit = async (event) => {
         event.preventDefault();
+
+        const sanitizedSongName = slugifyVietnamese(selectedSong.name);
+        if (selectedSongFile || selectedPictureFile) {
+            // Upload the song and image files if they have been selected
+            const formData = new FormData();
+            if (selectedSongFile) {
+                formData.append('file', selectedSongFile);
+            }
+            if (selectedPictureFile) {
+                formData.append('image', selectedPictureFile);
+            }
+            if (selectedSongFile.name) {
+                formData.append('name', sanitizedSongName);
+            }
+            formData.append('songId', selectedSong.id);
+
+            const uploadResponse = await authFetch('/api/songs/upload', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!uploadResponse.ok) {
+                throw new Error('Failed to upload new song or image files.');
+            }
+        }
+
         try {
             const putRequest = {
                 method: 'PUT',
@@ -236,8 +317,8 @@ const Song = () => {
                 body: JSON.stringify(
                     {
                         name: selectedSong.name,
-                        path: selectedSong.path,
-                        picture_path: selectedSong.picture_path,
+                        path: '../data/songs/' + sanitizedSongName + '-' + selectedSong.id + '.' + getExtension(selectedSongFile.name),
+                        picture_path: '../data/images/song/' + sanitizedSongName + '-' + selectedSong.id + '.' + getExtension(selectedPictureFile.name),
                         release_date: selectedSong.release_date
                     }
                 )
@@ -245,27 +326,51 @@ const Song = () => {
         
             const response = await authFetch(`/api/songs/${selectedSong.id}`, putRequest)
             if (response.status === 201) {
-                const existingArtists = (await authFetch(`/api/songs/${selectedSong.id}/artists`));
-                const existingGenres = (await authFetch(`/api/songs/${selectedSong.id}/genres`));
-
-                // Convert exiting artists and genres to JSON
-                const existingArtistsData = await existingArtists.json();
-                const existingGenresData = await existingGenres.json();
+                // Fetch current artists and genres associated with the song
+                const existingArtistsResponse = await authFetch(`/api/songs/${selectedSong.id}/artists`);
+                const existingGenresResponse = await authFetch(`/api/songs/${selectedSong.id}/genres`);
     
-                for (const artist of existingArtistsData) {
-                    await authFetch(`/api/songs/${selectedSong.id}/artists/${artist.id}`);
-                }
-                for (const genre of existingGenresData) {
-                    await authFetch(`/api/songs/${selectedSong.id}/genres/${genre.id}`);
+                if (!existingArtistsResponse.ok || !existingGenresResponse.ok) {
+                    throw new Error('Failed to fetch existing artists or genres.');
                 }
     
+                // Convert existing artists and genres to JSON
+                const existingArtists = await existingArtistsResponse.json();
+                const existingGenres = await existingGenresResponse.json();
+    
+                // Find and remove unselected artists
+                const artistsToRemove = existingArtists.filter(artist => !selectedArtistIds.includes(artist.id));
+                for (const artist of artistsToRemove) {
+                    await authFetch(`/api/songs/${selectedSong.id}/artists/${artist.id}`, {
+                        method: 'DELETE'
+                    });
+                }
+    
+                // Find and remove unselected genres
+                const genresToRemove = existingGenres.filter(genre => !selectedGenreIds.includes(genre.id));
+                for (const genre of genresToRemove) {
+                    await authFetch(`/api/songs/${selectedSong.id}/genres/${genre.id}`, {
+                        method: 'DELETE'
+                    });
+                }
+    
+                // Add new artist and genre associations
                 await associateArtistsAndGenres(selectedSong.id, selectedArtistIds, selectedGenreIds);
+    
                 setSelectedSong(null); // Reset selected song
             }
         } catch (error) {
             console.error('Error updating song: ', error);
         }
     };
+
+    const handleSongFileChange = (e) => {
+        setSelectedSongFile(e.target.files[0]);
+      };
+    
+      const handlePictureFileChange = (e) => {
+        setSelectedPictureFile(e.target.files[0]);
+      };
 
     return (
         <div>
@@ -289,8 +394,8 @@ const Song = () => {
             {selectedSong && (
                 <form onSubmit={handleEditSubmit}>
                     <input type="text" name="name" value={selectedSong.name} onChange={(e) => handleChange(e, setSelectedSong)} placeholder="Song name" />
-                    <input type="text" name="path" value={selectedSong.path} onChange={(e) => handleChange(e, setSelectedSong)} placeholder="Song path" />
-                    <input type="text" name="picture_path" value={selectedSong.picture_path} onChange={(e) => handleChange(e, setSelectedSong)} placeholder="Picture path" />
+                    <input type="file" onChange={handleSongFileChange} accept="audio/*" />
+                    <input type="file" onChange={handlePictureFileChange} accept="image/*" />
                     <input type="date" name="release_date" value={selectedSong.release_date} onChange={(e) => handleChange(e, setSelectedSong)} placeholder="Release date" />
                     {/* Artist multi-select dropdown */}
                     <MultiSelectDropdown
@@ -318,8 +423,8 @@ const Song = () => {
                 {isCreating && (
                     <form onSubmit={handleCreateSubmit}>
                         <input type="text" name="name" value={newSong.name} onChange={(e) => handleChange(e, setNewSong)} placeholder="Song name" />
-                        <input type="text" name="path" value={newSong.path} onChange={(e) => handleChange(e, setNewSong)} placeholder="Song path" />
-                        <input type="text" name="picture_path" value={newSong.picture_path} onChange={(e) => handleChange(e, setNewSong)} placeholder="Picture path" />
+                        <input type="file" onChange={handleSongFileChange} accept="audio/*" />
+                        <input type="file" onChange={handlePictureFileChange} accept="image/*" />
                         <input type="date" name="release_date" value={newSong.release_date} onChange={(e) => handleChange(e, setNewSong)} placeholder="Release date" />
                         {/* Artist multi-select dropdown for new song */}
                         <MultiSelectDropdown

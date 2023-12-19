@@ -10,6 +10,9 @@ import AdminLogin from './components/admin/Login/Login';
 import Dashboard from './Pages/Dashboard/Dashboard'
 import AdminDashboard from './components/admin/Dashboard/Dashboard';
 import AdminSong from './components/admin/Song/Song';
+import AdminArtist from './components/admin/Artist/Artist';
+import AdminAlbum from './components/admin/Album/Album';
+import AdminGenre from './components/admin/Genre/Genre';
 
 function App() {
   return (
@@ -44,7 +47,9 @@ function App() {
             <Route path='/admin/login' element={<AdminLogin />} />
             <Route path='/admin/dashboard' element={<AdminDashboard />} />
             <Route path='/admin/song' element={<AdminSong />} />
-
+            <Route path='/admin/artist' element={<AdminArtist />} />
+            <Route path='/admin/album' element={<AdminAlbum />} />
+            <Route path='/admin/genre' element={<AdminGenre />} />
           </Routes>
         </BrowserRouter>
       </React.StrictMode>

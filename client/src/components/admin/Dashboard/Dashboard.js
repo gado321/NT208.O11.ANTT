@@ -9,19 +9,16 @@ const LoggedInLinks = () => {
     return (
         <>
             <li className="nav-item">
-                <Link className="nav-link active" to="/admin/user">User</Link>
+                <Link className="nav-link active" to="/admin/song">Song</Link>
             </li>
             <li className="nav-item">
-                <Link className="nav-link active" to="/admin/song">Song</Link>
+                <Link className="nav-link active" to="/admin/artist">Artist</Link>
             </li>
             <li className="nav-item">
                 <Link className="nav-link active" to="/admin/genre">Genre</Link>
             </li>
             <li className="nav-item">
                 <Link className="nav-link active" to="/admin/genre">Album</Link>
-            </li>
-            <li className="nav-item">
-                <Link className="nav-link active" to="/admin/genre">Genre</Link>
             </li>
             <li className="nav-item">
                 <a className="nav-link active" href="#" onClick={()=>{logout()}}>Log Out</a>

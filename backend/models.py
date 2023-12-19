@@ -255,13 +255,11 @@ class Song(db.Model):
         db.session.commit()
         return self
     
-    def update(self, name, likes, play_count, path, picture_path, release_date):
-        self.name = name
-        self.likes = likes
-        self.play_count = play_count
-        self.path = path
-        self.picture_path = picture_path
-        self.release_date = release_date
+    def update(self, **kwargs):
+        for key, value in kwargs.items():
+            # Only update attributes that are part of the model and not None
+            if hasattr(self, key) and value is not None:
+                setattr(self, key, value)
         db.session.commit()
         return self
 

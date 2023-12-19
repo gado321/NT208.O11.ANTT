@@ -91,7 +91,11 @@ class ArtistLikesResource(Resource):
         """Get the total likes of an artist"""
         artist=Artist.query.get_or_404(id)
         likes=Artist.get_like_count(artist)
-        return likes
+        return jsonify(
+            {
+                "likes":likes
+            }
+        )
 
 # get all play count of all songs of an artist
 @artist_ns.route('/artists/<int:id>/plays')
@@ -100,5 +104,9 @@ class ArtistPlaysResource(Resource):
         """Get the total plays of an artist"""
         artist=Artist.query.get_or_404(id)
         plays=Artist.get_play_count(artist)
-        return plays
+        return jsonify(
+            {
+                "plays":plays
+            }
+        )
         
