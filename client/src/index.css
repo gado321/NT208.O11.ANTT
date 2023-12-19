@@ -19,11 +19,27 @@ html, body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-/* test */
-  /* thẻ chứa back và background-mode */
-.container {
-  display: flex;
-  justify-content: right;
+/* chia grid */
+.container-page {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
+  grid-template-rows: auto;
+  grid-template-areas:
+  "navbar header header"
+  "content content content"
+  "content content content";
+}
+.navBar {
+  grid-area: navbar;
+  background-color: var(--navbarColor);
+}
+.header-page {
+  grid-area: header;
+}
+.content-page {
+  grid-area: content;
 }
 .music-logo {
   width: 64px;
@@ -110,10 +126,6 @@ code {
   align-items: center;  
   padding: 0;
   padding-top: 1.5%;
-}
-.nav-bar{
-  grid-area: left;
-  background-color: var(--backgroundColor);
 }
 .nav-bar a {
   display: flex;

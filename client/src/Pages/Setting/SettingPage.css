@@ -1,0 +1,147 @@
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+.loading-title {
+  text-align: center;
+  color: var(--primary-color-light-mode-1100, #080519);
+  font-family: 'New Rocker';
+  font-size: 50px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  text-transform: uppercase;
+}
+
+.space{
+    height: 5%;
+}
+
+.container{
+    display: grid;
+    grid-template-columns: 17.33% 82.67%;
+    grid-template-rows: 10% 90%;
+    grid-template-areas: 
+    "left right-top"
+    "left right-bottom"; /* Xác định vị trí của các phần tử trong grid */    
+    height: 100%;
+    width: 100%;
+    background-color: transparent;
+}
+
+.list-nav ul {  
+    display: flex;
+    list-style-type: none;  
+    margin: 0;  
+    padding: 0;  
+    padding-top: 5%;
+    padding-bottom: 5%;
+    width: calc(90% - 5px);
+    padding-left: 10%;  
+}
+.list-nav ul img {
+    width: 20%;
+    height: 20%;
+    align-items: center;  
+    padding: 0;
+}
+.list-nav ul a {  
+    display:flex;
+    align-items: center;  
+    padding: 8px 16px;  
+    text-decoration: none;
+    font-size: 150%;
+}
+.list-nav ul:hover {  
+    background-color: #2f153f;  
+    font-weight: bold;  
+    border-right: 5px solid #bbc4fe;
+    border-radius: 0 3px 3px 0;
+}
+.list-nav ul:active {
+    background-color: #2f153f;  
+    font-weight: bold;  
+    border-right: 5px solid #bbc4fe;
+    border-radius: 0 3px 3px 0;
+}
+
+.header{
+    display: grid;
+    grid-area: right-top;
+    padding-right: 2.5%;
+}
+.header-content{
+    display:flex; 
+    align-items:flex-end; 
+    justify-content: flex-end; 
+    align-items: flex-start;
+}
+.header img{
+    width: 40px;
+    height: 40px;
+    align-items: center;  
+    padding: 0;
+    padding-top: 0.5%;
+}
+.header h2{ 
+    padding: 8px 16px;  
+    margin: 0;
+    padding-top: 1.5%;
+    text-decoration: none;
+    font-size: 150%;
+}
+.home-mode-switch-container {
+    margin: 50px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.content{
+    grid-area: right-bottom;
+}
+.music-SettingPage{
+    padding-left: 2%;
+    padding-right: 2%;
+}
+.music-SettingPage-list {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    padding-left: 5%;
+}
+  
+.music-SettingPage-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+.music-SettingPage-item-img img{
+    width: 75%;
+    border-radius: 8px; /* Đặt bán kính bo gốc */
+}
+
+.music-SettingPage-item-info {
+    margin-bottom: 20px;
+}
+
+.music-SettingPage-item-info h3 {
+    margin: 0;
+    padding: 0;
+    font-size: 24px; /* Kích thước chữ cho h3 là 24px */
+    text-align: center;
+    white-space: normal; /* Cho phép xuống dòng */
+}
+  
+.music-SettingPage-item-info p {
+    margin: 0;
+    padding: 0;
+    font-size: 20px; /* Kích thước chữ cho p là 20px */
+    text-align: center;
+    white-space: normal; /* Cho phép xuống dòng */
+}
+
+.music-SettingPage-item:last-child {
+    margin-right: 0;
+}
