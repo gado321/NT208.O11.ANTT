@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required
 from models import Album, Song
+from song import song_model
 
 album_ns = Namespace('api', description='Album related operations')
 
@@ -97,3 +98,23 @@ class AlbumSongResource(Resource):
             return {'message': f'Song {song.name} removed from album {album.name}'}, 201
         elif response['status']=='info':
             return {'message': 'Song is not in the album.'}, 200
+
+# get all songs of an album
+@album_ns.route('/albums/<int:id>/songs')
+class AlbumSongsResource(Resource):
+    @album_ns.marshal_list_with(song_model)
+    def get(self,id):
+        """Get all songs of an album"""
+        album=Album.query.get_or_404(id)
+        songs=album.songs
+        return songs
+
+# random album with a liked artist
+@album_ns.route('/albums/artist/<int:id>/random')
+class AlbumRandomResource(Resource):
+    @album_ns.marshal_with(album_model)
+    def get(self,id):
+        """Get a random album with a liked artist"""
+        albums=Album.query.filter(Album.artist_id==id).all()
+        return random.choice(albums)
+        

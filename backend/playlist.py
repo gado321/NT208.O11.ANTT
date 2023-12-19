@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required
 from models import Playlist
+from song import song_model
 
 playlist_ns = Namespace('api', description='Playlist related operations')
 
@@ -96,3 +97,11 @@ class PlaylistSongResource(Resource):
             return {'message': f'Song {song.name} removed from playlist {album.name}'}, 201
         elif response['status']=='info':
             return {'message': 'Song is not in the playlist.'}, 200
+
+@playlist_ns.route('/playlists/<int:id>/songs')
+class PlaylistSongsResource(Resource):
+    @playlist_ns.marshal_list_with(song_model)
+    def get(self,id):
+        """Get all songs of a playlist"""
+        playlist=Playlist.query.get_or_404(id)
+        return playlist.songs

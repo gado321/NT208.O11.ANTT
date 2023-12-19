@@ -1,4 +1,5 @@
 from exts import db
+from datetime import datetime
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -16,6 +17,7 @@ class User(db.Model):
     genres = db.relationship('Genre', secondary='user_genre', backref=db.backref('users', lazy='dynamic'))
     liked_songs = db.relationship('Song', secondary='user_song', backref=db.backref('liked_users', lazy='dynamic'))
     liked_artists = db.relationship('Artist', secondary='user_artist', backref=db.backref('liked_users', lazy='dynamic'))
+    histories = db.relationship('History', backref='user', lazy='dynamic')
 
     def __repr__(self):
         return f"<User {self.name}>"
@@ -157,6 +159,18 @@ class Artist(db.Model):
     
     def is_liked_user_added(self, user):
         return any(u.id == user.id for u in self.liked_users)
+
+    # get all song by artist
+    def get_songs(self):
+        return self.songs
+
+    # get all like count of all songs of an artist
+    def get_like_count(self):
+        return sum(song.likes for song in self.songs)
+
+    # get all play count of all songs of an artist
+    def get_play_count(self):
+        return sum(song.play_count for song in self.songs)
     
 
 class Album(db.Model):
@@ -211,6 +225,9 @@ class Album(db.Model):
     def is_song_added(self, song):
         return any(a.id == song.id for a in self.songs)
 
+    # random album with a liked artist
+
+
 class Song(db.Model):
     __tablename__ = 'songs'
     id = db.Column(db.Integer, primary_key=True)
@@ -223,6 +240,7 @@ class Song(db.Model):
 
     playlists = db.relationship('Playlist', secondary='playlist_song', backref=db.backref('songs', lazy='dynamic'))
     genres = db.relationship('Genre', secondary='song_genre', backref=db.backref('songs', lazy='dynamic'))
+    histories = db.relationship('History', backref='song', lazy='dynamic')
 
     def __repr__(self):
         return f"<Song {self.name}>"
@@ -237,13 +255,11 @@ class Song(db.Model):
         db.session.commit()
         return self
     
-    def update(self, name, likes, play_count, path, picture_path, release_date):
-        self.name = name
-        self.likes = likes
-        self.play_count = play_count
-        self.path = path
-        self.picture_path = picture_path
-        self.release_date = release_date
+    def update(self, **kwargs):
+        for key, value in kwargs.items():
+            # Only update attributes that are part of the model and not None
+            if hasattr(self, key) and value is not None:
+                setattr(self, key, value)
         db.session.commit()
         return self
 
@@ -421,7 +437,33 @@ class Genre(db.Model):
     # get all song by genre
     def get_songs(self):
         return self.songs
+
+class History(db.Model):
+    __tablename__ = 'histories'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    song_id = db.Column(db.Integer, db.ForeignKey('songs.id'), nullable=False)
+    played_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f"<History {self.id}>"
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+        return self
     
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+        return self
+    
+    def update(self, user_id, song_id, date):
+        self.user_id = user_id
+        self.song_id = song_id
+        self.date = date
+        db.session.commit()
+        return self
 
 class SongArtist(db.Model):
     __tablename__ = 'song_artist'
