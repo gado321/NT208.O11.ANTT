@@ -18,7 +18,6 @@ function Loading() {
     </div>
   );
 }
-
 function SettingPage() {
     var id = localStorage.getItem('data');
     const initialFormState = {
@@ -131,8 +130,8 @@ function SettingPage() {
         APP:['Privacy Policy', 'Share this app', 'Rate this app', 'Help', 'Sleep Timer', 'Set Favorite Genres']
       };
     const addContent = () => {
-        const content = document.querySelector('.content');
-
+        const content = document.querySelector('.content-page');
+        // content.className = 'content-page-setting';
         const listKeySettingName = Object.keys(dictSettingName);
         for(let j=0; j<listKeySettingName.length; j++){
             const div = document.createElement('div');
@@ -166,6 +165,7 @@ function SettingPage() {
     };
     useEffect(() => {
         if (!isHeaderAdded && !headerAddedRef.current) {
+            
             fetchUserData();
             setIsHeaderAdded(true);
             headerAddedRef.current = true;
