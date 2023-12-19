@@ -26,8 +26,8 @@ function App() {
         {/* Admin route */}
         {/* <Route path='/admin/login' element={<AdminLogin />} />
         <Route path='/admin/dashboard' element={<AdminDashboard />} />
-        <Route path='/admin/song' element={<AdminSong />} />
-        <Route path='/setting' element={<Setting />} /> */}
+        <Route path='/admin/song' element={<AdminSong />} /> */}
+        <Route path='/setting' element={<Setting />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
