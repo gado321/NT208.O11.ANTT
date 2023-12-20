@@ -21,6 +21,7 @@ album_model=album_ns.model(
 @album_ns.route('/albums')
 class AlbumResource(Resource):
     @album_ns.marshal_list_with(album_model)
+    @jwt_required()
     def get(self):
         """Get all albums"""
         albums=Album.query.all()
@@ -43,6 +44,7 @@ class AlbumResource(Resource):
 @album_ns.route('/albums/<int:id>')
 class AlbumResource(Resource):
     @album_ns.marshal_with(album_model)
+    @jwt_required()
     def get(self,id):
         """Get an album by id"""
         album=Album.query.get_or_404(id)
@@ -103,6 +105,7 @@ class AlbumSongResource(Resource):
 @album_ns.route('/albums/<int:id>/songs')
 class AlbumSongsResource(Resource):
     @album_ns.marshal_list_with(song_model)
+    @jwt_required()
     def get(self,id):
         """Get all songs of an album"""
         album=Album.query.get_or_404(id)
@@ -113,6 +116,7 @@ class AlbumSongsResource(Resource):
 @album_ns.route('/albums/artist/<int:id>/random')
 class AlbumRandomResource(Resource):
     @album_ns.marshal_with(album_model)
+    @jwt_required()
     def get(self,id):
         """Get a random album with a liked artist"""
         albums=Album.query.filter(Album.artist_id==id).all()

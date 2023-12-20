@@ -20,6 +20,7 @@ artist_model=artist_ns.model(
 @artist_ns.route('/artists')
 class ArtistResource(Resource):
     @artist_ns.marshal_list_with(artist_model)
+    @jwt_required()
     def get(self):
         """Get all artists"""
         artists=Artist.query.all()
@@ -41,6 +42,7 @@ class ArtistResource(Resource):
 @artist_ns.route('/artists/<int:id>')
 class ArtistResource(Resource):
     @artist_ns.marshal_with(artist_model)
+    @jwt_required()
     def get(self,id):
         """Get an artist by id"""
         artist=Artist.query.get_or_404(id)
@@ -59,6 +61,7 @@ class ArtistResource(Resource):
         return artist_to_update,201
 
     @artist_ns.marshal_with(artist_model)
+    @jwt_required()
     def delete(self,id):
         """Delete an artist by id"""
         artist_to_delete=Artist.query.get_or_404(id)
@@ -68,6 +71,7 @@ class ArtistResource(Resource):
 @artist_ns.route('/artists/search/<string:name>')
 class ArtistSearchResource(Resource):
     @artist_ns.marshal_list_with(artist_model)
+    @jwt_required()
     def get(self,name):
         """Search """
         search_term = urllib.parse.unquote(name)
@@ -78,6 +82,7 @@ class ArtistSearchResource(Resource):
 @artist_ns.route('/artists/<int:id>/songs')
 class ArtistSongsResource(Resource):
     @artist_ns.marshal_list_with(song_model)
+    @jwt_required()
     def get(self,id):
         """Get all songs of an artist"""
         artist=Artist.query.get_or_404(id)
@@ -87,6 +92,7 @@ class ArtistSongsResource(Resource):
 # get all like count of all songs of an artist
 @artist_ns.route('/artists/<int:id>/likes')
 class ArtistLikesResource(Resource):
+    @jwt_required()
     def get(self,id):
         """Get the total likes of an artist"""
         artist=Artist.query.get_or_404(id)
@@ -100,6 +106,7 @@ class ArtistLikesResource(Resource):
 # get all play count of all songs of an artist
 @artist_ns.route('/artists/<int:id>/plays')
 class ArtistPlaysResource(Resource):
+    @jwt_required()
     def get(self,id):
         """Get the total plays of an artist"""
         artist=Artist.query.get_or_404(id)

@@ -19,6 +19,7 @@ genres_model=genre_ns.model(
 @genre_ns.route('/genres')
 class GenreResource(Resource):
     @genre_ns.marshal_list_with(genres_model)
+    @jwt_required()
     def get(self):
         """Get all genres"""
         genres=Genre.query.all()
@@ -39,6 +40,7 @@ class GenreResource(Resource):
 @genre_ns.route('/genres/<int:id>')
 class GenreResource(Resource):
     @genre_ns.marshal_with(genres_model)
+    @jwt_required()
     def get(self,id):
         """Get a genre by id"""
         genre=Genre.query.get_or_404(id)
@@ -66,6 +68,7 @@ class GenreResource(Resource):
 # search songs by genre
 @genre_ns.route('/genres/<int:id>/songs')
 class GenreSongsResource(Resource):
+    @jwt_required()
     def get(self,id):
         """Get all songs by genre"""
         genre=Genre.query.get_or_404(id)
@@ -87,6 +90,7 @@ class GenreSongsResource(Resource):
 @genre_ns.route('/genres/search/<string:name>')
 class GenreSearchResource(Resource):
     @genre_ns.marshal_list_with(genres_model)
+    @jwt_required()
     def get(self,name):
         """Search genres by name"""
         search_term = urllib.parse.unquote(name)
