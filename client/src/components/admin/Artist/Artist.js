@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Dropdown, Badge, Button } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { useAuth ,logout, authFetch} from '../Auth'
+import React, { useState } from 'react';
 import api from '../../../api'
 import { slugifyVietnamese, getExtension } from '../Utils';
-import { set } from 'react-hook-form';
 
 const Artist = () => {
+    if (window.location.pathname === '/admin/artist') {
+        require('bootstrap/dist/css/bootstrap.min.css');
+    }
+
     const [artists, setArtists] = useState([]);
     const [selectedArtist, setSelectedArtist] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
@@ -20,20 +20,6 @@ const Artist = () => {
     }
     const [newArtist, setNewArtist] = useState(initialFormState);
 
-    // useEffect(() => {
-    //     const fetchArtists = async () => {
-    //         try {
-    //             const response = await authFetch('/api/artists');
-    //             const responseData = await response.json();
-    //             setArtists(responseData);
-    //         } catch (error) {
-    //             console.log(error);
-    //         }
-    //     }
-
-    //     fetchArtists();
-    // }, []);
-
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
     };
@@ -44,7 +30,7 @@ const Artist = () => {
             return;
         }
         try {
-            const response = await authFetch(`/api/artists/search/${searchTerm}`);
+            const response = await api.get(`/api/artists/search/${encodeURIComponent(searchTerm)}`);
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
@@ -62,6 +48,19 @@ const Artist = () => {
     const handleEdit = async (artist) => {
         setSelectedArtist(artist);
         setIsCreating(false);
+    };
+
+    const handleDelete = async (artistId) => {
+        try {
+            const response = await api.delete(`/api/artists/${artistId}`);
+            if (response.ok) {
+                setArtists(artists.filter((artist) => artist.id !== artistId));
+            } else {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+        } catch (error) {
+            console.error('Error deleting artist: ', error);
+        }
     };
 
     const handleChange = (event, setFunction) => {
@@ -83,22 +82,22 @@ const Artist = () => {
         }
 
         const sanitizedName = slugifyVietnamese(newArtist.name);
-        const getLastIdResponse = await authFetch('/api/artists/last_id');
+        const getLastIdResponse = await api.get('/api/artists/last_id');
         const data = await getLastIdResponse.json();
         const newArtistId = data.lastId + 1;
         try {
-            const requestOptions = {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    name: newArtist.name,
-                    picture_path: '../data/images/artist/' + sanitizedName + '-' + newArtistId + '.' + getExtension(selectedArtistImage.name),
-                }),
-            };
+            const data = JSON.stringify({ 
+                name: newArtist.name,
+                picture_path: '../data/images/artist/' + sanitizedName + '-' + newArtistId + '.' + getExtension(selectedArtistImage.name),
+            });
 
-            const response = await authFetch('/api/artists', requestOptions);
+            const response = await api.post('/api/artists', data, { 
+                headers: {
+                    'Content-Type': 'application/json' 
+                }
+            });
 
-            if (!response.status === 201) {
+            if (response.status === 201) {
                 const data = await response.json(); // Parse the response body as JSON
                 const newArtistId = data.id; // Access the artist ID from the parsed data
 
@@ -107,11 +106,7 @@ const Artist = () => {
                 formData.append('image', selectedArtistImage);
                 formData.append('artistId', newArtistId);
                 try {
-                    const requestOptions = {
-                        method: 'POST',
-                        body: formData,
-                    };
-                    const response = await authFetch('/api/artists/upload', requestOptions);
+                    const response = await api.post('/api/artists/upload', formData);
                     if (response.ok) {
                         console.log('Artist image uploaded successfully!');
                     } else {
@@ -143,10 +138,7 @@ const Artist = () => {
             }
             formData.append('artistId', selectedArtist.id);
 
-            const uploadResponse = await authFetch('/api/artists/upload', {
-                method: 'POST',
-                body: formData,
-            });
+            const uploadResponse = await api.post('/api/artists/upload', formData);
 
             if (!uploadResponse.ok) {
                 throw new Error('Failed to upload artist image');
@@ -154,16 +146,16 @@ const Artist = () => {
         }
 
         try {
-            const putRequest = {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    name: selectedArtist.name,
-                    picture_path: '../data/images/artist/' + sanitizedName + '-' + selectedArtist.id + '.' + getExtension(selectedArtistImage.name),
-                }),
-            };
+            const putData = JSON.stringify({ 
+                name: selectedArtist.name,
+                picture_path: '../data/images/artist/' + sanitizedName + '-' + selectedArtist.id + '.' + getExtension(selectedArtistImage.name),
+            });
             
-            const response = await authFetch(`/api/artists/${selectedArtist.id}`, putRequest);
+            const response = await api.put(`/api/artists/${selectedArtist.id}`, putData, {
+                headers: {
+                    'Content-Type': 'application/json' 
+                }
+            });
             if (response.status === 201) {
                 console.log('Artist updated successfully!');
                 setSelectedArtist(null); // Reset selected song
@@ -192,6 +184,7 @@ const Artist = () => {
                     <div key={artist.id}>
                         {artist.name}
                         <button onClick={() => handleEdit(artist)}>Edit</button>
+                        <button onClick={() => handleDelete(artist.id)}>Delete</button>
                     </div>
                 ))}
             </div>
@@ -221,4 +214,4 @@ const Artist = () => {
     );
 }
 
-export default Artist
+export default Artist;

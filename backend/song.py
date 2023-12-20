@@ -26,6 +26,7 @@ song_model=song_ns.model(
 @song_ns.route('/songs')
 class SongResource(Resource):
     @song_ns.marshal_list_with(song_model)
+    @jwt_required()
     def get(self):
         """Get all songs"""
         songs=Song.query.all()
@@ -51,6 +52,7 @@ class SongResource(Resource):
 @song_ns.route('/songs/<int:id>')
 class SongResource(Resource):
     @song_ns.marshal_with(song_model)
+    @jwt_required()
     def get(self,id):
         """Get a song by id"""
         song=Song.query.get_or_404(id)
@@ -129,6 +131,7 @@ class SongGenreResource(Resource):
 @song_ns.route('/songs/search/<string:name>')
 class SongSearchResource(Resource):
     @song_ns.marshal_list_with(song_model)
+    @jwt_required()
     def get(self,name):
         """Search artists by name"""
         search_term = urllib.parse.unquote(name)
@@ -139,6 +142,7 @@ class SongSearchResource(Resource):
 @song_ns.route('/songs/random_with_genre/<int:genre_id>')
 class SongRandomWithGenreResource(Resource):
     @song_ns.marshal_list_with(song_model)
+    @jwt_required()
     def get(self,genre_id):
         """Get random 2 songs with a genre id"""
         songs=Song.query.filter(Song.genres.any(id=genre_id)).order_by(Song.id.desc()).all()
@@ -150,6 +154,7 @@ class SongRandomWithGenreResource(Resource):
 # route for get all artists of a song
 @song_ns.route('/songs/<int:id>/artists')
 class SongArtistsResource(Resource):
+    @jwt_required()
     def get(self,id):
         """Get all artists of a song"""
         song=Song.query.get_or_404(id)
@@ -167,6 +172,7 @@ class SongArtistsResource(Resource):
 # route for get all genres of a song
 @song_ns.route('/songs/<int:id>/genres')
 class SongGenresResource(Resource):
+    @jwt_required()
     def get(self,id):
         """Get all genres of a song"""
         song=Song.query.get_or_404(id)
