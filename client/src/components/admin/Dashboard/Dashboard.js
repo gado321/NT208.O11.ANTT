@@ -22,7 +22,7 @@ const LoggedInLinks = () => {
                 <Link className="nav-link active" to="/admin/genre">Genre</Link>
             </li>
             <li className="nav-item">
-                <Link className="nav-link active" to="/admin/genre">Album</Link>
+                <Link className="nav-link active" to="/admin/album">Album</Link>
             </li>
             <li className="nav-item">
                 <a className="nav-link active" href="/admin/login" onClick={()=>{logout()}}>Log Out</a>
