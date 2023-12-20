@@ -18,51 +18,12 @@ import loudspeaker from "../Icon/loudspeaker.png";
 import mute from "../Icon/mute.png";
 import api from "../../api";
 import LoadingHome from "./LoadHome";
-import sharedVariables from "./shareVariable";
-// import Setting from "../Setting/setting";
+
 
 // Kiểm tra URL hiện tại và tải tệp CSS khi URL khớp với /dashboard
 if (window.location.pathname === '/dashboard') {
     require('./Dashboard.css'); // Import tệp CSS
 }
-
-var sound = new Howl({
-  src: './song/thang-nam.mp3', // URL của file nhạc
-  format: 'mp3', // Định dạng file nhạc
-  autoplay: false, // Tắt chế độ tự động phát
-  html5: true, // Sử dụng HTML5 Audio để phát nhạc nếu có thể
-  onplay: function() {
-    // Bắt đầu cập nhật thời gian bài hát khi bắt đầu phát
-    setInterval(updateTimestamp, 1000);
-  },
-  onend: function() {
-    // Khi bài hát kết thúc, dừng cập nhật thời gian
-    clearInterval(timestampInterval);
-  },
-});
-// Thêm thuộc tính tùy chỉnh cho đối tượng sound
-sound.title = 'Tháng Năm';
-sound.artist = 'Soobin Hoàng Sơn';
-sound.imagePath = 'images/anh-chua-thuong-em-den-vay-dau.jpg';
-
-sharedVariables.setSound(sound); // Lưu đối tượng sound vào biến toàn cục
-
-let timestampInterval; // Biến lưu trữ ID của interval
-
-function updateTimestamp() {
-    const currentPosition = sharedVariables.getSound().seek(); // Lấy vị trí hiện tại của bài hát (thời gian tính bằng giây)
-    const formattedTime = formatTime(currentPosition); // Định dạng thời gian hiện tại
-    document.querySelector('#timestamp-song-start').textContent = formattedTime;
-    document.querySelector('#timestamp-song-end').textContent = formatTime(sharedVariables.getSound().duration());
-}
-
-function formatTime(time) {
-    const minutes = Math.floor(time / 60);
-    const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-}
-
-
 
 
 function DashboardPage() {
@@ -79,6 +40,24 @@ function DashboardPage() {
     gender: '',
     date_of_birth: ''
   };
+  var sound = new Howl({
+    src: './song/thang-nam.mp3', // URL của file nhạc
+    format: 'mp3', // Định dạng file nhạc
+    autoplay: false, // Tắt chế độ tự động phát
+    html5: true, // Sử dụng HTML5 Audio để phát nhạc nếu có thể
+    onplay: function() {
+      // Bắt đầu cập nhật thời gian bài hát khi bắt đầu phát
+      setInterval(updateTimestamp, 1000);
+    },
+    onend: function() {
+      // Khi bài hát kết thúc, dừng cập nhật thời gian
+      clearInterval(timestampInterval);
+    },
+  });
+  // Thêm thuộc tính tùy chỉnh cho đối tượng sound
+  sound.title = 'Tháng Năm';
+  sound.artist = 'Soobin Hoàng Sơn';
+  sound.imagePath = 'images/anh-chua-thuong-em-den-vay-dau.jpg';
 
   const [dataUser, setDataUser] = useState(initialFormState);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -88,7 +67,6 @@ function DashboardPage() {
 
   const fetchDisplay = async () =>{
     try{
-
       //Get user data
       const response = await api.get(`/api/users/${id}`);
       const userData = await response.json();
@@ -158,23 +136,31 @@ function DashboardPage() {
 
       const settingIcon = createNavItem('setting', setting, 'Setting');
       settingIcon.addEventListener('click', function() {
-        // <Setting />
+        window.location.href = '/setting';
       });
       listNav.appendChild(settingIcon);
-
-      const clearContentButton = document.createElement('button');
-      clearContentButton.id = 'clear-content-button';
-      clearContentButton.textContent = 'Clear Content';
-      // Lắng nghe sự kiện click vào nút "Clear Content"
-      clearContentButton.addEventListener('click', function() {
-        clearContent();
-      });
-      
-      listNav.appendChild(clearContentButton);
 
       navBar.appendChild(listNav);
 
       return navBar;
+  };
+  // Function to create nav item
+  const createNavItem = (id, iconSrc, label) => {
+    const ul = document.createElement('ul');
+    ul.id = id;
+
+    const img = document.createElement('img');
+    img.src = iconSrc;
+    img.alt = 'Music4Life';
+
+    const a = document.createElement('a');
+    a.href = '#';
+    a.textContent = label;
+
+    ul.appendChild(img);
+    ul.appendChild(a);
+
+    return ul;
   };
 
   function volumeControl(value) {
@@ -184,6 +170,20 @@ function DashboardPage() {
     var seekTime = sound.duration() * value;
     sound.seek(seekTime);
   }
+  let timestampInterval; // Biến lưu trữ ID của interval
+
+  function updateTimestamp() {
+      const currentPosition = sound.seek(); // Lấy vị trí hiện tại của bài hát (thời gian tính bằng giây)
+      const formattedTime = formatTime(currentPosition); // Định dạng thời gian hiện tại
+      document.querySelector('#timestamp-song-start').textContent = formattedTime;
+      document.querySelector('#timestamp-song-end').textContent = formatTime(sound.duration());
+  }
+
+  function formatTime(time) {
+      const minutes = Math.floor(time / 60);
+      const seconds = Math.floor(time % 60);
+      return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  }
 
   function nextSong() {
     sound.stop();
@@ -192,26 +192,6 @@ function DashboardPage() {
     sound.stop();
   }
 
-
-  // Function to create nav item
-  const createNavItem = (id, iconSrc, label) => {
-      const ul = document.createElement('ul');
-      ul.id = id;
-
-      const img = document.createElement('img');
-      img.src = iconSrc;
-      img.alt = 'Music4Life';
-
-      const a = document.createElement('a');
-      a.href = '#';
-      a.textContent = label;
-
-      ul.appendChild(img);
-      ul.appendChild(a);
-
-      return ul;
-  };
-  
   // Function to add footer content
   const addFooterContent = () => {
 
@@ -402,14 +382,6 @@ function DashboardPage() {
     div.appendChild(playlistContainerDiv);
   };
 
-  // Hàm clearContent để xóa nội dung trong .content
-  const clearContent = () => {
-    const content = document.querySelector('.content');
-    while (content.firstChild) {
-      content.removeChild(content.firstChild);
-    }
-  };
-
 
 
   useEffect(() => {
@@ -426,6 +398,7 @@ function DashboardPage() {
   }, []);
 
   return (
+    <>
     <React.StrictMode>
       <link rel="stylesheet" type="text/css" href="./Dashboard.css" />
       {isLoaded ? (
@@ -434,6 +407,7 @@ function DashboardPage() {
         <LoadingHome />
       )}
     </React.StrictMode>
+    </>
   );
 }
 
