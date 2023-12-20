@@ -20,6 +20,7 @@ history_model=history_ns.model(
 @history_ns.route('/histories')
 class HistoryResource(Resource):
     @history_ns.marshal_list_with(history_model)
+    @jwt_required()
     def get(self):
         """Get all histories"""
         histories=History.query.all()
@@ -42,6 +43,7 @@ class HistoryResource(Resource):
 @history_ns.route('/histories/<int:id>')
 class HistoryResource(Resource):
     @history_ns.marshal_with(history_model)
+    @jwt_required()
     def get(self,id):
         """Get a history by id"""
         history=History.query.get_or_404(id)
@@ -61,6 +63,7 @@ class HistoryResource(Resource):
         return history_to_update,201
 
     @history_ns.marshal_with(history_model)
+    @jwt_required()
     def delete(self,id):
         """Delete a history by id"""
         history_to_delete=History.query.get_or_404(id)
@@ -70,6 +73,7 @@ class HistoryResource(Resource):
 @history_ns.route('/histories/users/<int:user_id>')
 class HistoryResource(Resource):
     @history_ns.marshal_with(history_model)
+    @jwt_required()
     def get(self,user_id):
         """Get a history by user id"""
         history=History.query.filter_by(user_id=user_id).order_by(History.date.desc()).all()

@@ -31,16 +31,11 @@ class User(db.Model):
         db.session.delete(self)
         db.session.commit()
 
-    def update(self, name, email, password, is_admin, last_login, is_premium, picture_path, gender, date_of_birth):
-        self.name = name
-        self.email = email
-        self.password = password
-        self.is_admin = is_admin
-        self.last_login = last_login
-        self.is_premium = is_premium
-        self.picture_path = picture_path
-        self.gender = gender
-        self.date_of_birth = date_of_birth
+    def update(self, **kwargs):
+        for key, value in kwargs.items():
+            # Only update attributes that are part of the model and not None
+            if hasattr(self, key) and value is not None:
+                setattr(self, key, value)
         db.session.commit()
         return self
 
@@ -178,6 +173,7 @@ class Album(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     artist_id = db.Column(db.Integer, db.ForeignKey('artists.id'), nullable=False)
     name = db.Column(db.String(255), nullable=False)
+    picture_path = db.Column(db.String(255))
     release_date = db.Column(db.Date)
 
     songs = db.relationship('Song', secondary='album_song', backref=db.backref('albums', lazy='dynamic'))
@@ -195,10 +191,11 @@ class Album(db.Model):
         db.session.commit()
         return self
     
-    def update(self, artist_id, name, release_date):
-        self.artist_id = artist_id
-        self.name = name
-        self.release_date = release_date
+    def update(self, **kwargs):
+        for key, value in kwargs.items():
+            # Only update attributes that are part of the model and not None
+            if hasattr(self, key) and value is not None:
+                setattr(self, key, value)
         db.session.commit()
         return self
 
@@ -352,11 +349,11 @@ class Playlist(db.Model):
         db.session.commit()
         return self
     
-    def update(self, user_id, name, picture_path, thumbnail_path):
-        self.user_id = user_id
-        self.name = name
-        self.picture_path = picture_path
-        self.thumbnail_path = thumbnail_path
+    def update(self, **kwargs):
+        for key, value in kwargs.items():
+            # Only update attributes that are part of the model and not None
+            if hasattr(self, key) and value is not None:
+                setattr(self, key, value)
         db.session.commit()
         return self
 
@@ -395,8 +392,11 @@ class Genre(db.Model):
         db.session.commit()
         return self
     
-    def update(self, name):
-        self.name = name
+    def update(self, **kwargs):
+        for key, value in kwargs.items():
+            # Only update attributes that are part of the model and not None
+            if hasattr(self, key) and value is not None:
+                setattr(self, key, value)
         db.session.commit()
         return self
 
@@ -458,10 +458,11 @@ class History(db.Model):
         db.session.commit()
         return self
     
-    def update(self, user_id, song_id, date):
-        self.user_id = user_id
-        self.song_id = song_id
-        self.date = date
+    def update(self, **kwargs):
+        for key, value in kwargs.items():
+            # Only update attributes that are part of the model and not None
+            if hasattr(self, key) and value is not None:
+                setattr(self, key, value)
         db.session.commit()
         return self
 

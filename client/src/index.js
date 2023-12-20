@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { jwtDecode } from "jwt-decode";
 import './index.css';
 import musical_sound_music_logo from "./Pages/Icon/musical-sound-music-logo.svg"
 import HomePage from './Pages/Home/Home';
@@ -14,7 +15,43 @@ import AdminArtist from './components/admin/Artist/Artist';
 import AdminAlbum from './components/admin/Album/Album';
 import AdminGenre from './components/admin/Genre/Genre';
 
+const checkIsAdmin = (token) => {
+  try {
+    const decodedToken = jwtDecode(token);
+    return decodedToken.is_admin === true; // Assuming is_admin is a boolean
+  } catch (error) {
+    return false;
+  }
+};
 
+const checkTokenExpiration = (token) => {
+  try {
+    const decodedToken = jwtDecode(token);
+    const currentDate = new Date();
+    return decodedToken.exp * 1000 < currentDate.getTime();
+  } catch (error) {
+    return true;
+  }
+};
+
+const ProtectedRoute = ({ children }) => {
+  const location = useLocation();
+  const token = localStorage.getItem('access_token');
+  const isTokenExpired = token ? checkTokenExpiration(token) : true;
+  const isAdmin = token ? checkIsAdmin(token) : false;
+
+  if (!token || isTokenExpired) {
+    if (location.pathname.includes('/admin')) {
+      return <Navigate to="/admin/login" state={{ from: location }} replace />;
+    } else {
+      return <Navigate to="/" state={{ from: location }} replace />;
+    }
+  } else if (!isAdmin) {
+    // If the token is valid but the user is not an admin, redirect to the regular login page
+    return <Navigate to="/dashboard" state={{ from: location }} replace />;
+  }
+  return children;
+};
 
 function App() {
   return (
@@ -38,6 +75,7 @@ function App() {
             </div>  
           </div>
           <div className='content'> </div>
+          <div className='footer'> </div>
       </div>
       <React.StrictMode>
         <BrowserRouter>
@@ -49,12 +87,22 @@ function App() {
             <Route path='/dashboard' element={<Dashboard />} />
             
             {/* Admin route */}
-            <Route path='/admin/login' element={<AdminLogin />} />
-            <Route path='/admin/dashboard' element={<AdminDashboard />} />
-            <Route path='/admin/song' element={<AdminSong />} />
-            <Route path='/admin/artist' element={<AdminArtist />} />
-            <Route path='/admin/album' element={<AdminAlbum />} />
-            <Route path='/admin/genre' element={<AdminGenre />} />
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route 
+              path="/admin/*" 
+              element={
+                <ProtectedRoute>
+                  <Routes>
+                    <Route path="dashboard" element={<AdminDashboard />} />
+                    <Route path="song" element={<AdminSong />} />
+                    <Route path="artist" element={<AdminArtist />} />
+                    <Route path="album" element={<AdminAlbum />} />
+                    <Route path="genre" element={<AdminGenre />} />
+                    <Route path="/" element={<Navigate to="dashboard" replace />} />
+                  </Routes>
+                </ProtectedRoute>
+              } 
+            />
           </Routes>
         </BrowserRouter>
       </React.StrictMode>
