@@ -38,30 +38,25 @@ api.interceptors.response.use(
       // it means the token has expired and we need to refresh it
       if (error.response.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true;
-        
-        const requestOptions = {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${localStorage.getItem('refresh_token')}` // Thêm JWT vào tiêu đề Authorization
-            }
-          };
-          
-          fetch('http://localhost:5000/auth/refresh', requestOptions)
-            .then(response =>  {
-              // Xử lý dữ liệu trả về từ phản hồi
-              const data = response.json();
-              console.log(data);
-              localStorage.setItem('access_token', data.access_token);
-              response.headers.Authorization = `Bearer ${localStorage.getItem('access_token')}`;
-              return convertAxiosResponseToResponse(response);
-            })
-            .catch(error => {
-              // Xử lý lỗi
-              console.error('Lỗi khi gửi yêu cầu:', error);
-            });
-        // Retry the original request with the new token
-        
+        const refresh_token = localStorage.getItem('refresh_token');
+        const refreshResponse = await axios.post('http://localhost:5000/auth/refresh',null, {
+          headers: {
+            'Authorization': `Bearer ${refresh_token}`
+          }
+        });
+
+          // Get the new access token from the refresh response
+          const newAccessToken = refreshResponse.data.access_token;
+
+          // Update the access token in localStorage
+          localStorage.setItem('access_token', newAccessToken);
+
+          // Update the Authorization header with the new access token
+          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+
+          // Retry the original request with the updated token
+          const reg = axios(originalRequest);
+          return convertAxiosResponseToResponse(reg)
         
       }
   
