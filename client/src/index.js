@@ -38,6 +38,7 @@ function App() {
             </div>  
           </div>
           <div className='content'> </div>
+          <div className='footer'> </div>
       </div>
       <React.StrictMode>
         <BrowserRouter>
