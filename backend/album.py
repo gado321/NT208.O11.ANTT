@@ -6,6 +6,7 @@ from models import Album, Song
 from song import song_model
 import urllib.parse
 import os
+import random
 
 album_ns = Namespace('api', description='Album related operations')
 

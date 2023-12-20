@@ -408,13 +408,12 @@ const Album = () => {
                             items={artists}
                             title="Select Artist"
                             selectedItemIds={selectedArtistIds}
-                            setSelectedItemIds={handleArtistSelect} // Pass the new function to handle artist selection
-                            singleSelection={true} // Set single selection to true for artists
+                            setSelectedItemIds={setSelectedArtistIds} // Pass the new function to handle artist selection
                         />
 
                         {/* Song multi-select dropdown for new song */}
                         <MultiSelectDropdown
-                            items={songs.filter(song => selectedArtistIds.includes(song.artist_id))}
+                            items={songs}
                             title="Select Songs"
                             selectedItemIds={selectedSongIds}
                             setSelectedItemIds={setSelectedSongIds}
