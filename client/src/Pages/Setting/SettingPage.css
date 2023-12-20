@@ -24,7 +24,7 @@
     height: 5%;
 }
 
-.container {
+.container-page {
     grid-template-areas: 
     "left right-top"
     "left right-bottom"; /* Xác định vị trí của các phần tử trong grid */    

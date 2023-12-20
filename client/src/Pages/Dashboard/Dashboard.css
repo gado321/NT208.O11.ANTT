@@ -21,19 +21,20 @@
 }
 
 .space{
-    height: 5%;
+    height: 2.5%;
 }
 
-.container{
+.container-page{
     display: grid;
     grid-template-columns: 17.33% 82.67%;
-    grid-template-rows: 10% 90%;
+    grid-template-rows: 148px calc(100% - 148px);
     grid-template-areas: 
     "left right-top"
     "left right-bottom"; /* Xác định vị trí của các phần tử trong grid */    
     height: 100%;
     width: 100%;
-    background-color: transparent;
+    background-color: var(--backgroundColor);
+    justify-content: start;
 }
 
 .nav-bar{
@@ -41,10 +42,13 @@
     grid-area: left;
     height: 100%;
 }
+.music-logo {
+    width: 40%;
+    height: 40%;
+  }
 .nav-bar img{
     display: flex;
     justify-content: center;
-    width: 57.63%;
     padding-top: 10%;
 }
 .list-nav ul {  
@@ -54,8 +58,8 @@
     padding: 0;  
     padding-top: 5%;
     padding-bottom: 5%;
-    width: calc(90% - 5px);
     padding-left: 10%;  
+    align-items: center;
 }
 .list-nav ul img {
     width: 20%;
@@ -127,12 +131,31 @@
     padding: 0;
     padding-left: 5%;
 }
+.music-dashboard-list-header{
+    display: flex;
+    list-style: none;
+    padding: 0;
+    justify-content: space-between;
+    align-items: center;
+}
+.see-more-button {
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+  
+.see-more-button:hover {
+    background-color: #0056b3;
+}
   
 .music-dashboard-item {
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
+    padding: 10px;
+    width: 256px;
 }
 .music-dashboard-item-img img{
     width: 75%;

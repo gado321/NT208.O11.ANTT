@@ -134,7 +134,7 @@ function SettingPage() {
         APP:['Privacy Policy', 'Share this app', 'Rate this app', 'Help', 'Sleep Timer', 'Set Favorite Genres']
       };
     const addContent = () => {
-        const contentPage = document.querySelector('.content');
+        const content = document.querySelector('.content-page');
         // content.className = 'content-page-setting';
         const listKeySettingName = Object.keys(dictSettingName);
         for(let j=0; j<listKeySettingName.length; j++){
@@ -157,7 +157,7 @@ function SettingPage() {
                 ul.appendChild(li);
             }
             div.appendChild(ul);
-            contentPage.appendChild(div);   
+            content.appendChild(div);   
         }
       const deleteAccount = document.createElement('div');
       deleteAccount.className = 'delete-account-container';
@@ -165,7 +165,7 @@ function SettingPage() {
       button.className = 'delete-account-button';
       button.textContent = 'Delete Account';
       deleteAccount.appendChild(button);
-      contentPage.appendChild(deleteAccount);
+      content.appendChild(deleteAccount);
     };
     useEffect(() => {
         if (!isHeaderAdded && !headerAddedRef.current) {

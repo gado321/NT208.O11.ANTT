@@ -3,6 +3,7 @@ from flask_restx import Namespace, Resource, fields
 from models import User
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, create_refresh_token, jwt_required, get_jwt_identity
+import datetime
 
 auth_ns = Namespace('auth', description='Authentication related operations')
 
@@ -72,12 +73,12 @@ class Login(Resource):
         password = data.get('password')
         
         db_user = User.query.filter_by(email=email).first()
-        
+        expires = datetime.timedelta(hours=2)
         if db_user and bcrypt.check_password_hash(db_user.password, password):
             # Check if the user is an admin
             if db_user.is_admin:
                 # Create tokens with additional claim to indicate the admin role
-                access_token = create_access_token(identity=db_user.email, additional_claims={"is_admin": True})
+                access_token = create_access_token(identity=db_user.email, additional_claims={"is_admin": True}, fresh=True, expires_delta = expires)
                 refresh_token = create_refresh_token(identity=db_user.email)
                 return make_response(jsonify({
                     "access_token": access_token,
@@ -88,7 +89,7 @@ class Login(Resource):
                 }), 200)
             else:
                 # Create tokens without the admin claim
-                access_token = create_access_token(identity=db_user.email)
+                access_token = create_access_token(identity=db_user.email, fresh=True, expires_delta = expires)
                 refresh_token = create_refresh_token(identity=db_user.email)
                 return make_response(jsonify({
                     "access_token": access_token,
@@ -110,5 +111,5 @@ class Refresh(Resource):
     @jwt_required(refresh=True)
     def post(self):
         current_user=get_jwt_identity()
-        new_access_token=create_access_token(identity=current_user)
+        new_access_token=create_access_token(identity=current_user, fresh=False)
         return make_response(jsonify({"access_token":new_access_token}), 200)

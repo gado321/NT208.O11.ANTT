@@ -25,6 +25,15 @@ const AdminLogin = () => {
             .then(data => {
                 if (data.is_admin) {
                     login(data); // Assuming login function takes the whole data object
+                    // Retrieve the data from the "REACT_TOKEN_AUTH_KEY" field in JSON format from localStorage
+                    const tokenData = JSON.parse(localStorage.getItem("REACT_TOKEN_AUTH_KEY"));
+
+                    // Extract the "access_token" and "refresh_token" components from the tokenData
+                    const { access_token, refresh_token } = tokenData;
+
+                    // Store the "access_token" and "refresh_token" back in the localStorage with corresponding names
+                    localStorage.setItem("access_token", access_token);
+                    localStorage.setItem("refresh_token", refresh_token);
                     navigate('/admin/dashboard', {replace: true});
                 } else {
                     // This else part will handle the situation when the login is successful but the user is not an admin
