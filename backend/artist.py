@@ -1,8 +1,11 @@
 from flask import Flask, request, jsonify
 from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required
+from werkzeug.utils import secure_filename
 from models import Artist, Song
 from song import song_model
+import urllib.parse
+import os
 
 artist_ns = Namespace('api', description='Artist related operations')
 
@@ -116,4 +119,56 @@ class ArtistPlaysResource(Resource):
                 "plays":plays
             }
         )
+
+@artist_ns.route('/artist/search/<string:name>')
+class ArtistSearchResource(Resource):
+    @artist_ns.marshal_list_with(artist_model)
+    def get(self,name):
+        """Search artists by name"""
+        search_term = urllib.parse.unquote(name)
+        artist=Artist.query.filter(Artist.name.like(f'%{search_term}%')).all()
+        return artist
+
+# get last id of artist in database
+@artist_ns.route('/artists/last_id')
+class ArtistLastIdResource(Resource):
+    def get(self):
+        """Get last id of artist in database"""
+        song=Artist.query.order_by(Artist.id.desc()).first()
+        return jsonify(
+            {
+                "lastId":song.id
+            }
+        )
+
+# route to upload image of an artist
+@artist_ns.route('/artists/upload')
+class ArtistUploadResource(Resource):
+    @jwt_required()
+    def post(self):
+        """Upload an image of an artist"""
+        from flask import current_app
+
+        if 'image' not in request.files:
+            return {'message': 'No data sent'}, 400
+
+        image = request.files['image']
+        artist_name = request.form['name']
+        artist_id = request.form['artistId']
+
+        if image.filename == '':
+            return {'message': 'No file selected'}, 400
+        
+        if image:
+            image_extension = os.path.splitext(image.filename)[1]
+            
+            artist_filename = artist_name + '-' + artist_id + image_extension
+
+            secure_artist_filename = secure_filename(artist_filename)
+
+            image.save(os.path.join('../data/images/artist', secure_artist_filename))
+
+            return {'message': 'Image uploaded successfully'}, 200
+        else:
+            return {'message': 'Image upload failed'}, 400
         
