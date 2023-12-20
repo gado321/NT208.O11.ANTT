@@ -755,7 +755,6 @@ function LoadingDashboard() {
     const iconPreviousSongImg = document.createElement('img');
     iconPreviousSongImg.className = 'icon-previous-song';
     iconPreviousSongImg.src = skipForward;
-    iconPreviousSongImg.addEventListener('click', 'previousSong');
     
     const iconPlaySongImg = document.createElement('img');
     iconPlaySongImg.className = 'icon-play-song';
@@ -768,7 +767,6 @@ function LoadingDashboard() {
     const iconNextSongImg = document.createElement('img');
     iconNextSongImg.className = 'icon-next-song';
     iconNextSongImg.src = skipNext;
-    iconNextSongImg.addEventListener('click', 'nextSong');
     
     const iconRepeatSongImg = document.createElement('img');
     iconRepeatSongImg.className = 'icon-repeat-song';
