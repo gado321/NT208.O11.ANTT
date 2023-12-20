@@ -8,6 +8,7 @@ import HomePage from './Pages/Home/Home';
 import LoginPage from './Pages/Login/Login';
 import RegisterPage from './Pages/Register/Register';
 import Dashboard from './Pages/Dashboard/Dashboard'
+import AdminLogin from './components/admin/Login/Login';
 import AdminDashboard from './components/admin/Dashboard/Dashboard';
 import AdminSong from './components/admin/Song/Song';
 import AdminArtist from './components/admin/Artist/Artist';
@@ -73,37 +74,38 @@ function App() {
               <div className='avt'></div>
             </div>  
           </div>
-          <div className='content'> </div>
+          <div className='content'>
+          <React.StrictMode>
+            <BrowserRouter>
+              <Routes>
+                {/* User route */}
+                <Route path="/" element={<HomePage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
+                <Route path='/dashboard' element={<Dashboard />} />
+                
+                {/* Admin route */}
+                <Route 
+                  path="/admin/*" 
+                  element={
+                    <ProtectedRoute>
+                      <Routes>
+                        <Route path="dashboard" element={<AdminDashboard />} />
+                        <Route path="song" element={<AdminSong />} />
+                        <Route path="artist" element={<AdminArtist />} />
+                        <Route path="album" element={<AdminAlbum />} />
+                        <Route path="genre" element={<AdminGenre />} />
+                        <Route path="/" element={<Navigate to="dashboard" replace />} />
+                      </Routes>
+                    </ProtectedRoute>
+                  } 
+                />
+              </Routes>
+            </BrowserRouter>
+          </React.StrictMode>
+          </div>
           <div className='footer'> </div>
       </div>
-      <React.StrictMode>
-        <BrowserRouter>
-          <Routes>
-            {/* User route */}
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path='/dashboard' element={<Dashboard />} />
-            
-            {/* Admin route */}
-            <Route 
-              path="/admin/*" 
-              element={
-                <ProtectedRoute>
-                  <Routes>
-                    <Route path="dashboard" element={<AdminDashboard />} />
-                    <Route path="song" element={<AdminSong />} />
-                    <Route path="artist" element={<AdminArtist />} />
-                    <Route path="album" element={<AdminAlbum />} />
-                    <Route path="genre" element={<AdminGenre />} />
-                    <Route path="/" element={<Navigate to="dashboard" replace />} />
-                  </Routes>
-                </ProtectedRoute>
-              } 
-            />
-          </Routes>
-        </BrowserRouter>
-      </React.StrictMode>
     </>
   );
 }
