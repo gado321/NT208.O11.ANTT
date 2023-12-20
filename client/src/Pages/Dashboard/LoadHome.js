@@ -57,7 +57,7 @@ function LoadingDashboard() {
       try {
         //Get user data
         const response = await api.get(`/api/users/${id}`);
-        const userData = await response.json;
+        const userData = await response.json();
         setDataUser(userData);
 
         // Add content
@@ -67,7 +67,7 @@ function LoadingDashboard() {
         const moodBoosters = [];
         for (let i = 0; i < 2; i++) {
           const responseSong = await api.get(`/api/songs/random_with_genre/1`);
-          const songJSON = await responseSong.json;
+          const songJSON = await responseSong.json();
           const song = [];
           song.push(...songJSON);
           setDataSong(...song);
@@ -82,7 +82,7 @@ function LoadingDashboard() {
         const bestArtists = [];
         for (let i = 0; i < 7; i++) {
           const responseArtist = await api.get(`/api/artists/${idArtistLikes[i].id}`);
-          const artistJSON = await responseArtist.json;
+          const artistJSON = await responseArtist.json();
           setDataArtist(artistJSON);
           bestArtists.push(artistJSON);
         }
@@ -93,7 +93,7 @@ function LoadingDashboard() {
           Authorization: `Bearer ${token}`
         };
         const artistMadeForUser = await api.get(`/api/users/${id}/like_artists`, { headers });
-        const artistMadeForUserJSON = await artistMadeForUser.json;
+        const artistMadeForUserJSON = await artistMadeForUser.json();
         const artistMadeForUserList = [];
         setDataArtist(...artistMadeForUserJSON);
         artistMadeForUserList.push(...artistMadeForUserJSON);
@@ -101,7 +101,7 @@ function LoadingDashboard() {
         const albumForUserList = [];
         for(let i=0; i<artistMadeForUserList.length; i++){
           const responseAlbum = await api.get(`/api/albums/artist/${artistMadeForUserList[i].id}/random`);
-          const albumJSON = await responseAlbum.json;
+          const albumJSON = await responseAlbum.json();
           setDataAlbum(albumJSON);
           albumForUserList.push(albumJSON);
         }
@@ -119,7 +119,7 @@ function LoadingDashboard() {
     const transSongToArtist = async (idSong) => {
       try {
         const response = await api.get(`/api/songs/${idSong}/artists`);
-        const artistJSON = await response.json;
+        const artistJSON = await response.json();
         const artistList = [];
         artistList.push(...artistJSON);
         return artistList;
@@ -134,13 +134,13 @@ function LoadingDashboard() {
     const sortArtistByLike = async () => {
       try {
         const response = await api.get(`/api/artists`);
-        const artistJSON = await response.json;
+        const artistJSON = await response.json();
         const cntArtist = artistJSON.length;
         const id_likes = [];
         for(let i=0; i<cntArtist; i++){
           try{
             const response = await api.get(`/api/artists/${i+1}/likes`);
-            const artistLikeJSON = await response.json;
+            const artistLikeJSON = await response.json();
             id_likes.push({ id: i+1, likes: artistLikeJSON.likes });
           }
           catch (error) {
