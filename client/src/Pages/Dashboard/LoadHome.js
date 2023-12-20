@@ -1,19 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import musical_sound_music_logo from "../Icon/musical-sound-music-logo.svg";
-import axios from 'axios';
-
-
-// Loading page
-function Loading() {
-  return (
-    <div className="loading-container">
-      <div>
-        <img className="home-logo" src={musical_sound_music_logo} alt="loading" />
-        <p className="loading-title">Music4Life</p>
-      </div>
-    </div>
-  );
-}
+import api from '../../api';
+import sharedVariables from './shareVariable';
 
 // Kiểm tra URL hiện tại và tải tệp CSS khi URL khớp với /dashboard
 if (window.location.pathname === '/dashboard') {
@@ -68,8 +56,8 @@ function LoadingDashboard() {
     const fetchUserData = async () => {
       try {
         //Get user data
-        const response = await axios.get(`/api/users/${id}`);
-        const userData = response.data;
+        const response = await api.get(`/api/users/${id}`);
+        const userData = await response.json;
         setDataUser(userData);
 
         // Add content
@@ -78,8 +66,8 @@ function LoadingDashboard() {
         // Get mood boosters
         const moodBoosters = [];
         for (let i = 0; i < 2; i++) {
-          const responseSong = await axios.get(`/api/songs/random_with_genre/1`);
-          const songJSON = responseSong.data;
+          const responseSong = await api.get(`/api/songs/random_with_genre/1`);
+          const songJSON = await responseSong.json;
           const song = [];
           song.push(...songJSON);
           setDataSong(...song);
@@ -93,8 +81,8 @@ function LoadingDashboard() {
         const idArtistLikes = await sortArtistByLike();
         const bestArtists = [];
         for (let i = 0; i < 7; i++) {
-          const responseArtist = await axios.get(`/api/artists/${idArtistLikes[i].id}`);
-          const artistJSON = responseArtist.data;
+          const responseArtist = await api.get(`/api/artists/${idArtistLikes[i].id}`);
+          const artistJSON = await responseArtist.json;
           setDataArtist(artistJSON);
           bestArtists.push(artistJSON);
         }
@@ -104,16 +92,16 @@ function LoadingDashboard() {
         const headers = {
           Authorization: `Bearer ${token}`
         };
-        const artistMadeForUser = await axios.get(`/api/users/${id}/like_artists`, { headers });
-        const artistMadeForUserJSON = artistMadeForUser.data;
+        const artistMadeForUser = await api.get(`/api/users/${id}/like_artists`, { headers });
+        const artistMadeForUserJSON = await artistMadeForUser.json;
         const artistMadeForUserList = [];
         setDataArtist(...artistMadeForUserJSON);
         artistMadeForUserList.push(...artistMadeForUserJSON);
 
         const albumForUserList = [];
         for(let i=0; i<artistMadeForUserList.length; i++){
-          const responseAlbum = await axios.get(`/api/albums/artist/${artistMadeForUserList[i].id}/random`);
-          const albumJSON = responseAlbum.data;
+          const responseAlbum = await api.get(`/api/albums/artist/${artistMadeForUserList[i].id}/random`);
+          const albumJSON = await responseAlbum.json;
           setDataAlbum(albumJSON);
           albumForUserList.push(albumJSON);
         }
@@ -130,8 +118,8 @@ function LoadingDashboard() {
     // Function to fetch Artist data from Song
     const transSongToArtist = async (idSong) => {
       try {
-        const response = await axios.get(`/api/songs/${idSong}/artists`);
-        const artistJSON = response.data;
+        const response = await api.get(`/api/songs/${idSong}/artists`);
+        const artistJSON = await response.json;
         const artistList = [];
         artistList.push(...artistJSON);
         return artistList;
@@ -145,14 +133,14 @@ function LoadingDashboard() {
     // Function to sort Artist by like
     const sortArtistByLike = async () => {
       try {
-        const response = await axios.get(`/api/artists`);
-        const artistJSON = response.data;
+        const response = await api.get(`/api/artists`);
+        const artistJSON = await response.json;
         const cntArtist = artistJSON.length;
         const id_likes = [];
         for(let i=0; i<cntArtist; i++){
           try{
-            const response = await axios.get(`/api/artists/${i+1}/likes`);
-            const artistLikeJSON = response.data;
+            const response = await api.get(`/api/artists/${i+1}/likes`);
+            const artistLikeJSON = await response.json;
             id_likes.push({ id: i+1, likes: artistLikeJSON.likes });
           }
           catch (error) {
