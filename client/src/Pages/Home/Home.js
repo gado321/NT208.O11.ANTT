@@ -6,7 +6,7 @@ import musical_sound_music_logo from "../Icon/musical-sound-music-logo.svg"
 import icon_google from "../Icon/icon-google.svg"
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-
+import { useNavigate } from "react-router-dom";
 function Loading() {
     return (
         <div className="loading-container">
@@ -49,6 +49,14 @@ function Home() {
 // ====================================================================================================
 
 function HomePage() {
+    const navigate = useNavigate(); // Sử dụng useNavigate để chuyển hướng trang
+    // const condition = localStorage.getItem('access_token')// Kiểm tra access_token có tồn tại hay không
+    // useEffect(() => {
+    //   if (condition) {
+    //     navigate('/dashboard'); // Điều hướng về trang ban đầu của bạn
+    //   }
+    // }, [condition, navigate]);
+
     const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {

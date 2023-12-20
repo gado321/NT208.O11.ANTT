@@ -1,9 +1,16 @@
-import React, { useState } from "react";
+import {React, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Register.css";
-// import { Icon } from '@iconify/react';
 
 export default function RegisterPage() {
+    const navigate = useNavigate(); // Sử dụng useNavigate để chuyển hướng trang
+    // const condition = localStorage.getItem('access_token')// Kiểm tra access_token có tồn tại hay không
+    // useEffect(() => {
+    //   if (condition) {
+    //     navigate('/dashboard'); // Điều hướng về trang ban đầu của bạn
+    //   }
+    // }, [condition, navigate]);
+    
     const initUserName = {
         email: "",
         password: "",
@@ -13,7 +20,6 @@ export default function RegisterPage() {
         gender: "",
     };
     const [registerMessage, setRegisterMessage] = useState("");
-    const navigate = useNavigate(); // Sử dụng useNavigate để chuyển hướng trang
     const [UserName, setUserName] = useState(initUserName);
     const [formError, setFormError] = useState({});
     
