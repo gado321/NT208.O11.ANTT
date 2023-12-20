@@ -9,14 +9,7 @@ var sharedVariables = (function() {
         format: 'mp3',
         autoplay: false,
         html5: true,
-        onplay: function() {
-          setInterval(updateTimestamp, 1000);
-        },
-        onend: function() {
-          clearInterval(timestampInterval);
-        },
     });
-
   
     return {
         getSound: function() {
