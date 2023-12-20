@@ -86,7 +86,6 @@ function App() {
             <Route path='/dashboard' element={<Dashboard />} />
             
             {/* Admin route */}
-            <Route path="/admin/login" element={<AdminLogin />} />
             <Route 
               path="/admin/*" 
               element={
@@ -111,5 +110,5 @@ function App() {
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <MainApp />
+  <App />
 );
