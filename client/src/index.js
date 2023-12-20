@@ -85,7 +85,6 @@ function App() {
                 <Route path='/dashboard' element={<Dashboard />} />
                 
                 {/* Admin route */}
-                <Route path="/admin/login" element={<AdminLogin />} />
                 <Route 
                   path="/admin/*" 
                   element={
