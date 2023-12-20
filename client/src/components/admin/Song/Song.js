@@ -3,10 +3,6 @@ import { Dropdown, Badge, Button } from 'react-bootstrap';
 import api from '../../../api'
 import { slugifyVietnamese, getExtension } from '../Utils';
 
-if (window.location.pathname === '/admin/song') { //Link actice
-    require('bootstrap/dist/css/bootstrap.min.css'); // Import tệp CSS 
-}
-
 const MultiSelectDropdown = ({ items, title, selectedItemIds, setSelectedItemIds }) => {
     const [searchValue, setSearchValue] = useState('');
   
@@ -83,6 +79,10 @@ const Song = () => {
     const [selectedSongFile, setSelectedSongFile] = useState(null);
     const [selectedPictureFile, setSelectedPictureFile] = useState(null);
     const [isCreating, setIsCreating] = useState(false);
+
+    if (window.location.pathname === '/admin/song') {
+        require('bootstrap/dist/css/bootstrap.min.css');
+    }
 
     // Initialize new song form data
     const initialFormState = {

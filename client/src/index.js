@@ -7,7 +7,6 @@ import musical_sound_music_logo from "./Pages/Icon/musical-sound-music-logo.svg"
 import HomePage from './Pages/Home/Home';
 import LoginPage from './Pages/Login/Login';
 import RegisterPage from './Pages/Register/Register';
-import AdminLogin from './components/admin/Login/Login';
 import Dashboard from './Pages/Dashboard/Dashboard'
 import AdminDashboard from './components/admin/Dashboard/Dashboard';
 import AdminSong from './components/admin/Song/Song';
@@ -111,7 +110,6 @@ function App() {
 }
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-
 root.render(
-  <App />
+  <MainApp />
 );
