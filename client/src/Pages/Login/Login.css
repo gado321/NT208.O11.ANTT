@@ -26,7 +26,7 @@
     border: 2px solid var(--fontColor);
     border-radius: 5px;
 }
-.forgot-password Link {
+.forgot-password a {
     margin: 5px;
     display: flex;
     justify-content: flex-end;
