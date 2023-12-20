@@ -37,13 +37,13 @@ function MainApp() {
   return (
     <div className="container-page">
         <div className='nav-bar'>
-          <a className="mucsic-logo-link" href="/">
-            <img className="music-logo" src={musical_sound_music_logo} alt="logo"/>
-          </a>
-        </div>
-        <div className='header-page'>
-          <div className="header-content">
-            <div className='hello'></div>
+            <a className="mucsic-logo-link" href="/">
+              <img className="music-logo" src={musical_sound_music_logo} alt="logo"/>
+            </a>
+      </div>
+      <div className='header'>
+        <div className="header-content">
+          <div className='hello'></div>
             <div className='button-mode'>
               <label className="mode-switch" onClick="">
                   <input type="checkbox"/>
@@ -53,9 +53,9 @@ function MainApp() {
             <div className='avt'></div>
           </div>  
         </div>
-        <div className='content-page'>
-          <App/>
-        </div>
+      <div className='content'>
+            <App/>
+          </div>
     </div>
   );
 }

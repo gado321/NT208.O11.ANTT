@@ -9,6 +9,7 @@
 }
 html, body {
   margin: 0;
+  width: 100%;
   height: 100%;
   background-color: var(--backgroundColor);
   color: var(--fontColor);
@@ -19,26 +20,31 @@ html, body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+#root {
+  width: 100%;
+  height: 100%;
+}
 /* chia grid */
 .container-page {
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-columns: 1fr 3fr 1fr;
+  grid-template-columns: 1fr 9fr;
   grid-template-rows: auto;
   grid-template-areas:
-  "navbar header header"
-  "content content content"
-  "content content content";
+  "navbar header"
+  "content content"
+  "content content";
 }
 .nav-bar {
   grid-area: navbar;
   background-color: var(--navbarColor);
 }
-.header-page {
+.header {
+  height: 10%;
   grid-area: header;
 }
-.content-page {
+.content {
   grid-area: content;
 }
 .music-logo {
@@ -109,11 +115,6 @@ transform: translateX(46px);
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
-}
-
-.header{
-  display: grid;
-  grid-area: right-top;
 }
 .header-content{
   display: flex;
