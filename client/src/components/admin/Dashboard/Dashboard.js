@@ -1,11 +1,15 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { useAuth ,logout} from '../Auth'
 import './Dashboard.css'
-import 'bootstrap/dist/css/bootstrap.min.css';
-import AdminLoginPage from '../../admin/Login/Login'
-
 const LoggedInLinks = () => {
+    
+    const logout = () => {
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        localStorage.removeItem('is_admin');
+        localStorage.removeItem('REACT_TOKEN_AUTH_KEY');
+    }
+
     return (
         <>
             <li className="nav-item">
@@ -21,21 +25,23 @@ const LoggedInLinks = () => {
                 <Link className="nav-link active" to="/admin/genre">Album</Link>
             </li>
             <li className="nav-item">
-                <a className="nav-link active" href="#" onClick={()=>{logout()}}>Log Out</a>
+                <a className="nav-link active" href="/admin/login" onClick={()=>{logout()}}>Log Out</a>
             </li>
         </>
     )
 }
 
 const AdminDashboard = () => {
-    const [logged] = useAuth();
+    if (window.location.pathname === '/admin/dashboard') {
+        require('bootstrap/dist/css/bootstrap.min.css');
+    }    
 
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
             <div className="container-fluid">
                 <div className="collapse navbar-collapse" id="navbarNav">
                     <ul className="navbar-nav">
-                        {logged?<LoggedInLinks/>:<AdminLoginPage/>}
+                        <LoggedInLinks/>
                     </ul>
                 </div>
             </div>

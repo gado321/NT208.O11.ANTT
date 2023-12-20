@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Dropdown, Badge, Button } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { useAuth ,logout, authFetch} from '../Auth'
 import api from '../../../api'
 import { slugifyVietnamese, getExtension } from '../Utils';
+
+if (window.location.pathname === '/admin/song') { //Link actice
+    require('bootstrap/dist/css/bootstrap.min.css'); // Import tệp CSS 
+}
 
 const MultiSelectDropdown = ({ items, title, selectedItemIds, setSelectedItemIds }) => {
     const [searchValue, setSearchValue] = useState('');
@@ -155,6 +157,22 @@ const Song = () => {
             console.error('Error fetching related artists and genres:', error);
         }
     };
+
+    const handleDelete = async (songId) => {
+        try {
+            const response = await api.delete(`/api/songs/${songId}`);
+    
+            if (response.ok) {
+                // Remove the song from the songs list in the state
+                setSongs(songs.filter((song) => song.id !== songId));
+                console.log(`Song with ID: ${songId} deleted successfully.`);
+            } else {
+                console.error('Failed to delete the song.');
+            }
+        } catch (error) {
+            console.error('Error deleting the song: ', error);
+        }
+    };    
     
     const handleChange = (event, setFunction) => {
         const { name, value } = event.target;
@@ -279,12 +297,24 @@ const Song = () => {
         }
 
         try {
-            
+            var filePath = '';
+            if (selectedSongFile) {
+                filePath = '../data/songs/' + sanitizedSongName + '-' + selectedSong.id + '.' + getExtension(selectedSongFile.name);
+            } else {
+                filePath = selectedSong.path;
+            }
+
+            var picturePath = '';
+            if (selectedPictureFile) {
+                picturePath = '../data/images/song/' + sanitizedSongName + '-' + selectedSong.id + '.' + getExtension(selectedPictureFile.name);
+            } else {
+                picturePath = selectedSong.picture_path;
+            }
             const putData = JSON.stringify(
                 {
                     name: selectedSong.name,
-                    path: '../data/songs/' + sanitizedSongName + '-' + selectedSong.id + '.' + getExtension(selectedSongFile.name),
-                    picture_path: '../data/images/song/' + sanitizedSongName + '-' + selectedSong.id + '.' + getExtension(selectedPictureFile.name),
+                    path: filePath,
+                    picture_path: picturePath,
                     release_date: selectedSong.release_date
                 }
             );
@@ -350,6 +380,7 @@ const Song = () => {
                     <div key={song.id}>
                         {song.name}
                         <button onClick={() => handleEdit(song)}>Edit</button>
+                        <button onClick={() => handleDelete(song.id)}>Delete</button>
                     </div>
                 ))}
             </div>

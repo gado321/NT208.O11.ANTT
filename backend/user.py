@@ -30,6 +30,7 @@ user_model=user_ns.model(
 @user_ns.route('/users')
 class UserResource(Resource):
     @user_ns.marshal_list_with(user_model)
+    @jwt_required()
     def get(self):
         """Get all users"""
         users=User.query.all()
@@ -58,6 +59,7 @@ class UserResource(Resource):
 @user_ns.route('/users/<int:id>')
 class UserResource(Resource):
     @user_ns.marshal_with(user_model)
+    @jwt_required()
     def get(self,id):
         """Get a user by id"""
         user=User.query.get_or_404(id)
