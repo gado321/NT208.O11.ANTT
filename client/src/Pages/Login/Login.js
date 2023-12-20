@@ -136,7 +136,7 @@ export default function LoginPage() {
                         <Link to="/forgotpassword">
                             Forgot Password?
                         </Link>
-                        <Link to="./register">
+                        <Link to="/register">
                             Do not have account?
                         </Link>
                     </div>

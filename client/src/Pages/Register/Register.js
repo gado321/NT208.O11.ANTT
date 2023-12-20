@@ -108,16 +108,13 @@ export default function RegisterPage() {
                     setRegisterMessage("Registration successful!");
                     navigate("/login");
                 } else {
-                    setRegisterMessage("Registration failed! Please try again.");
+                    throw new Error('Something went wrong');
                     
                 }
             })
             .catch(error => {
                 setRegisterMessage("Registration failed! Please try again.");
             });
-        }
-        else {
-            setRegisterMessage("Registration failed! Please try again.");
         }
     };
     // Trả về html
@@ -252,12 +249,14 @@ export default function RegisterPage() {
                                 {formError.gender}
                             </p>
                         </div>
-                        {registerMessage && <p>{registerMessage}</p>}
                     </div>
                 </div>
                 <div className="btnRegister-container">
+                    <p className="register-error-feedback">
+                        {registerMessage}
+                    </p>
                     <button type="submit" className="btnRegister">
-                        SIGN IN
+                        REGISTER
                     </button>
                 </div>
             </form>

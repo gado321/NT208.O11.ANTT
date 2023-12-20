@@ -3,7 +3,7 @@ import "./ForgotPassword.css";
 import { useNavigate } from "react-router-dom";
 export default function ForgotPasswordPage() {
 
-    // const navigate = useNavigate(); // Sử dụng useNavigate để chuyển hướng trang
+    const navigate = useNavigate(); // Sử dụng useNavigate để chuyển hướng trang
     // const condition = localStorage.getItem('access_token')// Kiểm tra access_token có tồn tại hay không
     // useEffect(() => {
     //   if (condition) {
@@ -15,7 +15,7 @@ export default function ForgotPasswordPage() {
         newpass: "",
         confirmnewpass: "",
     };
-
+    const [forgotpasswordMessage, setForgotpasswordrMessage] = useState("");
     const [UserName, setUserName] = useState(initUserName);
     const [formError, setFormError] = useState({});
     
@@ -49,60 +49,53 @@ export default function ForgotPasswordPage() {
         else if (isEmailValid(UserName.email)) {
             error.email = "Please enter a valid email address";
         }
-        if (isEmptyValue(UserName.password)) {
-            error.password = "Please enter your password";
+        if (isEmptyValue(UserName.newpass)) {
+            error.newpass = "Please enter your password";
         }
-        else if ((UserName.password.length < 8) || (UserName.password.length > 20)) {
-            error.password = "Password must be at least 8 and less than 20.";
+        else if ((UserName.newpass.length < 8) || (UserName.newpass.length > 20)) {
+            error.newpass = "Password must be at least 8 and less than 20.";
         }
-        else if ((!/\d/.test(UserName.password)) || (!/[!@#$%^&*]/.test(UserName.password))) {
-            error.password = "Password must contain numbers and symbols";
+        else if ((!/\d/.test(UserName.newpass)) || (!/[!@#$%^&*]/.test(UserName.newpass))) {
+            error.newpass = "Password must contain numbers and symbols";
         }
         // Kiểm tra mật khẩu nhập lại
-        if (isEmptyValue(UserName.confirmpassword)) {
-            error.confirmpassword = "Please enter confirm password";
+        if (isEmptyValue(UserName.confirmnewpass)) {
+            error.confirmnewpass = "Please enter confirm password";
         }
-        else if (UserName.confirmpassword !== UserName.password) {
-            error.confirmpassword = "Confirm password does not match";
+        else if (UserName.confirmnewpass !== UserName.newpass) {
+            error.confirmnewpass = "Confirm password does not match";
         }
         setFormError(error);
         return Object.keys(error).length === 0;
     }
     // Xác nhận dữ liệu khi đăng nhập và in ra console
     const handleSubmit = (event) => {
-        // event.preventDefault();
-        // if (validateForm()) {
-        //     // Gửi yêu cầu POST đến API Python
-        //     fetch('http://localhost:5000/auth/signup', {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/json'
-        //         },
-        //         body: JSON.stringify({
-        //             name: UserName.username,
-        //             email: UserName.email,
-        //             password: UserName.password,
-        //             gender: UserName.gender,
-        //             date_of_birth: UserName.birthday
-        //         })
-        //     })
-        //     .then(response => {
-        //         if (response.ok) {
-        //             setRegisterMessage("Registration successful!");
-        // history.push('/dashboard');
-        //             navigate("/login");
-        //         } else {
-        //             setRegisterMessage("Registration failed! Please try again.");
-                    
-        //         }
-        //     })
-        //     .catch(error => {
-        //         setRegisterMessage("Registration failed! Please try again.");
-        //     });
-        // }
-        // else {
-        //     setRegisterMessage("Registration failed! Please try again.");
-        // }
+        event.preventDefault();
+        if (validateForm()) {
+            // Gửi yêu cầu POST đến API Python
+            fetch('http://localhost:5000/auth/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: UserName.username,
+                    email: UserName.email,
+                    password: UserName.password
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    setForgotpasswordrMessage("Set New Password Successful!");
+                    navigate("/login");
+                } else {
+                    throw new Error('Something went wrong');
+                }
+            })
+            .catch(error => {
+                setForgotpasswordrMessage("Set new password failed! Please try again.");
+            });
+        }
         event.preventDefault();
         const forgotpasswordData = {
             email: UserName.email,
@@ -141,7 +134,7 @@ export default function ForgotPasswordPage() {
                             New Password
                         </label>
                         <input
-                            type="passqword"
+                            type="password"
                             id="forgotpassword-newpass"
                             className="forgotpassword-form-control"
                             name="newpass"
@@ -149,7 +142,7 @@ export default function ForgotPasswordPage() {
                             onChange={handleChangeUser}
                         />
                         <p className="forgotpassword-error-feedback">
-                            {formError.email}
+                            {formError.newpass}
                         </p>
                     </div>
                     <div>
@@ -166,13 +159,16 @@ export default function ForgotPasswordPage() {
                             onChange={handleChangeUser}
                         />
                         <p className="forgotpassword-error-feedback">
-                            {formError.password}
+                            {formError.confirmnewpass}
                         </p>
                     </div>
                     <div className="btnforgotpassword-container">
                         <button type="submit" className="btnforgotpassword" onClick={handleSubmit}>
                             Forgot Password
                         </button>
+                        <p className="forgotpassword-error-feedback">
+                            {forgotpasswordMessage}
+                        </p>
                     </div>
                 </form>
             </div>
