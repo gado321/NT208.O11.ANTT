@@ -38,34 +38,40 @@ function SettingPage() {
     };
     
     const [dataUser, setDataUser] = useState(initialFormState);
-    
+    const [isHeaderAdded, setIsHeaderAdded] = useState(false);
+    const headerAddedRef = useRef(false);
     // Function to fetch user data
     const fetchUserData = async () => {
       try {
         const response = await axios.get(`/api/users/${id}`);
         const userData = response.data;
         setDataUser(userData);
-        addHeaderContent(userData);
+        addHeaderContent(dataUser);
         addContent();
       } catch (error) {
         // Xử lý lỗi nếu có
         console.error(error);
       }
     };
-
-    const [isHeaderAdded, setIsHeaderAdded] = useState(false);
-    const headerAddedRef = useRef(false);
-    const addHeaderContent = (userData) => {
+    useEffect(() => {
+      if (!isHeaderAdded && !headerAddedRef.current) {
+          
+          fetchUserData();
+          setIsHeaderAdded(true);
+          headerAddedRef.current = true;
+      }
+    }, []);
+    const addHeaderContent = (dataUser) => {
         const hello = document.querySelector('.hello');
         const avtDiv = document.querySelector('.avt');
         const heading = document.createElement('h2');
-        heading.textContent = 'Hey ' + userData.name +'!';
+        heading.textContent = 'Hey ' + dataUser.name +'!';
         const ringImg = document.createElement('img');
         ringImg.src = ring;
         ringImg.alt = 'Music4Life';
         const avt = document.createElement('img');
-        if(userData.picture_path != null){
-          avt.src = userData.picture_path;
+        if(dataUser.picture_path != null){
+          avt.src = dataUser.picture_path;
         }
         else{
           avt.src = profile;
@@ -167,15 +173,6 @@ function SettingPage() {
       deleteAccount.appendChild(button);
       content.appendChild(deleteAccount);
     };
-    useEffect(() => {
-        if (!isHeaderAdded && !headerAddedRef.current) {
-            
-            fetchUserData();
-            setIsHeaderAdded(true);
-            headerAddedRef.current = true;
-        }
-    }, []);
-
     return (
       <div></div>
     );

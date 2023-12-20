@@ -3,12 +3,12 @@ import "./Login.css";
 import { Link, useNavigate } from "react-router-dom";
 export default function LoginPage() {
     const navigate = useNavigate(); // Sử dụng useNavigate để chuyển hướng trang
-    // const condition = localStorage.getItem('access_token')// Kiểm tra access_token có tồn tại hay không
-    // useEffect(() => {
-    //   if (condition) {
-    //     navigate('/dashboard'); // Điều hướng về trang ban đầu của bạn
-    //   }
-    // }, [condition, navigate]);
+    const condition = localStorage.getItem('access_token')// Kiểm tra access_token có tồn tại hay không
+    useEffect(() => {
+      if (condition) {
+        navigate('/dashboard'); // Điều hướng về trang ban đầu của bạn
+      }
+    });
     
     const initUserName = {
         email: "",

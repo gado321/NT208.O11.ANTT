@@ -50,12 +50,12 @@ function Home() {
 
 function HomePage() {
     const navigate = useNavigate(); // Sử dụng useNavigate để chuyển hướng trang
-    // const condition = localStorage.getItem('access_token')// Kiểm tra access_token có tồn tại hay không
-    // useEffect(() => {
-    //   if (condition) {
-    //     navigate('/dashboard'); // Điều hướng về trang ban đầu của bạn
-    //   }
-    // }, [condition, navigate]);
+    const condition = localStorage.getItem('access_token')// Kiểm tra access_token có tồn tại hay không
+    useEffect(() => {
+      if (condition) {
+        navigate('/dashboard'); // Điều hướng về trang ban đầu của bạn
+      }
+    });
 
     const [isLoaded, setIsLoaded] = useState(false);
 
