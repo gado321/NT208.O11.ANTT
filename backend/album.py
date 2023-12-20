@@ -1,8 +1,11 @@
 from flask import Flask, request, jsonify
 from flask_restx import Namespace, Resource, fields
+from werkzeug.utils import secure_filename
 from flask_jwt_extended import jwt_required
 from models import Album, Song
 from song import song_model
+import urllib.parse
+import os
 
 album_ns = Namespace('api', description='Album related operations')
 
@@ -14,6 +17,7 @@ album_model=album_ns.model(
         "id":fields.Integer(),
         "artist_id":fields.Integer(),
         "name":fields.String(),
+        "picture_path":fields.String(),
         "release_date":fields.Date()
     }
 )
@@ -35,6 +39,7 @@ class AlbumResource(Resource):
         new_album=Album(
             artist_id=data.get('artist_id'),
             name=data.get('name'),
+            picture_path=data.get('picture_path'),
             release_date=data.get('release_date')
         )
 
@@ -59,6 +64,7 @@ class AlbumResource(Resource):
         album_to_update.update(
             artist_id=data.get('artist_id'),
             name=data.get('name'),
+            picture_path=data.get('picture_path'),
             release_date=data.get('release_date')
         )
         return album_to_update,201
@@ -121,4 +127,56 @@ class AlbumRandomResource(Resource):
         """Get a random album with a liked artist"""
         albums=Album.query.filter(Album.artist_id==id).all()
         return random.choice(albums)
+
+@album_ns.route('/albums/search/<string:name>')
+class AlbumSearchResource(Resource):
+    @album_ns.marshal_list_with(album_model)
+    @jwt_required()
+    def get(self,name):
+        """Search albums by name"""
+        search_term = urllib.parse.unquote(name)
+        albums=Album.query.filter(Album.name.like(f'%{search_term}%')).all()
+        return albums
+
+# get last id of album in database
+@album_ns.route('/albums/last_id')
+class AlbumLastIdResource(Resource):
+    @jwt_required()
+    def get(self):
+        """Get last id of album in database"""
+        last_album_id=Album.query.order_by(Album.id.desc()).first().id
+        return jsonify(
+            {
+                'lastId': last_album_id
+            }
+        )
+
+@album_ns.route('/albums/upload')
+class AlbumUploadResource(Resource):
+    @jwt_required()
+    def post(self):
+        """Upload an image of an album"""
+        from flask import current_app
+
+        if 'image' not in request.files:
+            return {'message': 'No data sent'}, 400
+
+        image = request.files['image']
+        album_name = request.form['name']
+        album_id = request.form['albumId']
+
+        if image.filename == '':
+            return {'message': 'No file selected'}, 400
         
+        if image:
+            image_extension = os.path.splitext(image.filename)[1]
+            
+            album_filename = album_name + '-' + album_id + image_extension
+
+            secure_album_filename = secure_filename(album_filename)
+
+            image.save(os.path.join('../data/images/album', secure_album_filename))
+
+            return {'message': 'Image uploaded successfully'}, 200
+        else:
+            return {'message': 'Image upload failed'}, 400

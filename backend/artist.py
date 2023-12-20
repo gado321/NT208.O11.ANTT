@@ -123,6 +123,7 @@ class ArtistPlaysResource(Resource):
 @artist_ns.route('/artist/search/<string:name>')
 class ArtistSearchResource(Resource):
     @artist_ns.marshal_list_with(artist_model)
+    @jwt_required()
     def get(self,name):
         """Search artists by name"""
         search_term = urllib.parse.unquote(name)
@@ -132,6 +133,7 @@ class ArtistSearchResource(Resource):
 # get last id of artist in database
 @artist_ns.route('/artists/last_id')
 class ArtistLastIdResource(Resource):
+    @jwt_required()
     def get(self):
         """Get last id of artist in database"""
         song=Artist.query.order_by(Artist.id.desc()).first()

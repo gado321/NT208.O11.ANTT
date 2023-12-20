@@ -3,6 +3,7 @@ from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required
 from models import Genre
 from song import song_model, song_ns
+import urllib.parse
 
 genre_ns = Namespace('api', description='Genre related operations')
 
