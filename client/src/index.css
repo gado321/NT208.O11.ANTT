@@ -9,6 +9,7 @@
 }
 html, body {
   margin: 0;
+  width: 100%;
   height: 100%;
   background-color: var(--backgroundColor);
   color: var(--fontColor);
@@ -18,11 +19,32 @@ html, body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-/* test */
-  /* thẻ chứa back và background-mode */
+#root {
+  width: 100%;
+  height: 100%;
+}
+/* chia grid */
 .container-page {
-  display: flex;
-  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 9fr;
+  grid-template-rows: auto;
+  grid-template-areas:
+  "navbar header"
+  "content content"
+  "content content";
+}
+.nav-bar {
+  grid-area: navbar;
+  background-color: var(--navbarColor);
+}
+.header {
+  height: 10%;
+  grid-area: header;
+}
+.content {
+  grid-area: content;
 }
 .music-logo {
   width: 64px;
@@ -93,11 +115,6 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-
-.header{
-  display: grid;
-  grid-area: right-top;
-}
 .header-content{
   display: flex;
   align-items:flex-end; 
@@ -109,10 +126,6 @@ code {
   align-items: center;  
   padding: 0;
   padding-top: 1.5%;
-}
-.nav-bar{
-  grid-area: left;
-  background-color: var(--backgroundColor);
 }
 .nav-bar a {
   display: flex;

@@ -7,7 +7,11 @@ import setting from "../Icon/setting.png";
 import ring from "../Icon/ring.png";
 import musical_sound_music_logo from "../Icon/musical-sound-music-logo.svg";
 import axios from 'axios';
-import './SettingPage.css';
+
+
+if (window.location.pathname === '/setting') {
+  require('./SettingPage.css'); // Import tệp CSS
+}
 function Loading() {
   return (
     <div className="loading-container">
@@ -173,7 +177,7 @@ function SettingPage() {
     }, []);
 
     return (
-      <div>{}</div>
+      <div></div>
     );
 }
 

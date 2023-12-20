@@ -1,9 +1,16 @@
-import React, { useState } from "react";
+import {React, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Register.css";
-// import { Icon } from '@iconify/react';
 
 export default function RegisterPage() {
+    const navigate = useNavigate(); // Sử dụng useNavigate để chuyển hướng trang
+    // const condition = localStorage.getItem('access_token')// Kiểm tra access_token có tồn tại hay không
+    // useEffect(() => {
+    //   if (condition) {
+    //     navigate('/dashboard'); // Điều hướng về trang ban đầu của bạn
+    //   }
+    // }, [condition, navigate]);
+    
     const initUserName = {
         email: "",
         password: "",
@@ -13,7 +20,6 @@ export default function RegisterPage() {
         gender: "",
     };
     const [registerMessage, setRegisterMessage] = useState("");
-    const navigate = useNavigate(); // Sử dụng useNavigate để chuyển hướng trang
     const [UserName, setUserName] = useState(initUserName);
     const [formError, setFormError] = useState({});
     
@@ -102,16 +108,13 @@ export default function RegisterPage() {
                     setRegisterMessage("Registration successful!");
                     navigate("/login");
                 } else {
-                    setRegisterMessage("Registration failed! Please try again.");
+                    throw new Error('Something went wrong');
                     
                 }
             })
             .catch(error => {
                 setRegisterMessage("Registration failed! Please try again.");
             });
-        }
-        else {
-            setRegisterMessage("Registration failed! Please try again.");
         }
     };
     // Trả về html
@@ -246,12 +249,14 @@ export default function RegisterPage() {
                                 {formError.gender}
                             </p>
                         </div>
-                        {registerMessage && <p>{registerMessage}</p>}
                     </div>
                 </div>
                 <div className="btnRegister-container">
+                    <p className="register-error-feedback">
+                        {registerMessage}
+                    </p>
                     <button type="submit" className="btnRegister">
-                        SIGN IN
+                        REGISTER
                     </button>
                 </div>
             </form>
