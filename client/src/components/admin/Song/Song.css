@@ -1,0 +1,135 @@
+/* Container styles */
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f7f7f7;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Search area styles */
+  .search-area {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .search-area input[type="text"] {
+    flex-grow: 1;
+    margin-right: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  /* Button styles */
+  button {
+    padding: 10px 15px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Song list styles */
+  .song-list {
+    margin-bottom: 20px;
+  }
+  
+  .song-item {
+    background-color: #fff;
+    border: 1px solid #eee;
+    padding: 10px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .song-name {
+    font-weight: bold;
+  }
+  
+  /* Form styles */
+  form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+  }
+  
+  form input[type="text"],
+  form input[type="date"],
+  form input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  /* Multi-select dropdown styles */
+  .multi-select-dropdown {
+    margin-bottom: 20px;
+  }
+  
+  /* Styles for the create button */
+  .create-btn {
+    background-color: #28a745;
+  }
+  
+  .create-btn:hover {
+    background-color: #218838;
+  }
+  
+  /* Styles for the update button */
+  .update-btn {
+    background-color: #ffc107;
+  }
+  
+  .update-btn:hover {
+    background-color: #e0a800;
+  }
+  
+  /* Styles for the delete button */
+  .delete-btn {
+    background-color: #dc3545;
+  }
+  
+  .delete-btn:hover {
+    background-color: #c82333;
+  }
+
+  /* Styles for the dropdown menu */
+.song-list-dropdown {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 50%; /* Set a width or make it 100% to fill the container */
+    max-height: 200px; /* Adjust the height as needed */
+    overflow-y: auto; /* Enables scrolling */
+    position: absolute; /* To make it a dropdown */
+    z-index: 1000; /* To ensure it's above other elements */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: Adds a shadow for depth */
+  }
+  
+  .song-item {
+    padding: 10px;
+    border-bottom: 1px solid #eee; /* Adds a separator between songs */
+  }
+  
+  .song-item:last-child {
+    border-bottom: none; /* Removes the separator from the last item */
+  }
+  
+  /* Ensure button doesn't take full width and has margin */
+  .song-item button {
+    margin-left: 10px;
+  }
