@@ -126,6 +126,9 @@ function DashboardPage() {
       listNav.appendChild(homeIcon);
 
       const searchIcon = createNavItem('search', search, 'Search');
+      searchIcon.addEventListener('click', function() {
+        window.location.href = '/search';
+      });
       listNav.appendChild(searchIcon);
 
       const favouriteIcon = createNavItem('favourite', favourite, 'Favourites');

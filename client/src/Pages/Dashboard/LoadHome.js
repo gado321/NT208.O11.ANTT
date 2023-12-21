@@ -268,8 +268,8 @@ function LoadingDashboard() {
             function updateTimestamp() {
                 const currentPosition = sound.seek(); // Lấy vị trí hiện tại của bài hát (thời gian tính bằng giây)
                 const formattedTime = formatTime(currentPosition); // Định dạng thời gian hiện tại
-                document.querySelector('#timestamp-song-start').textContent = formattedTime;
-                document.querySelector('#timestamp-song-end').textContent = formatTime(sound.duration());
+                document.querySelector('.timestamp-song-start').textContent = formattedTime;
+                document.querySelector('.timestamp-song-end').textContent = formatTime(sound.duration());
             }
           
             function formatTime(time) {
@@ -524,8 +524,10 @@ function LoadingDashboard() {
             function updateTimestamp() {
                 const currentPosition = sound.seek(); // Lấy vị trí hiện tại của bài hát (thời gian tính bằng giây)
                 const formattedTime = formatTime(currentPosition); // Định dạng thời gian hiện tại
-                document.querySelector('#timestamp-song-start').textContent = formattedTime;
-                document.querySelector('#timestamp-song-end').textContent = formatTime(sound.duration());
+                if(document.querySelector('.timestamp-song-start') != null && document.querySelector('.timestamp-song-end') != null){
+                  document.querySelector('.timestamp-song-start').textContent = formattedTime;
+                  document.querySelector('.timestamp-song-end').textContent = formatTime(sound.duration());
+                }
             }
           
             function formatTime(time) {
@@ -685,26 +687,6 @@ function LoadingDashboard() {
   }
 
 
-  function playSongReset(isPlaying) {
-    var iconPlaySongImg = document.querySelector('.icon-play-song');
-    if (isPlaying) {
-      // Nếu đang phát, chuyển sang trạng thái tạm dừng
-      iconPlaySongImg.src = pause;
-      sound.play();
-      document.querySelector('.playing-song-title').textContent = sound.title;
-      document.querySelector('.playing-song-author').textContent = sound.artist;
-      document.querySelector('.logo-playing-song').src = sound.imagePath;
-    } else {
-      // Nếu đang tạm dừng, chuyển sang trạng thái phát
-      // iconPlaySongImg.src = play;
-      // if (sound) {
-      //   sound.pause();
-      // }
-    }
-    isPlaying = !isPlaying; // Đảo ngược trạng thái
-    // Thực hiện các hành động khác tại đây
-  }
-
   // Function to add footer content
   const addFooterContent = (sound) => {
 
@@ -759,10 +741,29 @@ function LoadingDashboard() {
     const iconPlaySongImg = document.createElement('img');
     iconPlaySongImg.className = 'icon-play-song';
     iconPlaySongImg.src = play;
-    let isPlaying = false; // Biến trạng thái, ban đầu là không phát
+    let isPlaying = true; // Biến trạng thái, ban đầu là không phát
     // Thêm sự kiện click cho nút play
 
-    iconPlaySongImg.addEventListener('click', playSongReset(isPlaying));
+    btnPlaylistContainerDiv.appendChild(iconPlaySongImg);
+
+    function playSongReset() {
+      if (isPlaying) {
+        // Nếu đang phát, chuyển sang trạng thái tạm dừng
+        iconPlaySongImg.src = pause;
+        sound.play();
+        playingSongTitleP.textContent = sound.title;
+        playingSongAuthorP.textContent = sound.artist;
+        logoPlayingSongImg.src = sound.imagePath;
+      } else {
+        // Nếu đang tạm dừng, chuyển sang trạng thái phát
+        iconPlaySongImg.src = play;
+        sound.pause();
+      }
+      isPlaying = !isPlaying; // Đảo ngược trạng thái
+      // Thực hiện các hành động khác tại đây
+    }
+
+    iconPlaySongImg.addEventListener('click', playSongReset());
     
     const iconNextSongImg = document.createElement('img');
     iconNextSongImg.className = 'icon-next-song';
