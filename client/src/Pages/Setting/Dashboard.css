@@ -1,3 +1,5 @@
+
+
 .home-logo {
     width: 630px;
     height: 630px;
@@ -260,4 +262,97 @@ input.song-timeline {
     /* align-content: flex-end; */
     align-items: center;
     justify-content: space-evenly;
+}
+/* ==========================================================CSSSettingContent========================================================== */
+
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.avt-container {
+    width: 300px;  /* Điều chỉnh kích thước ảnh */
+    height: 300px; /* Điều chỉnh kích thước ảnh */
+    border-radius: 50%; /* Hình tròn */
+    overflow: hidden; /* Đảm bảo ảnh không tràn ra khỏi khung hình tròn */
+    margin-bottom: 20px;
+}
+
+.avt-container img {
+    width: 100%;  /* Điều chỉnh kích thước ảnh */
+    height: 100%; /* Điều chỉnh kích thước ảnh */
+    object-fit: cover; /* Đảm bảo ảnh đầy đủ trong khung hình tròn */
+}
+.profile-list-info-container {
+    width: 300px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid #2c0c0c;
+}
+.profile-info-container {
+    margin: 10px;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 5px solid #291919;
+}
+
+.profile-info-number,
+.profile-list-info-name {
+    margin: 0;
+}
+.profile-info{
+    font-size: 28px;
+    font-weight: 750;
+    color: black;
+}
+.edit-profile-button {
+    width: 200px;
+    height: 80px;
+    color: var(--fontColor);
+    font-size: 28px;
+    font-weight: 750;
+    background-color: transparent;
+    border: 2px solid var(--btnColor);
+    border-radius: 5px;
+    cursor: pointer;
+    transition-duration: 0.3s;
+}
+.edit-profile-button:hover {
+    background-color: var(--btnColor);
+}
+/* =========================================================================================== */
+.list-setting-container{
+    font-size: 28px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    padding-left: 2%;
+    padding-right: 2%;
+}
+.delete-account-container {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.delete-account-button {
+    width: 300px;
+    height: 96px;
+    color: var(--fontColor);
+    font-size: 28px;
+    font-weight: 750;
+    background-color: transparent;
+    border: 2px solid var(--btnColor);
+    border-radius: 5px;
+    cursor: pointer;
+    transition-duration: 0.3s;
+}
+.delete-account-button:hover {
+    background-color: var(--btnColor);
 }
