@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Dropdown, Badge, Button } from 'react-bootstrap';
 import api from '../../../api'
 import { slugifyVietnamese, getExtension } from '../Utils';
@@ -27,7 +27,7 @@ const MultiSelectDropdown = ({ items, title, selectedItemIds, setSelectedItemIds
             {title}
           </Dropdown.Toggle>
   
-          <Dropdown.Menu>
+          <Dropdown.Menu style={{ maxHeight: '300px', overflowY: 'auto' }}>
             <div style={{ padding: '10px' }}>
               <input
                 autoFocus
@@ -228,7 +228,7 @@ const Album = () => {
                 {
                     name: newAlbum.name,
                     artist_id: selectedArtistIds[0],
-                    picture_path: '../data/images/album/' + sanitizedAlbumName + '-' + newAlbumId + '.' + getExtension(selectedAlbumImage.name),
+                    picture_path: './images/album/' + sanitizedAlbumName + '-' + newAlbumId + '.' + getExtension(selectedAlbumImage.name),
                     release_date: newAlbum.release_date
                 }
             )
@@ -303,7 +303,7 @@ const Album = () => {
             
             var picPath = '';
             if (selectedAlbumImage) {
-                picPath = '../data/images/album/' + sanitizedAlbumName + '-' + selectedAlbum.id + '.' + getExtension(selectedAlbumImage.name);
+                picPath = './images/album/' + sanitizedAlbumName + '-' + selectedAlbum.id + '.' + getExtension(selectedAlbumImage.name);
             } else {
                 picPath = selectedAlbum.picture_path;
             }
@@ -350,24 +350,38 @@ const Album = () => {
         setSelectedAlbumImage(event.target.files[0]);
         setAlbumImageUpdated(true); // Set this to true when a new image is selected
     };
+
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+
+    const toggleDropdown = useCallback(() => {
+    setDropdownOpen(!dropdownOpen);
+    }, [dropdownOpen]);
+
     return (
         <div>
-            {/* Search Ground */}
-            <div>
-                <input type="text" value={searchTerm} onChange={handleSearchChange} placeholder="Search for a album..." />
-                <button onClick={handleSearch}>Search</button>
-            </div>
+        {/* Search Ground */}
+        <div className="search-ground">
+            <input type="text" value={searchTerm} onChange={handleSearchChange} placeholder="Search for an album..." />
+            <button onClick={handleSearch}>Search</button>
+        </div>
 
-            {/* Albums List */}
-            <div>
-                {albums.map((album) => (
-                    <div key={album.id}>
-                        {album.name}
-                        <button onClick={() => handleEdit(album)}>Edit</button>
-                        <button onClick={() => handleDelete(album.id)}>Delete</button>
-                    </div>
-                ))}
-            </div>
+            {/* Albums Dropdown Button */}
+            <button onClick={toggleDropdown}>Album List</button>
+
+            {/* Albums List Dropdown Menu */}
+            {dropdownOpen && (
+                <div className="album-list-dropdown">
+                    {albums.map((album) => (
+                        <div key={album.id} className="album-item">
+                            <span className="album-name">{album.name}</span>
+                            <div>
+                                <button onClick={() => handleEdit(album)}>Edit</button>
+                                <button onClick={() => handleDelete(album.id)} className="delete-btn">Delete</button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
 
             {/* Edit Ground */}
             {selectedAlbum && (
