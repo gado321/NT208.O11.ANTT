@@ -98,6 +98,7 @@
     position: sticky;
     top: 0;
     background-color: var(--backgroundColor);
+    height: 100px;
 }
 .header-content{
     display:flex; 
@@ -127,6 +128,8 @@
 
 .content{
     grid-area: right-bottom;
+    height: calc(100vh - 200px);
+    overflow: auto;
 }
 .music-dashboard{
     padding-left: 2%;
@@ -204,6 +207,7 @@
     left: 0;
     bottom: 0;
     width: 100%;
+    height: 100px;
     background-color: var(--primary-color-light-mode-1100);
     color: white;
     text-align: center;
@@ -244,7 +248,11 @@
     justify-content: space-evenly;
     align-items: center;
 }
-.logo-playing-song{
+.playing-song-title{
+    font-size: 20px;
+    font-weight: bold;
+}
+.playing-song-container .logo-playing-song{
     width: 65px;
     height: 65px;
     border-radius: 50%;
@@ -262,4 +270,183 @@ input.song-timeline {
     /* align-content: flex-end; */
     align-items: center;
     justify-content: space-evenly;
+}
+
+.Album-Info{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    margin: 0 auto;
+    width: 80%;
+    height: 100%;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+.Album-Info .Album-Info-Image{
+    width: 50%;
+    height: 100%;
+}
+.Album-Info .Album-Info-Text{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    padding-left: 10px;
+}
+.Album-Info .Album-Info-Text h1, h2, h3, h4{
+    margin: 0;
+    padding: 0;
+}
+
+.Album-Info-Buttons{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    height: 50px;
+    background-color: #fff;
+    padding: 20%;
+}
+
+.Album-Info-Buttons button{
+    margin: 30px;
+}
+
+/* CSS */
+.button-49,
+.button-49:after {
+  width: 75px;
+  height: 75px;
+  line-height: 78px;
+  font-size: 20px;
+  font-family: 'Bebas Neue', sans-serif;
+  background: linear-gradient(45deg, transparent 5%, #ce8fff 5%);
+  border: 0;
+  color: #fff;
+  letter-spacing: 3px;
+  box-shadow: 6px 0px 0px #00E6F6;
+  outline: transparent;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button-49:after {
+  --slice-0: inset(50% 50% 50% 50%);
+  --slice-1: inset(80% -6px 0 0);
+  --slice-2: inset(50% -6px 30% 0);
+  --slice-3: inset(10% -6px 85% 0);
+  --slice-4: inset(40% -6px 43% 0);
+  --slice-5: inset(80% -6px 5% 0);
+  
+  content: 'ALTERNATE TEXT';
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 3%, #00E6F6 3%, #00E6F6 5%, #ce8fff 5%);
+  text-shadow: -3px -3px 0px #F8F005, 3px 3px 0px #00E6F6;
+  clip-path: var(--slice-0);
+}
+
+.button-49:hover:after {
+  animation: 1s glitch;
+  animation-timing-function: steps(2, end);
+}
+
+@keyframes glitch {
+  0% {
+    clip-path: var(--slice-1);
+    transform: translate(-20px, -10px);
+  }
+  10% {
+    clip-path: var(--slice-3);
+    transform: translate(10px, 10px);
+  }
+  20% {
+    clip-path: var(--slice-1);
+    transform: translate(-10px, 10px);
+  }
+  30% {
+    clip-path: var(--slice-3);
+    transform: translate(0px, 5px);
+  }
+  40% {
+    clip-path: var(--slice-2);
+    transform: translate(-5px, 0px);
+  }
+  50% {
+    clip-path: var(--slice-3);
+    transform: translate(5px, 0px);
+  }
+  60% {
+    clip-path: var(--slice-4);
+    transform: translate(5px, 10px);
+  }
+  70% {
+    clip-path: var(--slice-2);
+    transform: translate(-10px, 10px);
+  }
+  80% {
+    clip-path: var(--slice-5);
+    transform: translate(20px, -10px);
+  }
+  90% {
+    clip-path: var(--slice-1);
+    transform: translate(-10px, 0px);
+  }
+  100% {
+    clip-path: var(--slice-1);
+    transform: translate(0);
+  }
+}
+
+.Album-Detail {
+    padding-top: 5%;
+    margin: auto auto;
+    width: 80%;
+    height: 100%;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+  
+.responsive-table {
+    li {
+        border-radius: 3px;
+        padding: 25px 30px;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 25px;
+    }
+    .table-header {
+        background-color: #ce8fff;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        font-weight: bold;
+    }
+    .table-row {
+        background-color: #ffffff;
+        box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.1);
+    }
+    .col-1 {
+        flex-basis: 10%;
+    }
+    .col-2 {
+        flex-basis: 40%;
+    }
+    .col-3 {
+        flex-basis: 25%;
+    }
+    .col-4 {
+        flex-basis: 25%;
+    }
 }

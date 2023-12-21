@@ -3,6 +3,9 @@ from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required
 from models import User, Artist, Song, Genre
 from flask_bcrypt import Bcrypt
+from genre import genres_model
+from artist import artist_model
+from song import song_model
 
 bcrypt = Bcrypt()
 
@@ -163,6 +166,7 @@ class UserGenreResource(Resource):
 
 @user_ns.route('/users/<int:id>/like_songs')
 class UserLikedSongsResource(Resource):
+    @user_ns.marshal_with(song_model)
     @jwt_required()
     def get(self,id):
         """Get all liked songs of a user"""
@@ -171,6 +175,7 @@ class UserLikedSongsResource(Resource):
 
 @user_ns.route('/users/<int:id>/like_artists')
 class UserLikedArtistsResource(Resource):
+    @user_ns.marshal_with(genres_model)
     @jwt_required()
     def get(self,id):
         """Get all liked artists of a user"""
@@ -179,6 +184,7 @@ class UserLikedArtistsResource(Resource):
 
 @user_ns.route('/users/<int:id>/genres')
 class UserLikedGenresResource(Resource):
+    @user_ns.marshal_with(artist_model)
     @jwt_required()
     def get(self,id):
         """Get all genres of a user"""
