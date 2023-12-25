@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import api from '../../../api'
-import './Genre.css';
+
 
 const Genre = () => {
     if (window.location.pathname === '/admin/genre') {
         require('bootstrap/dist/css/bootstrap.min.css');
+        require('./Genre.css');
     }
 
     const [genres, setGenres] = useState([]);

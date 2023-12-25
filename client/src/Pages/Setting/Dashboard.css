@@ -77,6 +77,7 @@
     padding: 8px 16px;  
     text-decoration: none;
     font-size: 150%;
+    font-weight: bolder;
 }
 .list-nav ul:hover {  
     background-color: #2f153f;  

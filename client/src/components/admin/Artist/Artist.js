@@ -1,11 +1,12 @@
 import React, { useState, useCallback} from 'react';
 import api from '../../../api'
 import { slugifyVietnamese, getExtension } from '../Utils';
-import './Artist.css';
+
 
 const Artist = () => {
     if (window.location.pathname === '/admin/artist') {
         require('bootstrap/dist/css/bootstrap.min.css');
+        require('./Artist.css')
     }
 
     const [artists, setArtists] = useState([]);

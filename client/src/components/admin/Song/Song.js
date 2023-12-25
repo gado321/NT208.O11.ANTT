@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Dropdown, Badge, Button } from 'react-bootstrap';
 import api from '../../../api'
 import { slugifyVietnamese, getExtension } from '../Utils';
-import './Song.css';
+
 
 const MultiSelectDropdown = ({ items, title, selectedItemIds, setSelectedItemIds }) => {
     const [searchValue, setSearchValue] = useState('');
@@ -84,6 +84,7 @@ const Song = () => {
 
     if (window.location.pathname === '/admin/song') {
         require('bootstrap/dist/css/bootstrap.min.css');
+        require('./Song.css');
     }
 
     // Initialize new song form data

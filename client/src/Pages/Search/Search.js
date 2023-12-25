@@ -393,29 +393,113 @@ function SearchPage() {
         div.appendChild(playlistContainerDiv);
     };
 
-    const addContent = () => {
+    const addContent = async () => {
         const content = document.querySelector('.content');
         const searchContainer = document.createElement('div');
         searchContainer.className = 'search-container';
 
         const searchInput = document.createElement('input');
         searchInput.type = 'text';
-        searchInput.value = {searchTerm};
         searchInput.onChange = {handleSearchChange}
         searchInput.placeholder = 'Search for songs...';
 
         const searchButton = document.createElement('button');
-        searchButton.onClick = {handleSearch};
         searchButton.textContent = 'Search';
+
+        const albumDiv = document.createElement('div');
+        albumDiv.className = 'Album';
+    
+        var rowData = [];
+
+        searchButton.addEventListener('click', async function() {
+            if(document.querySelector('.Album-Detail') != null){
+                const albumDetailOld = document.querySelector('.Album-Detail');
+                while (albumDetailOld.firstChild) {
+                    albumDetailOld.removeChild(albumDetailOld.firstChild);
+                }
+            }
+
+            const response = await api.get(`/api/songs/search/${encodeURIComponent(searchInput.value)}`);
+            const data = await response.json();
+            setSongs(data);
+            rowData.push(...data);
+            const albumDetailDiv = document.createElement('div');
+            albumDetailDiv.className = 'Album-Detail';
+        
+            const tableUl = document.createElement('ul');
+            tableUl.className = 'responsive-table';
+        
+            const tableHeaderLi = document.createElement('li');
+            tableHeaderLi.className = 'table-header';
+        
+            const headerCol1 = document.createElement('div');
+            headerCol1.className = 'col col-1';
+            headerCol1.textContent = 'ID';
+        
+            const headerCol2 = document.createElement('div');
+            headerCol2.className = 'col col-2';
+            headerCol2.textContent = 'Title';
+        
+            const headerCol4 = document.createElement('div');
+            headerCol4.className = 'col col-4';
+            headerCol4.textContent = 'Released';
+
+            const headerCol5 = document.createElement('div');
+            headerCol5.className = 'col col-5';
+            headerCol5.textContent = 'play';
+        
+            tableHeaderLi.appendChild(headerCol1);
+            tableHeaderLi.appendChild(headerCol2);
+            tableHeaderLi.appendChild(headerCol4);
+            tableHeaderLi.appendChild(headerCol5);
+        
+            tableUl.appendChild(tableHeaderLi);
+        
+            for (let i = 0; i < rowData.length; i++) {
+            const tableRowLi = document.createElement('li');
+            tableRowLi.className = 'table-row';
+        
+            const rowCol1 = document.createElement('div');
+            rowCol1.className = 'col col-1';
+            rowCol1.textContent = rowData[i].id;
+        
+            const rowCol2 = document.createElement('div');
+            rowCol2.className = 'col col-2';
+            rowCol2.textContent = rowData[i].name;
+        
+            const rowCol4 = document.createElement('div');
+            rowCol4.className = 'col col-4';
+            rowCol4.textContent = rowData[i].release_date;
+
+            const rowCol5 = document.createElement('div');
+            rowCol5.className = 'col col-5';
+            const playButton = document.createElement('button');
+
+            playButton.className = 'button-49';
+            playButton.setAttribute('role', 'button');
+            playButton.textContent = 'Play';
+            
+            rowCol5.appendChild(playButton);
+        
+            tableRowLi.appendChild(rowCol1);
+            tableRowLi.appendChild(rowCol2);
+            tableRowLi.appendChild(rowCol4);
+            tableRowLi.appendChild(rowCol5);
+        
+            tableUl.appendChild(tableRowLi);
+            }
+        
+            albumDetailDiv.appendChild(tableUl);
+        
+            albumDiv.appendChild(albumDetailDiv);
+        
+            content.appendChild(albumDiv);
+        });
+        
 
         searchContainer.appendChild(searchInput);
         searchContainer.appendChild(searchButton);
 
-        songs.forEach((song) => {
-            const songDiv = document.createElement('div');
-            songDiv.textContent = song.name;
-            content.appendChild(songDiv);
-        }, []);
         content.appendChild(searchContainer);
         
     };
