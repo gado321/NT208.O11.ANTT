@@ -7,7 +7,7 @@ export default function RegisterPage() {
     const condition = localStorage.getItem('access_token')// Kiểm tra access_token có tồn tại hay không
     useEffect(() => {
       if (condition) {
-        navigate('/dashboard'); // Điều hướng về trang ban đầu của bạn
+        window.location.href = '/dashboard'; // Điều hướng về trang ban đầu của bạn
       }
     });
     

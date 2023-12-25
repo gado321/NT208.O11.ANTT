@@ -3,6 +3,8 @@ import { Dropdown, Badge, Button } from 'react-bootstrap';
 import api from '../../../api'
 import { slugifyVietnamese, getExtension } from '../Utils';
 
+
+
 const MultiSelectDropdown = ({ items, title, selectedItemIds, setSelectedItemIds, singleSelection = false }) => {
     const [searchValue, setSearchValue] = useState('');
   
@@ -75,6 +77,7 @@ const MultiSelectDropdown = ({ items, title, selectedItemIds, setSelectedItemIds
 const Album = () => {
     if (window.location.pathname === '/admin/album') {
         require('bootstrap/dist/css/bootstrap.min.css');
+        require('./Album.css');
     }
 
     const [albums, setAlbums] = useState([]);

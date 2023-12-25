@@ -6,7 +6,7 @@ export default function LoginPage() {
     const condition = localStorage.getItem('access_token')// Kiểm tra access_token có tồn tại hay không
     useEffect(() => {
       if (condition) {
-        navigate('/dashboard'); // Điều hướng về trang ban đầu của bạn
+        window.location.href = '/dashboard'; // Điều hướng về trang ban đầu của bạn
       }
     });
     
@@ -84,7 +84,7 @@ export default function LoginPage() {
               localStorage.setItem('refresh_token', data.refresh_token);
               localStorage.setItem('data', data.id);
               setLoginMessage("Login successful!");
-              navigate("/dashboard");
+              window.localStorage.href = "/dashboard";
             })
             .catch(error => {
                 setLoginMessage("Loggin failed! Please try again.");

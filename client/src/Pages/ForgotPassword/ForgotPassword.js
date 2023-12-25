@@ -73,7 +73,7 @@ export default function ForgotPasswordPage() {
         event.preventDefault();
         if (validateForm()) {
             // Gửi yêu cầu POST đến API Python
-            fetch('http://localhost:5000/auth/signup', {
+            fetch('http://localhost:5000/api/user/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

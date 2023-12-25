@@ -110,7 +110,7 @@ function LoadingDashboard() {
         Authorization: `Bearer ${token}`
       };
       const artistMadeForUser = await api.get(`/api/users/${id}/like_artists`, { headers });
-      const artistMadeForUserJSON = await artistMadeForUser.json();
+      const artistMadeForUserJSON = await artistMadeForUser.json(); 
       const artistMadeForUserList = [];
       setDataArtist(...artistMadeForUserJSON);
       artistMadeForUserList.push(...artistMadeForUserJSON);
@@ -239,12 +239,12 @@ function LoadingDashboard() {
             infoDiv.appendChild(title);
             infoDiv.appendChild(artist);
 
-            // Thêm thuộc tính data-music-path vào phần tử li
-            li.dataset.musicPath = moodBoosters[i].path;
+          // Thêm thuộc tính data-music-path vào phần tử li
+          li.dataset.musicPath = moodBoosters[i].path;
 
           // Thêm sự kiện click cho li
           li.addEventListener('click', () => {
-            sound = new Howl({
+              sound = new Howl({
               src: './song/music.mp3', // URL của file nhạc
               format: 'mp3', // Định dạng file nhạc
               autoplay: false, // Tắt chế độ tự động phát
@@ -268,8 +268,10 @@ function LoadingDashboard() {
             function updateTimestamp() {
                 const currentPosition = sound.seek(); // Lấy vị trí hiện tại của bài hát (thời gian tính bằng giây)
                 const formattedTime = formatTime(currentPosition); // Định dạng thời gian hiện tại
-                document.querySelector('.timestamp-song-start').textContent = formattedTime;
-                document.querySelector('.timestamp-song-end').textContent = formatTime(sound.duration());
+                if(document.querySelector('.timestamp-song-start') != null && document.querySelector('.timestamp-song-end') != null){
+                  document.querySelector('.timestamp-song-start').textContent = formattedTime;
+                  document.querySelector('.timestamp-song-end').textContent = formatTime(sound.duration());
+                }
             }
           
             function formatTime(time) {
@@ -277,6 +279,7 @@ function LoadingDashboard() {
                 const seconds = Math.floor(time % 60);
                 return `${minutes}:${seconds.toString().padStart(2, '0')}`;
             }
+          
           
             resetFooter(sound);
           });

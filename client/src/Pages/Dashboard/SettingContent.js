@@ -211,7 +211,7 @@ export function addSettingContent () {
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
         localStorage.removeItem('data');
-        window.location.reload();
+        window.location.href = "/login";
     };
     const handleButtonClick = (name) => () => {
         switch (name) {

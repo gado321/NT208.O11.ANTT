@@ -56,7 +56,7 @@ api.interceptors.response.use(
 
           // Retry the original request with the updated token
           const reg = axios(originalRequest);
-          return convertAxiosResponseToResponse(reg)
+          return reg;
         
       }
   

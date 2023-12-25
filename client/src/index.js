@@ -59,7 +59,7 @@ function App() {
     <>
       <div className="container-page">
           <div className='nav-bar'>
-            <a href="/">
+            <a href="/dashboard">
               <img className="music-logo" src={musical_sound_music_logo} alt="logo"/>
             </a>
           </div>
@@ -67,7 +67,7 @@ function App() {
             <div className="header-content">
               <div className='hello'></div>
               <div className='button-mode'>
-                <label className="mode-switch" onClick="">
+                <label className="mode-switch">
                     <input type="checkbox"/>
                     <span className="mode-switch-slider"></span>
                 </label>
@@ -85,6 +85,7 @@ function App() {
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path='/dashboard' element={<Dashboard />} />
                 <Route path='/search' element={<SearchPage />} />
+                <Route path='*' element={<HomePage />} />
                 
                 {/* Admin route */}
                 <Route path="/admin/login" element={<AdminLogin />} />

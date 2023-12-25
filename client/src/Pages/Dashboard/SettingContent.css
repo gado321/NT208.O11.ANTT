@@ -16,6 +16,9 @@
     display: inline-block;         /* Hiển thị nút như một block inline */
     vertical-align: middle;        /* Canh giữa nút */
   }
+  .setting-button-item p {
+    color: var(--fontColor);
+  }
 .delete-account-container {
     margin-top: 10px;
     display: flex;
