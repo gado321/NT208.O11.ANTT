@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Dropdown, Badge, Button } from 'react-bootstrap';
 import api from '../../../api'
 import { slugifyVietnamese, getExtension } from '../Utils';
+
 
 const MultiSelectDropdown = ({ items, title, selectedItemIds, setSelectedItemIds }) => {
     const [searchValue, setSearchValue] = useState('');
@@ -23,7 +24,8 @@ const MultiSelectDropdown = ({ items, title, selectedItemIds, setSelectedItemIds
             {title}
           </Dropdown.Toggle>
   
-          <Dropdown.Menu>
+          {/* Apply inline style for fixed height and scroll */}
+          <Dropdown.Menu style={{ maxHeight: '300px', overflowY: 'auto' }}>
             <div style={{ padding: '10px' }}>
               <input
                 autoFocus
@@ -82,6 +84,7 @@ const Song = () => {
 
     if (window.location.pathname === '/admin/song') {
         require('bootstrap/dist/css/bootstrap.min.css');
+        require('./Song.css');
     }
 
     // Initialize new song form data
@@ -226,8 +229,8 @@ const Song = () => {
             const data = JSON.stringify(
                 {
                     name: newSong.name,
-                    path: '../data/songs/' + sanitizedSongName + '-' + newSongId + '.' + getExtension(selectedSongFile.name),
-                    picture_path: '../data/images/song/' + sanitizedSongName + '-' + newSongId + '.' + getExtension(selectedPictureFile.name),
+                    path: './songs/' + sanitizedSongName + '-' + newSongId + '.' + getExtension(selectedSongFile.name),
+                    picture_path: './images/song/' + sanitizedSongName + '-' + newSongId + '.' + getExtension(selectedPictureFile.name),
                     release_date: newSong.release_date
                 }
             )
@@ -299,14 +302,14 @@ const Song = () => {
         try {
             var filePath = '';
             if (selectedSongFile) {
-                filePath = '../data/songs/' + sanitizedSongName + '-' + selectedSong.id + '.' + getExtension(selectedSongFile.name);
+                filePath = './songs/' + sanitizedSongName + '-' + selectedSong.id + '.' + getExtension(selectedSongFile.name);
             } else {
                 filePath = selectedSong.path;
             }
 
             var picturePath = '';
             if (selectedPictureFile) {
-                picturePath = '../data/images/song/' + sanitizedSongName + '-' + selectedSong.id + '.' + getExtension(selectedPictureFile.name);
+                picturePath = './images/song/' + sanitizedSongName + '-' + selectedSong.id + '.' + getExtension(selectedPictureFile.name);
             } else {
                 picturePath = selectedSong.picture_path;
             }
@@ -366,24 +369,42 @@ const Song = () => {
         setSelectedPictureFile(e.target.files[0]);
       };
 
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+
+    const toggleDropdown = useCallback(() => {
+    setDropdownOpen(!dropdownOpen);
+    }, [dropdownOpen]);
+
     return (
-        <div>
+        <div className="container">
             {/* Search Ground */}
-            <div>
-                <input type="text" value={searchTerm} onChange={handleSearchChange} placeholder="Search for a song..." />
+            <div className="search-area">
+                <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    placeholder="Search for a song..."
+                />
                 <button onClick={handleSearch}>Search</button>
             </div>
 
-            {/* Songs List */}
-            <div>
-                {songs.map((song) => (
-                    <div key={song.id}>
-                        {song.name}
-                        <button onClick={() => handleEdit(song)}>Edit</button>
-                        <button onClick={() => handleDelete(song.id)}>Delete</button>
-                    </div>
-                ))}
-            </div>
+            {/* Songs Dropdown Button */}
+            <button onClick={toggleDropdown}>Songs List</button>
+
+            {/* Songs List Dropdown Menu */}
+            {dropdownOpen && (
+                <div className="song-list-dropdown">
+                    {songs.map((song) => (
+                        <div key={song.id} className="song-item">
+                            <span className="song-name">{song.name}</span>
+                            <div>
+                                <button onClick={() => handleEdit(song)}>Edit</button>
+                                <button onClick={() => handleDelete(song.id)} className="delete-btn">Delete</button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
 
             {/* Edit Ground */}
             {selectedSong && (
@@ -408,13 +429,13 @@ const Song = () => {
                         setSelectedItemIds={setSelectedGenreIds}
                     />
 
-                    <button type="submit">Update Song</button>
+                    <button type="submit" className="update-btn">Update Song</button>
                 </form>
             )}
 
             {/* Create Ground */}
             <div>
-                <button onClick={handleCreateNewSong}>Create New Song</button>
+                <button onClick={handleCreateNewSong} className="create-btn">Create New Song</button>
                 {isCreating && (
                     <form onSubmit={handleCreateSubmit}>
                         <input type="text" name="name" value={newSong.name} onChange={(e) => handleChange(e, setNewSong)} placeholder="Song name" />
@@ -436,7 +457,7 @@ const Song = () => {
                             selectedItemIds={selectedGenreIds}
                             setSelectedItemIds={setSelectedGenreIds}
                         />
-                        <button type="submit">Create Song</button>
+                        <button type="submit" className="create-btn">Create Song</button>
                     </form>
                 )}
             </div>

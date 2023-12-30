@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import api from '../../../api'
 
+
 const Genre = () => {
     if (window.location.pathname === '/admin/genre') {
         require('bootstrap/dist/css/bootstrap.min.css');
+        require('./Genre.css');
     }
 
     const [genres, setGenres] = useState([]);
@@ -98,39 +100,62 @@ const Genre = () => {
     }
 
     return (
-        <div>
+        <div className="genre-container">
             {/* Search Ground */}
-            <div>
-                <input type="text" value={searchTerm} onChange={handleSearchChange} placeholder="Search for an genre..." />
-                <button onClick={handleSearch}>Search</button>
+            <div className="search-ground">
+                <input
+                    type="text"
+                    className="search-input"
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    placeholder="Search for a genre..."
+                />
+                <button className="search-button" onClick={handleSearch}>Search</button>
             </div>
-
-            {/* Genre List */}
-            <div>
-                {genres.map((genre) => (
-                    <div key={genre.id}>
-                        {genre.name}
-                        <button onClick={() => handleEdit(genre)}>Edit</button>
-                        <button onClick={() => handleDelete(genre.id)}>Delete</button>
-                    </div>
-                ))}
+    
+            {/* Dropdown for Genre List */}
+            <div className="dropdown">
+                <button className="search-button">Genres</button>
+                <div className="dropdown-content">
+                    {genres.map((genre) => (
+                        <div key={genre.id} className="genre-item">
+                            {genre.name}
+                            <button className="genre-action-button" onClick={() => handleEdit(genre)}>Edit</button>
+                            <button className="genre-action-button delete-button" onClick={() => handleDelete(genre.id)}>Delete</button>
+                        </div>
+                    ))}
+                </div>
             </div>
-
+    
             {/* Edit Ground */}
             {selectedGenre && (
-                <form onSubmit={handleEditSubmit}>
-                    <input type="text" name="name" value={selectedGenre.name} onChange={(e) => handleChange(e, setSelectedGenre)} placeholder="Genre name" />
-                    <button type="submit">Update Genre</button>
+                <form onSubmit={handleEditSubmit} className="edit-ground">
+                    <input
+                        type="text"
+                        name="name"
+                        className="search-input"
+                        value={selectedGenre.name}
+                        onChange={(e) => handleChange(e, setSelectedGenre)}
+                        placeholder="Genre name"
+                    />
+                    <button type="submit" className="submit-button">Update Genre</button>
                 </form>
             )}
-
+    
             {/* Create Ground */}
-            <div>
-                <button onClick={handleCreateNewGenre}>Create New Genre</button>
+            <div className="create-ground">
+                <button className="create-button" onClick={handleCreateNewGenre}>Create New Genre</button>
                 {isCreating && (
                     <form onSubmit={handleCreateSubmit}>
-                        <input type="text" name="name" value={newGenre.name} onChange={(e) => handleChange(e, setNewGenre)} placeholder="Genre name" />
-                        <button type="submit">Create Genre</button>
+                        <input
+                            type="text"
+                            name="name"
+                            className="search-input"
+                            value={newGenre.name}
+                            onChange={(e) => handleChange(e, setNewGenre)}
+                            placeholder="Genre name"
+                        />
+                        <button type="submit" className="submit-button">Create Genre</button>
                     </form>
                 )}
             </div>
