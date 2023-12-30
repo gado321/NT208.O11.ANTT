@@ -17,10 +17,6 @@ if (window.location.pathname === '/dashboard') {
     require('./Dashboard.css'); // Import tệp CSS
 }
 
-function PlayMusic(musicPath) {
-
-}
-
 function artistsDisplay(artistsID) {
   
 }
@@ -268,8 +264,10 @@ function LoadingDashboard() {
             function updateTimestamp() {
                 const currentPosition = sound.seek(); // Lấy vị trí hiện tại của bài hát (thời gian tính bằng giây)
                 const formattedTime = formatTime(currentPosition); // Định dạng thời gian hiện tại
-                document.querySelector('.timestamp-song-start').textContent = formattedTime;
-                document.querySelector('.timestamp-song-end').textContent = formatTime(sound.duration());
+                if(document.querySelector('#timestamp-song-start') != null && document.querySelector('#timestamp-song-end') != null){
+                  document.querySelector('#timestamp-song-start').textContent = formattedTime;
+                  document.querySelector('#timestamp-song-end').textContent = formatTime(sound.duration());
+                }
             }
           
             function formatTime(time) {
@@ -277,7 +275,7 @@ function LoadingDashboard() {
                 const seconds = Math.floor(time % 60);
                 return `${minutes}:${seconds.toString().padStart(2, '0')}`;
             }
-          
+            sound.stop();
             resetFooter(sound);
           });
         
@@ -500,7 +498,7 @@ function LoadingDashboard() {
 
           // Thêm sự kiện click cho li
           li.addEventListener('click', () => {
-              sound = new Howl({
+            sound = new Howl({
               src: './song/music.mp3', // URL của file nhạc
               format: 'mp3', // Định dạng file nhạc
               autoplay: false, // Tắt chế độ tự động phát
@@ -524,9 +522,9 @@ function LoadingDashboard() {
             function updateTimestamp() {
                 const currentPosition = sound.seek(); // Lấy vị trí hiện tại của bài hát (thời gian tính bằng giây)
                 const formattedTime = formatTime(currentPosition); // Định dạng thời gian hiện tại
-                if(document.querySelector('.timestamp-song-start') != null && document.querySelector('.timestamp-song-end') != null){
-                  document.querySelector('.timestamp-song-start').textContent = formattedTime;
-                  document.querySelector('.timestamp-song-end').textContent = formatTime(sound.duration());
+                if(document.querySelector('#timestamp-song-start') != null && document.querySelector('#timestamp-song-end') != null){
+                  document.querySelector('#timestamp-song-start').textContent = formattedTime;
+                  document.querySelector('#timestamp-song-end').textContent = formatTime(sound.duration());
                 }
             }
           
@@ -535,7 +533,6 @@ function LoadingDashboard() {
                 const seconds = Math.floor(time % 60);
                 return `${minutes}:${seconds.toString().padStart(2, '0')}`;
             }
-          
             resetFooter(sound);
           });
       
@@ -681,7 +678,7 @@ function LoadingDashboard() {
   function volumeControl(value) {
     sound.volume(value);
   }
-  function timeLineControl(value) {
+  function timeLineControl(value, sound) {
     var seekTime = sound.duration() * value;
     sound.seek(seekTime);
   }
@@ -741,19 +738,16 @@ function LoadingDashboard() {
     const iconPlaySongImg = document.createElement('img');
     iconPlaySongImg.className = 'icon-play-song';
     iconPlaySongImg.src = play;
-    let isPlaying = true; // Biến trạng thái, ban đầu là không phát
+    let isPlaying = false; // Biến trạng thái, ban đầu là không phát
     // Thêm sự kiện click cho nút play
-
-    btnPlaylistContainerDiv.appendChild(iconPlaySongImg);
-
-    function playSongReset() {
+    iconPlaySongImg.addEventListener('click', function() {
       if (isPlaying) {
         // Nếu đang phát, chuyển sang trạng thái tạm dừng
         iconPlaySongImg.src = pause;
         sound.play();
-        playingSongTitleP.textContent = sound.title;
-        playingSongAuthorP.textContent = sound.artist;
-        logoPlayingSongImg.src = sound.imagePath;
+        document.querySelector('.playing-song-title').textContent = sound.title;
+        document.querySelector('.playing-song-author').textContent = sound.artist;
+        document.querySelector('.logo-playing-song').src = sound.imagePath;
       } else {
         // Nếu đang tạm dừng, chuyển sang trạng thái phát
         iconPlaySongImg.src = play;
@@ -761,9 +755,9 @@ function LoadingDashboard() {
       }
       isPlaying = !isPlaying; // Đảo ngược trạng thái
       // Thực hiện các hành động khác tại đây
-    }
+    });
 
-    iconPlaySongImg.addEventListener('click', playSongReset());
+    btnPlaylistContainerDiv.appendChild(iconPlaySongImg);
     
     const iconNextSongImg = document.createElement('img');
     iconNextSongImg.className = 'icon-next-song';
@@ -796,7 +790,7 @@ function LoadingDashboard() {
     songTimelineInput.value = '0';
     // Bắt sự kiện thay đổi tua bài hát từ slider
     songTimelineInput.addEventListener('change', function(e) {
-      timeLineControl(e.target.value / 100);
+      timeLineControl(e.target.value / 100, sound);
     });
     
     const timestampSongEndP = document.createElement('p');
@@ -878,6 +872,10 @@ function LoadingDashboard() {
   // Function to reset footer
   function resetFooter(sound) {
     clearFooter();
+    // Lặp qua và unload tất cả các đối tượng Howl
+    Howler._howls.slice().forEach(function(howl) {
+      howl.unload();
+    });
     addFooterContent(sound);
   }
 
@@ -972,27 +970,52 @@ function LoadingDashboard() {
     playButton.addEventListener('click', function() {
       // Initialize variables
       var currentTrack = 0;
-      var player = new Howl({
+      var sound = new Howl({
         src: [playlist[currentTrack].file],
         onend: function() {
+          clearInterval(timestampInterval); // Khi bài hát kết thúc, dừng cập nhật thời gian
           nextTrack(); // Play the next song automatically when one ends
-        }
+        },
+        onplay: function() {
+          // Bắt đầu cập nhật thời gian bài hát khi bắt đầu phát
+          setInterval(updateTimestamp, 1000);
+        },
       });
+
+      let timestampInterval; // Biến lưu trữ ID của interval
+
+      function updateTimestamp() {
+          const currentPosition = sound.seek(); // Lấy vị trí hiện tại của bài hát (thời gian tính bằng giây)
+          const formattedTime = formatTime(currentPosition); // Định dạng thời gian hiện tại
+          if(document.querySelector('#timestamp-song-start') != null && document.querySelector('#timestamp-song-end') != null){
+            document.querySelector('#timestamp-song-start').textContent = formattedTime;
+            document.querySelector('#timestamp-song-end').textContent = formatTime(sound.duration());
+          }
+      }
+    
+      function formatTime(time) {
+          const minutes = Math.floor(time / 60);
+          const seconds = Math.floor(time % 60);
+          return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+      }
+
       // Function to play a song
       function playTrack(index) {
-        if (player.playing()) {
-          player.stop();
-        }
-        player = new Howl({
+        sound = new Howl({
           src: [playlist[index].path],
           html5: true, // Force to HTML5 so that the audio can stream in (best for large files).
           onend: function() {
             nextTrack(); // Play the next song automatically when one ends
-          }
+            clearInterval(timestampInterval);
+          },
+          onplay: function() {
+            // Bắt đầu cập nhật thời gian bài hát khi bắt đầu phát
+            setInterval(updateTimestamp, 1000);
+          },
         });
+        sound.title = playlist[index].title;
+        sound.imagePath = 'images/song/noi-nay-co-anh.jpg';
         // Update the title display
-        document.querySelector('.playing-song-title').textContent = playlist[index].title;
-        player.play();
       }
       function nextTrack() {
         currentTrack = (currentTrack + 1) % playlist.length; // Loop back to the first song if at the end
@@ -1007,9 +1030,15 @@ function LoadingDashboard() {
       // Start playing the first track
       playTrack(currentTrack);
 
+      resetFooter(sound);
       // Event listeners for the buttons
-      document.querySelector('.icon-next-song').addEventListener('click', nextTrack);
-      document.querySelector('.icon-previous-song').addEventListener('click', prevTrack);
+      document.querySelector('.icon-next-song').addEventListener('click', function() {
+        nextTrack();
+      });
+      
+      document.querySelector('.icon-previous-song').addEventListener('click', function() {
+        prevTrack();
+      });
 
       function shufflePlaylist() {
         for (let i = playlist.length - 1; i > 0; i--) {
@@ -1019,25 +1048,7 @@ function LoadingDashboard() {
         currentTrack = 0; // Reset to the first song in the shuffled playlist
         playTrack(currentTrack);
       }
-      function togglePlayPause() {
-        if (player.playing()) {
-          player.pause();
-        } else {
-          player.play();
-        }
-      }
-      document.querySelector('.icon-play-song').remove();
 
-      const iconPlaySongImg = document.createElement('img');
-      iconPlaySongImg.className = 'icon-play-song';
-      iconPlaySongImg.src = play;
-      // Thêm sự kiện click cho nút play
-  
-      iconPlaySongImg.addEventListener('click', togglePlayPause());
-      var btnPlaylistContainerDiv = document.querySelector('.btn-playlist-container');
-      btnPlaylistContainerDiv.appendChild(iconPlaySongImg);
-      
-      // Event listener for the shuffle button
       document.querySelector('.icon-mix-song').addEventListener('click', shufflePlaylist());
     });
     albumInfoButtonDiv.appendChild(playButton);
@@ -1074,8 +1085,6 @@ function LoadingDashboard() {
     content.appendChild(albumDiv);
   }
   
-
-
   // Function useEffect
   useEffect(() => {
     if (!isContentAdded && !contentAddedRef.current) {

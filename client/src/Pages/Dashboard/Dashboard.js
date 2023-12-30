@@ -216,11 +216,11 @@ function DashboardPage() {
     
     const playingSongTitleP = document.createElement('p');
     playingSongTitleP.className = 'playing-song-title';
-    playingSongTitleP.textContent = 'NaN';
+    playingSongTitleP.textContent = 'Unknown';
     
     const playingSongAuthorP = document.createElement('p');
     playingSongAuthorP.className = 'playing-song-author';
-    playingSongAuthorP.textContent = 'NaN';
+    playingSongAuthorP.textContent = 'Unknown';
     
     const likeSongDiv = document.createElement('div');
     likeSongDiv.className = 'like-song';
@@ -245,9 +245,6 @@ function DashboardPage() {
     const iconPreviousSongImg = document.createElement('img');
     iconPreviousSongImg.className = 'icon-previous-song';
     iconPreviousSongImg.src = skipForward;
-    iconPreviousSongImg.addEventListener('click', function() {
-      previousSong();
-    });
     
     const iconPlaySongImg = document.createElement('img');
     iconPlaySongImg.className = 'icon-play-song';
@@ -274,9 +271,6 @@ function DashboardPage() {
     const iconNextSongImg = document.createElement('img');
     iconNextSongImg.className = 'icon-next-song';
     iconNextSongImg.src = skipNext;
-    iconNextSongImg.addEventListener('click', function() {
-      nextSong();
-    });
     
     const iconRepeatSongImg = document.createElement('img');
     iconRepeatSongImg.className = 'icon-repeat-song';
