@@ -1,0 +1,129 @@
+.list-setting-container{
+    font-size: 28px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    padding-left: 2%;
+    padding-right: 2%;
+}
+.setting-button-item {
+    background-color: transparent;  /* Làm nút trong suốt */
+    border: none;                  /* Loại bỏ viền */
+    padding: 0;                    /* Loại bỏ padding */
+    cursor: pointer;               /* Hiển thị con trỏ khi di chuột qua */
+    font-size: inherit;            /* Kích thước font chữ bằng với thẻ mẹ */
+    line-height: 1;                /* Đảm bảo chữ nằm giữa nút */
+    display: inline-block;         /* Hiển thị nút như một block inline */
+    vertical-align: middle;        /* Canh giữa nút */
+  }
+  .setting-button-item p {
+    color: var(--fontColor);
+  }
+.delete-account-container {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.delete-account-button {
+    width: 300px;
+    height: 96px;
+    color: var(--fontColor);
+    font-size: 28px;
+    font-weight: 750;
+    background-color: transparent;
+    border: 2px solid var(--btnColor);
+    border-radius: 5px;
+    cursor: pointer;
+    transition-duration: 0.3s;
+}
+.delete-account-button:hover {
+    background-color: var(--btnColor);
+}
+
+/* ////////////////////////////////////////////////////////////////////////////////// */
+.edit-profile-title {
+  font-size: 40px;
+  text-align: center;
+}
+.form-edit-profile {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Hai cột bằng nhau */
+    grid-gap: 20px; /* Khoảng cách giữa các div */
+}
+.edit-profile-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 32px;
+    font-weight: 500;
+}
+.edit-profile-form-left {
+    margin-left: 50px;
+    flex-basis: 50%;
+}
+.edit-profile-form-right {
+    margin-right: 50px;
+    flex-basis: 50%;
+}
+.edit-profile-label {
+    display: block;
+}
+.edit-profile-input {
+    margin-top: 10px;
+    width: 640px;
+    height: 72px;
+    font-size: 28px; 
+    font-weight: 500;
+    background-color: transparent;
+    border: 2px solid var(--fontColor);
+    border-radius: 5px;
+}
+.edit-profile-gender-container {
+    margin-top: 10px;
+    width: 640px;
+    height: 72px;
+    font-size: 28px; 
+    font-weight: 500;
+    background-color: transparent;
+    /* border: 2px solid var(--fontColor);
+    border-radius: 5px; */
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.edit-profile-gender-input {
+    width: 30px;
+    height: 30px;
+}
+.btn-edit-profile-container {
+    grid-column: 2;
+    margin: 50px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    align-items: center;
+}
+.btn-update, .btn-cancel{
+    margin: 20px;
+    width: 130px;
+    height: 64px;
+    color: var(--fontColor);
+    font-size: 18px;
+    font-weight: 750;
+    background-color: transparent;
+    border: 2px solid var(--btnColor);
+    border-radius: 5px;
+    cursor: pointer;
+    transition-duration: 0.3s;
+}
+.btn-update:hover, .btn-cancel:hover{
+    background-color: var(--btnColor);
+}
+.edit-profile-error {
+    color: rgb(180, 0, 0);
+    font-size: 15px;
+    font-weight: 500;
+    min-height: 20px;
+}

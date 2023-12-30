@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import musical_sound_music_logo from "../Icon/musical-sound-music-logo.svg";
+import {Howl, Howler} from 'howler';
 import favourite from "../Icon/favourite.png";
 import home from "../Icon/home.png";
 import profile from "../Icon/profile.png";
@@ -11,21 +10,27 @@ import like from "../Icon/like.png";
 import shuffle from "../Icon/shuffle.png";
 import skipForward from "../Icon/skip-forward.png";
 import play from "../Icon/play.png";
+import pause from "../Icon/pause.svg";
 import skipNext from "../Icon/skip-next.png";
 import repeat from "../Icon/repeat.png";
 import queue from "../Icon/queue.png";
 import loudspeaker from "../Icon/loudspeaker.png";
-import LoadingHome from "./LoadHome";
-import Dashboard from './Dashboard'
+import mute from "../Icon/mute.png";
 import api from "../../api";
-// import Setting from "../Setting/setting";
+import DashboardPage from './DashboardPage';
+import SearchPage from './SearchPage';
+import FavouritesPage from './FavouritesPage';
+import ProfilePage from './ProfilePage';
+import SettingPage from './SettingPage';
 
 // Kiểm tra URL hiện tại và tải tệp CSS khi URL khớp với /dashboard
 if (window.location.pathname === '/dashboard') {
     require('./Dashboard.css'); // Import tệp CSS
 }
 
-function DashboardPage() {
+
+function Dashboard() {
+
   var id = localStorage.getItem('data');
   const initialFormState = {
     id: '',
@@ -39,6 +44,26 @@ function DashboardPage() {
     gender: '',
     date_of_birth: ''
   };
+  var sound = new Howl({
+    src: './song/thang-nam.mp3', // URL của file nhạc
+    format: 'mp3', // Định dạng file nhạc
+    autoplay: false, // Tắt chế độ tự động phát
+    html5: true, // Sử dụng HTML5 Audio để phát nhạc nếu có thể
+    onplay: function() {
+      // Bắt đầu cập nhật thời gian bài hát khi bắt đầu phát
+      setInterval(updateTimestamp, 1000);
+    },
+    onend: function() {
+      // Khi bài hát kết thúc, dừng cập nhật thời gian
+      clearInterval(timestampInterval);
+    },
+  });
+  // Thêm thuộc tính tùy chỉnh cho đối tượng sound
+  sound.title = 'Tháng Năm';
+  sound.artist = 'Soobin Hoàng Sơn';
+  sound.imagePath = 'images/anh-chua-thuong-em-den-vay-dau.jpg';
+
+  const [activepage, setActivePage] = useState('dashboard');
   const [dataUser, setDataUser] = useState(initialFormState);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
@@ -87,118 +112,7 @@ function DashboardPage() {
       const modeSwitchContainer = document.querySelector('.nav-bar');
       modeSwitchContainer.appendChild(createNavBar());
   };
-  ////////////////////////////////////////////////////////////////////////////////////////////
-  const addProfileContent = () => {
-    const content = document.querySelector('.content');
-    content.innerHTML = '';
-    const profileContent= document.createElement('div');
-    profileContent.className = 'profile-container';
-
-    const avtContainer = document.createElement('div');
-    avtContainer.className = 'avt-container';
-    const avt = document.createElement('img');
-    avt.src='https://scontent.fhan2-4.fna.fbcdn.net/v/t39.30808-1/394536727_1698264187323635_8948875996727481682_n.jpg?stp=dst-jpg_p160x160&_nc_cat=103&ccb=1-7&_nc_sid=5740b7&_nc_eui2=AeEsng1tyBeMl_596rxxLBg4UiLf-EWAGL9SIt_4RYAYv2SYVdaOddu6LI_PU_sgh5b3V2BDGcFROkhDZ2kDV8vn&_nc_ohc=AcZ6rybe-HAAX9T3Kj3&_nc_ht=scontent.fhan2-4.fna&oh=00_AfAsTmCuPDYO16EgZy3n660REnO_iJj-LhzxhwmcnCwePg&oe=65875909';
-    avt.alt = 'avt';
-    avtContainer.appendChild(avt);
-
-    profileContent.appendChild(avtContainer);
-
-    const profileInfoContainer = document.createElement('div');
-    profileInfoContainer.className = 'profile-info-container';
-    const profileInfo = document.createElement('div');
-    profileInfo.className = 'profile-info';
-    const profileName = document.createElement('div');
-    profileName.className = 'profile-name';
-    profileName.textContent = 'Cong Thanh';
-    const editProfileButton = document.createElement('button');
-    editProfileButton.className = 'edit-profile-button';
-    editProfileButton.textContent = 'Edit Profile';
-    editProfileButton.onclick = function() {
-        profileName.textContent = 'Cong Thanh fixed';
-    };
-    profileInfo.appendChild(profileName);
-    profileInfo.appendChild(editProfileButton);
-    profileContent.appendChild(profileInfo);
-
-
-    const listInfo = {
-      Playlist: 15,
-      Follower: 99,
-      Following: 34
-    }
-
-    const profileListInfoContainer = document.createElement('div');
-    profileListInfoContainer.className = 'profile-list-info-container';
-    for (const [key, value] of Object.entries(listInfo)) {
-      const profileInfoContainer = document.createElement('div');
-      profileInfoContainer.className = 'profile-info-container';
-
-      const profileInfoNumber = document.createElement('p');
-      profileInfoNumber.className = 'profile-info-number';
-      profileInfoNumber.textContent = value;
-      const profileInfoName = document.createElement('p');
-      profileInfoName.className = 'profile-list-info-name';
-      profileInfoName.textContent = key;
-      profileInfoContainer.appendChild(profileInfoNumber);
-      profileInfoContainer.appendChild(profileInfoName);
-      profileListInfoContainer.appendChild(profileInfoContainer);
-    }
-    profileContent.appendChild(profileListInfoContainer);
-
-    content.appendChild(profileContent);
-  }
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////
- const creatSettingElement = (id, iconSrc, label) => {
- 
-}
-  const addSettingContent = () => {
-    const dictSettingName = {
-      ACCOUNT: ['View Profile', 'Edit Profile', 'Change E-mail', 'Change Password', 'Go Premium', 'Log out'],
-      APP:['Privacy Policy', 'Share this app', 'Rate this app', 'Help', 'Sleep Timer', 'Set Favorite Genres']
-    };
-    const content = document.querySelector('.content');
-    content.innerHTML = '';
-    const settingContent= document.createElement('div');
-    settingContent.className = 'setting-container';
-
-    const listSettingContent= document.createElement('div');
-    listSettingContent.className = 'list-setting-container';
-    const listKeySettingName = Object.keys(dictSettingName);
-    for(let j=0; j<listKeySettingName.length; j++){
-        const div = document.createElement('div');
-        div.className = 'list-SettingUser';
-        
-        const heading = document.createElement('h2');
-        heading.textContent = listKeySettingName[j];
-        div.appendChild(heading);
-
-        const ul = document.createElement('ul');
-        ul.className = 'Setting-list';
-
-        const listSettingName = dictSettingName[listKeySettingName[j]];
-        for (let i = 0; i < listSettingName.length; i++) {
-            const li = document.createElement('li');
-            const button = document.createElement('p');
-            button.textContent = listSettingName[i];
-            li.appendChild(button);
-            ul.appendChild(li);
-        }
-        div.appendChild(ul);
-        listSettingContent.appendChild(div);   
-    }
-    settingContent.appendChild(listSettingContent);
-    const deleteAccount = document.createElement('div');
-    deleteAccount.className = 'delete-account-container';
-    const button = document.createElement('button');
-    button.className = 'delete-account-button';
-    button.textContent = 'Delete Account';
-    deleteAccount.appendChild(button);
-    settingContent.appendChild(deleteAccount);
-    content.appendChild(settingContent);
-  };
-  //////////////////////////////////////////////////////////////////////////////////////////////////////
   // Function to create nav bar
-
   const createNavBar = () => {
       const navBar = document.createElement('div');
       navBar.className = 'nav-bar';
@@ -212,44 +126,90 @@ function DashboardPage() {
 
       const homeIcon = createNavItem('home', home, 'Home');
       homeIcon.addEventListener('click', function() {
-        window.location.href = '/dashboard';
+        setActivePage('dashboard');
       });
       listNav.appendChild(homeIcon);
 
       const searchIcon = createNavItem('search', search, 'Search');
+      searchIcon.addEventListener('click', function() {
+        setActivePage('search');
+      });
       listNav.appendChild(searchIcon);
 
       const favouriteIcon = createNavItem('favourite', favourite, 'Favourites');
+      favouriteIcon.addEventListener('click', function() {
+        setActivePage('favourite');
+      });
       listNav.appendChild(favouriteIcon);
 
       const profileIcon = createNavItem('profile', profile, 'Profile');
       profileIcon.addEventListener('click', function() {
-        addProfileContent();
+        setActivePage('profile');
       });
       listNav.appendChild(profileIcon);
+
       const settingIcon = createNavItem('setting', setting, 'Setting');
       settingIcon.addEventListener('click', function() {
-        addSettingContent();
+        setActivePage('setting');
       });
       listNav.appendChild(settingIcon);
-
-      const clearContentButton = document.createElement('button');
-      clearContentButton.id = 'clear-content-button';
-      clearContentButton.textContent = 'Clear Content';
-      // Lắng nghe sự kiện click vào nút "Clear Content"
-      clearContentButton.addEventListener('click', function() {
-        clearContent();
-      });
-      
-      listNav.appendChild(clearContentButton);
 
       navBar.appendChild(listNav);
 
       return navBar;
   };
-////////////////////////////////////////////////////////////////////////////////////////////
+  // Function to create nav item
+  const createNavItem = (id, iconSrc, label) => {
+    const ul = document.createElement('ul');
+    ul.id = id;
+
+    const img = document.createElement('img');
+    img.src = iconSrc;
+    img.alt = 'Music4Life';
+
+    const a = document.createElement('a');
+    a.href = '#';
+    a.textContent = label;
+
+    ul.appendChild(img);
+    ul.appendChild(a);
+
+    return ul;
+  };
+
+  function volumeControl(value) {
+    sound.volume(value);
+  }
+  function timeLineControl(value) {
+    var seekTime = sound.duration() * value;
+    sound.seek(seekTime);
+  }
+  let timestampInterval; // Biến lưu trữ ID của interval
+
+  function updateTimestamp() {
+      const currentPosition = sound.seek(); // Lấy vị trí hiện tại của bài hát (thời gian tính bằng giây)
+      const formattedTime = formatTime(currentPosition); // Định dạng thời gian hiện tại
+      document.querySelector('#timestamp-song-start').textContent = formattedTime;
+      document.querySelector('#timestamp-song-end').textContent = formatTime(sound.duration());
+  }
+
+  function formatTime(time) {
+      const minutes = Math.floor(time / 60);
+      const seconds = Math.floor(time % 60);
+      return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  }
+
+  function nextSong() {
+    sound.stop();
+  }
+  function previousSong() {
+    sound.stop();
+  }
+
   // Function to add footer content
   const addFooterContent = () => {
+
+    // Tạo cấu trúc cây DOM cho footer
     const div = document.querySelector('.footer');
 
     const playlistContainerDiv = document.createElement('div');
@@ -267,11 +227,11 @@ function DashboardPage() {
     
     const playingSongTitleP = document.createElement('p');
     playingSongTitleP.className = 'playing-song-title';
-    playingSongTitleP.textContent = 'Chưa Biết';
+    playingSongTitleP.textContent = 'NaN';
     
     const playingSongAuthorP = document.createElement('p');
     playingSongAuthorP.className = 'playing-song-author';
-    playingSongAuthorP.textContent = 'Đạt G';
+    playingSongAuthorP.textContent = 'NaN';
     
     const likeSongDiv = document.createElement('div');
     likeSongDiv.className = 'like-song';
@@ -296,33 +256,55 @@ function DashboardPage() {
     const iconPreviousSongImg = document.createElement('img');
     iconPreviousSongImg.className = 'icon-previous-song';
     iconPreviousSongImg.src = skipForward;
-    iconPreviousSongImg.setAttribute('onClick', 'previousSong');
+    iconPreviousSongImg.addEventListener('click', function() {
+      previousSong();
+    });
     
     const iconPlaySongImg = document.createElement('img');
     iconPlaySongImg.className = 'icon-play-song';
     iconPlaySongImg.src = play;
-    iconPlaySongImg.setAttribute('onClick', 'playSong');
+    let isPlaying = false; // Biến trạng thái, ban đầu là không phát
+    // Thêm sự kiện click cho nút play
+    iconPlaySongImg.addEventListener('click', function() {
+      if (isPlaying) {
+        // Nếu đang phát, chuyển sang trạng thái tạm dừng
+        iconPlaySongImg.src = pause;
+        sound.play();
+        document.querySelector('.playing-song-title').textContent = sound.title;
+        document.querySelector('.playing-song-author').textContent = sound.artist;
+        document.querySelector('.logo-playing-song').src = sound.imagePath;
+      } else {
+        // Nếu đang tạm dừng, chuyển sang trạng thái phát
+        iconPlaySongImg.src = play;
+        sound.pause();
+      }
+      isPlaying = !isPlaying; // Đảo ngược trạng thái
+      // Thực hiện các hành động khác tại đây
+    });
     
     const iconNextSongImg = document.createElement('img');
     iconNextSongImg.className = 'icon-next-song';
     iconNextSongImg.src = skipNext;
-    iconNextSongImg.setAttribute('onClick', 'nextSong');
+    iconNextSongImg.addEventListener('click', function() {
+      nextSong();
+    });
     
     const iconRepeatSongImg = document.createElement('img');
     iconRepeatSongImg.className = 'icon-repeat-song';
     iconRepeatSongImg.src = repeat;
-    iconRepeatSongImg.setAttribute('onClick', 'repeatSong');
+    iconRepeatSongImg.setAttribute('click', 'repeatSong');
     
     const iconListSongImg = document.createElement('img');
     iconListSongImg.className = 'icon-list-song';
     iconListSongImg.src = queue;
-    iconListSongImg.setAttribute('onClick', 'listSong');
+    iconListSongImg.setAttribute('click', 'listSong');
     
     const timestampSongContainerDiv = document.createElement('div');
     timestampSongContainerDiv.className = 'timestamp-song-container';
     
     const timestampSongStartP = document.createElement('p');
     timestampSongStartP.className = 'timestamp-song';
+    timestampSongStartP.id = 'timestamp-song-start';
     timestampSongStartP.textContent = '0:00';
     
     const songTimelineInput = document.createElement('input');
@@ -330,10 +312,16 @@ function DashboardPage() {
     songTimelineInput.type = 'range';
     songTimelineInput.min = '0';
     songTimelineInput.max = '100';
+    songTimelineInput.step = '1';
     songTimelineInput.value = '0';
+    // Bắt sự kiện thay đổi tua bài hát từ slider
+    songTimelineInput.addEventListener('change', function(e) {
+      timeLineControl(e.target.value / 100);
+    });
     
     const timestampSongEndP = document.createElement('p');
     timestampSongEndP.className = 'timestamp-song';
+    timestampSongEndP.id = 'timestamp-song-end';
     timestampSongEndP.textContent = '0:00';
     
     const mutePlaySongContainerDiv = document.createElement('div');
@@ -342,14 +330,30 @@ function DashboardPage() {
     const iconMuteSongImg = document.createElement('img');
     iconMuteSongImg.className = 'icon-mute-song';
     iconMuteSongImg.src = loudspeaker;
-    iconMuteSongImg.setAttribute('onClick', 'muteSong');
+    let isMute = false; // Biến trạng thái, ban đầu là không phát
+    iconMuteSongImg.addEventListener('click', function() {
+      if(isMute) {
+        iconMuteSongImg.src = mute;
+        volumeControl(0);
+      }
+      else if(!isMute) {
+        iconMuteSongImg.src = loudspeaker;
+        volumeControl(1);
+      }
+      isMute = !isMute;
+    });
     
     const volumeSongInput = document.createElement('input');
     volumeSongInput.className = 'volume-song';
     volumeSongInput.type = 'range';
     volumeSongInput.min = '0';
-    volumeSongInput.max = '100';
-    volumeSongInput.value = '100';
+    volumeSongInput.max = '1';
+    volumeSongInput.step = '0.1';
+    volumeSongInput.value = '1';
+
+    volumeSongInput.addEventListener('change', function(e) {
+      volumeControl(e.target.value);
+    });
     
     // Gắn các phần tử vào cấu trúc cây DOM
     
@@ -392,56 +396,40 @@ function DashboardPage() {
     div.appendChild(playlistContainerDiv);
   };
 
-  // Hàm clearContent để xóa nội dung trong .content
-  const clearContent = () => {
-    const content = document.querySelector('.content');
-    while (content.firstChild) {
-      content.removeChild(content.firstChild);
-    }
-  };
 
-  // Function to create nav item
-  const createNavItem = (id, iconSrc, label) => {
-      const ul = document.createElement('ul');
-      ul.id = id;
-
-      const img = document.createElement('img');
-      img.src = iconSrc;
-      img.alt = 'Music4Life';
-
-      const a = document.createElement('a');
-      a.href = '#';
-      a.textContent = label;
-
-      ul.appendChild(img);
-      ul.appendChild(a);
-
-      return ul;
-  };
 
   useEffect(() => {
-    if (!isHeaderAdded && !headerAddedRef.current) {
-      fetchDisplay();
-      setIsHeaderAdded(true);
-      headerAddedRef.current = true;
+    if(!localStorage.getItem('access_token')) {
+      window.location.href = '/'; // Điều hướng về trang ban đầu của bạn
     }
-    const fetchData = setTimeout(() => {
-      setIsLoaded(true);
-      setIsFirstLoad(false); // Đánh dấu là không phải lần đầu tiên mở dashboard
-    }, 1000);
-    return () => clearTimeout(fetchData);
-  }, []);
+    else {
+      if (!isHeaderAdded && !headerAddedRef.current) {
+        fetchDisplay();
+        setIsHeaderAdded(true);
+        headerAddedRef.current = true;
+      }
+      const fetchData = setTimeout(() => {
+        setIsLoaded(true);
+        setIsFirstLoad(false); // Đánh dấu là không phải lần đầu tiên mở dashboard
+      }, 1000);
+      return () => clearTimeout(fetchData);
+    }
+
+  });
 
   return (
+    <>
     <React.StrictMode>
-        <link rel="stylesheet" type="text/css" href="./Pages/Setting/Dashboard.css" />
-        {isLoaded ? (
-          isFirstLoad ? <LoadingHome /> : null
-        ) : (
-          <LoadingHome />
-        )}
+        <link rel="stylesheet" type="text/css" href="./Dashboard.css"/>
+        {activepage === 'dashboard' && <DashboardPage setActivePage = {setActivePage} />}
+        {activepage === 'search' && <SearchPage setActivePage = {setActivePage} />}
+        {activepage === 'favourite' && <FavouritesPage setActivePage = {setActivePage} />}
+        {activepage === 'profile' && <ProfilePage setActivePage = {setActivePage} />}
+        {activepage === 'setting' && <SettingPage setActivePage = {setActivePage} />}
+
     </React.StrictMode>
+    </>
   );
 }
 
-export default DashboardPage;
+export default Dashboard;
