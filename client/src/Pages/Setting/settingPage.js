@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import api from "../../api";
 
 if (window.location.pathname === '/dashboard') {
     require('./SettingPage.css'); // Import tệp CSS
@@ -6,14 +7,30 @@ if (window.location.pathname === '/dashboard') {
 
 function EditProfile({setActiveTab}) {
     const initProfile = {
-      username: "example",
-      email: "example@gmail.com",
-      birthday: "2022-12-30",
-      gender: "other",
+      name: "",
+      email: "",
+      birthday: "",
+      gender: "",
     };
     const [ProfileUser, setProfileUser] = useState(initProfile);
     const [formError, setFormError] = useState({});
-  
+    useEffect(() => {
+        const fetchUserData = async () => {
+          try {
+            const response = await api.get(`/api/users/${localStorage.getItem('data')}`);
+            const userData = await response.json();
+            setProfileUser({
+              name: userData.name,
+              email: userData.email,
+              birthday: userData.date_of_birth,
+              gender: userData.gender
+            });
+          } catch (error) {
+            console.error("Failed to fetch user data:", error);
+          }
+        };
+        fetchUserData();
+      }, []);
     // Kiểm tra giá trị rỗng
     const isEmptyValue = (value) => {
         return !value || value.trim().length < 1;
@@ -41,8 +58,8 @@ function EditProfile({setActiveTab}) {
             error.email = "Please enter a valid email address";
         }
         // Kiểm tra tên người dùng
-        if (isEmptyValue(ProfileUser.username)) {
-            error.username = "Please enter your ProfileUser";
+        if (isEmptyValue(ProfileUser.name)) {
+            error.name = "Please enter your ProfileUser";
         }
         //Kiẻm tra ngày sinh
         if (isEmptyValue(ProfileUser.birthday)) {
@@ -61,13 +78,25 @@ function EditProfile({setActiveTab}) {
     }
 
     // gửi giá trị cập nhật lên server
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         event.preventDefault();
         // Kiểm tra lỗi
         if (validateForm()) {
-            // Gửi dữ liệu hồ sơ đã chỉnh sửa
-            console.log("Dữ liệu hồ sơ đã chỉnh sửa:", ProfileUser);
+            const data = JSON.stringify(
+                {
+                    name: ProfileUser.name,
+                    email: ProfileUser.email,
+                    gender: ProfileUser.gender,
+                    date_of_birth: ProfileUser.birthday
+                }
+            )
+            const response = await api.put(`/api/users/${localStorage.getItem('data')}`, data, {
+                headers: {
+                  'Content-Type': 'application/json'
+                }
+              });
+            console.log("Dữ liệu hồ sơ đã chỉnh sửa:", response);
             // Quay về setting...
             setActiveTab('setting');
         }
@@ -87,27 +116,27 @@ function EditProfile({setActiveTab}) {
     title.textContent = 'Edit Profile';
     // Tạo các input và append vào form
 
-    // Tạo input username
-    const usernameInputContainer = document.createElement('div');
-    const usernameLabel = document.createElement('label');
-    usernameLabel.htmlFor = 'edit-username';
-    usernameLabel.className = 'edit-profile-label';
-    usernameLabel.textContent = 'Username:';
-    const usernameInput = document.createElement('input');
-    usernameInput.type = 'text';
-    usernameInput.id = 'edit-username';
-    usernameInput.className = 'edit-profile-input';
-    usernameInput.name = 'username';
-    usernameInput.placeholder = 'Enter your username';
-    usernameInput.value = ProfileUser.username;
-    usernameInput.addEventListener('change', handleChangeProfile);
-    const usernameError = document.createElement('p');
-    usernameError.className = 'edit-profile-error';
-    usernameError.textContent= formError.username;
+    // Tạo input name
+    const nameInputContainer = document.createElement('div');
+    const nameLabel = document.createElement('label');
+    nameLabel.htmlFor = 'edit-name';
+    nameLabel.className = 'edit-profile-label';
+    nameLabel.textContent = 'name:';
+    const nameInput = document.createElement('input');
+    nameInput.type = 'text';
+    nameInput.id = 'edit-name';
+    nameInput.className = 'edit-profile-input';
+    nameInput.name = 'name';
+    nameInput.placeholder = 'Enter your name';
+    nameInput.value = ProfileUser.name;
+    nameInput.addEventListener('change', handleChangeProfile);
+    const nameError = document.createElement('p');
+    nameError.className = 'edit-profile-error';
+    nameError.textContent= formError.name;
     
-    usernameInputContainer.appendChild(usernameLabel);
-    usernameInputContainer.appendChild(usernameInput);
-    usernameInputContainer.appendChild(usernameError);
+    nameInputContainer.appendChild(nameLabel);
+    nameInputContainer.appendChild(nameInput);
+    nameInputContainer.appendChild(nameError);
 
     // Tạo input email
     const emailInputContainer = document.createElement('div');
@@ -221,7 +250,7 @@ function EditProfile({setActiveTab}) {
     btnContainer.appendChild(btnUpdate);
 
     // Append các input vào form
-    form.appendChild(usernameInputContainer);
+    form.appendChild(nameInputContainer);
     form.appendChild(emailInputContainer);
     form.appendChild(birthdayInputContainer);
     form.appendChild(genderInputContainer);
