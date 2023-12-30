@@ -7,7 +7,7 @@ import musical_sound_music_logo from "./Pages/Icon/musical-sound-music-logo.svg"
 import HomePage from './Pages/Home/Home';
 import LoginPage from './Pages/Login/Login';
 import RegisterPage from './Pages/Register/Register';
-import Dashboard from './Pages/Dashboard/Dashboard';
+import Dashboard from './Pages/Setting/Dashboard';
 import SearchPage from './Pages/Search/Search';
 import AdminLogin from './components/admin/Login/Login';
 import AdminDashboard from './components/admin/Dashboard/Dashboard';
