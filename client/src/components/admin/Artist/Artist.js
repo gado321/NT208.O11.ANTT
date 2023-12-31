@@ -240,6 +240,11 @@ const Artist = () => {
                             onChange={(e) => handleChange(e, setNewArtist)}
                             placeholder="Artist name"
                         />
+                        <input
+                        type="file"
+                        onChange={handleArtistImageChange}
+                        accept="image/*"
+                    />
                         <button type="submit" className="update-btn">Create Artist</button>
                     </form>
                 )}
