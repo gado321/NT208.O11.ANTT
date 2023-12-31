@@ -17,21 +17,19 @@ import queue from "../Icon/queue.png";
 import loudspeaker from "../Icon/loudspeaker.png";
 import mute from "../Icon/mute.png";
 import api from "../../api";
-//////////////import các trang Dev_CThanh/////////////////////
 import DashboardPage from './DashboardPage';
 import SearchPage from './SearchPage';
 import FavouritesPage from './FavouritesPage';
 import ProfilePage from './ProfilePage';
 import SettingPage from "./settingPage";
-//////////////////////////////////////////////////////////
+
 // Kiểm tra URL hiện tại và tải tệp CSS khi URL khớp với /dashboard
 if (window.location.pathname === '/dashboard') {
     require('./Dashboard.css'); // Import tệp CSS
 }
 
-//////đổi tên từ DashboardPage thành Dashboard Dev_CThanh////
 function Dashboard() {
-
+  // Khởi tạo state và các biến cần thiết
   var id = localStorage.getItem('data');
   const initialFormState = {
     id: '',
@@ -45,6 +43,7 @@ function Dashboard() {
     gender: '',
     date_of_birth: ''
   };
+  // Khởi tạo đối tượng sound (bài hát mặc định)
   var sound = new Howl({
     src: './song/thang-nam.mp3', // URL của file nhạc
     format: 'mp3', // Định dạng file nhạc
@@ -59,19 +58,18 @@ function Dashboard() {
       clearInterval(timestampInterval);
     },
   });
-  // Thêm thuộc tính tùy chỉnh cho đối tượng sound
+  // Thêm thuộc tính tùy chỉnh cho đối tượng sound 
   sound.title = 'Tháng Năm';
   sound.artist = 'Soobin Hoàng Sơn';
   sound.imagePath = 'images/anh-chua-thuong-em-den-vay-dau.jpg';
-  ///////////////thêm biến check trang Dev_Thanh///////////////////////
   const [activepage, setActivePage] = useState('dashboard');
-  //////////////////////////////////
   const [dataUser, setDataUser] = useState(initialFormState);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
   const [isHeaderAdded, setIsHeaderAdded] = useState(false);
   const headerAddedRef = useRef(false);
 
+  // Hàm fetch data
   const fetchDisplay = async () =>{
     try{
       //Get user data
@@ -89,7 +87,7 @@ function Dashboard() {
     }
   }
 
-  // Function to add header content
+  // Hàm add header content
   const addHeaderContent = (userData) => {
       const hello = document.querySelector('.hello');
       const avtDiv = document.querySelector('.avt');
@@ -114,8 +112,8 @@ function Dashboard() {
       const modeSwitchContainer = document.querySelector('.nav-bar');
       modeSwitchContainer.appendChild(createNavBar());
   };
-  // Function to create nav bar
-  ////////////////////////////////////////////Thay đổi biến khi click vào các button trang Dev_Thanh///////////////////////
+
+  // Hàm create nav bar
   const createNavBar = () => {
       const navBar = document.createElement('div');
       navBar.className = 'nav-bar';
@@ -161,8 +159,8 @@ function Dashboard() {
 
       return navBar;
   };
-  ///////////////////////////////////////////////////////////////////
-  // Function to create nav item
+
+  // Hàm create nav item
   const createNavItem = (id, iconSrc, label) => {
     const ul = document.createElement('ul');
     ul.id = id;
@@ -203,16 +201,8 @@ function Dashboard() {
       return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   }
 
-  function nextSong() {
-    sound.stop();
-  }
-  function previousSong() {
-    sound.stop();
-  }
-
-  // Function to add footer content
+  // Hàm add footer content
   const addFooterContent = () => {
-
     // Tạo cấu trúc cây DOM cho footer
     const div = document.querySelector('.footer');
 
@@ -280,7 +270,6 @@ function Dashboard() {
         sound.pause();
       }
       isPlaying = !isPlaying; // Đảo ngược trạng thái
-      // Thực hiện các hành động khác tại đây
     });
     
     const iconNextSongImg = document.createElement('img');
@@ -416,19 +405,16 @@ function Dashboard() {
   });
 
   return (
-    ////////////////////////////thêm các trang Dev_CThanh////////////////////
     <>
-    <React.StrictMode>
-        <link rel="stylesheet" type="text/css" href="./Dashboard.css"/>
-        {activepage === 'dashboard' && <DashboardPage setActivePage = {setActivePage} />}
-        {activepage === 'search' && <SearchPage setActivePage = {setActivePage} />}
-        {activepage === 'favourite' && <FavouritesPage setActivePage = {setActivePage} />}
-        {activepage === 'profile' && <ProfilePage setActivePage = {setActivePage} />}
-        {activepage === 'setting' && <SettingPage setActivePage = {setActivePage} />}
-
-    </React.StrictMode>
+      <React.StrictMode>
+          <link rel="stylesheet" type="text/css" href="./Dashboard.css"/>
+          {activepage === 'dashboard' && <DashboardPage setActivePage = {setActivePage} />}
+          {activepage === 'search' && <SearchPage setActivePage = {setActivePage} />}
+          {activepage === 'favourite' && <FavouritesPage setActivePage = {setActivePage} />}
+          {activepage === 'profile' && <ProfilePage setActivePage = {setActivePage} />}
+          {activepage === 'setting' && <SettingPage setActivePage = {setActivePage} />}
+      </React.StrictMode>
     </>
-    ///////////////////////////////////////////////////////////////////////////
   );
 }
 
