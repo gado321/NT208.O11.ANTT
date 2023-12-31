@@ -1,4 +1,4 @@
-import React, { useState, useCallback} from 'react';
+import React, { useState, useEffect, useCallback} from 'react';
 import api from '../../../api'
 import { slugifyVietnamese, getExtension } from '../Utils';
 
@@ -8,7 +8,10 @@ const Artist = () => {
         require('bootstrap/dist/css/bootstrap.min.css');
         require('./Artist.css')
     }
-
+    useEffect(() => {
+        const linkDashboard = document.querySelector('.link-home');
+        linkDashboard.href = "/admin/dashboard";
+    });
     const [artists, setArtists] = useState([]);
     const [selectedArtist, setSelectedArtist] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');

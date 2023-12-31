@@ -86,7 +86,10 @@ const Song = () => {
         require('bootstrap/dist/css/bootstrap.min.css');
         require('./Song.css');
     }
-
+    useEffect(() => {
+        const linkDashboard = document.querySelector('.link-home');
+        linkDashboard.href = "/admin/dashboard";
+    });
     // Initialize new song form data
     const initialFormState = {
         name: '',

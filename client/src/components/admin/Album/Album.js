@@ -79,7 +79,10 @@ const Album = () => {
         require('bootstrap/dist/css/bootstrap.min.css');
         require('./Album.css');
     }
-
+    useEffect(() => {
+        const linkDashboard = document.querySelector('.link-home');
+        linkDashboard.href = "/admin/dashboard";
+    });
     const [albums, setAlbums] = useState([]);
     const [songs, setSongs] = useState([]);
     const [artists, setArtists] = useState([]);
