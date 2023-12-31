@@ -227,11 +227,11 @@ function Dashboard() {
     
     const playingSongTitleP = document.createElement('p');
     playingSongTitleP.className = 'playing-song-title';
-    playingSongTitleP.textContent = 'NaN';
+    playingSongTitleP.textContent = 'Setting';
     
     const playingSongAuthorP = document.createElement('p');
     playingSongAuthorP.className = 'playing-song-author';
-    playingSongAuthorP.textContent = 'NaN';
+    playingSongAuthorP.textContent = 'Setting';
     
     const likeSongDiv = document.createElement('div');
     likeSongDiv.className = 'like-song';
