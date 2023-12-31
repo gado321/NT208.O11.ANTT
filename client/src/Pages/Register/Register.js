@@ -1,7 +1,7 @@
 import {React, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Register.css";
-
+import api from "../../api";
 export default function RegisterPage() {
     const navigate = useNavigate(); // Sử dụng useNavigate để chuyển hướng trang
     const condition = localStorage.getItem('access_token')// Kiểm tra access_token có tồn tại hay không
@@ -86,24 +86,26 @@ export default function RegisterPage() {
         return Object.keys(error).length === 0;
     }
     // Xác nhận dữ liệu khi đăng nhập và in ra console
-    const handleSubmit = (event) => {
+    ///////////////////////////////
+    const handleSubmit = async (event) => {
         event.preventDefault();
+        // Kiểm tra lỗi
         if (validateForm()) {
-            // Gửi yêu cầu POST đến API Python
-            fetch('http://localhost:5000/auth/signup', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
+            const data = JSON.stringify(
+                {
                     name: UserName.username,
                     email: UserName.email,
                     password: UserName.password,
                     gender: UserName.gender,
                     date_of_birth: UserName.birthday
-                })
-            })
-            .then(response => {
+                }
+            )
+            try {
+                const response = await api.post(`/auth/signup`, data, {
+                    headers: {
+                      'Content-Type': 'application/json'
+                    }
+                  });
                 if (response.ok) {
                     setRegisterMessage("Registration successful!");
                     navigate("/login");
@@ -111,24 +113,15 @@ export default function RegisterPage() {
                     throw new Error('Something went wrong');
                     
                 }
-            })
-            .catch(error => {
+            }
+            catch (error) {
                 setRegisterMessage("Registration failed! Please try again.");
-            });
+            }
         }
     };
     // Trả về html
     return (
         <div className="register-page">
-            {/* <div className="register-mode-switch-container">
-                <a href="/home">
-                    <Icon className="register-icon" icon="bx:arrow-back" />
-                </a>
-                <label className="mode-switch">
-                    <input type="checkbox" onclick="toggleDarkMode()"/>
-                    <span className="mode-switch-slider"></span>
-                </label>
-            </div> */}
             <h1 className="register-title">Sign Up</h1>
             <form onSubmit={handleSubmit}>
                 <div className="register-form-container">
