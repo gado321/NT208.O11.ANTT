@@ -172,7 +172,7 @@ function Dashboard() {
     img.alt = 'Music4Life';
 
     const a = document.createElement('a');
-    a.href = '';
+    a.href = '#';
     a.textContent = label;
 
     ul.appendChild(img);
@@ -413,7 +413,7 @@ function Dashboard() {
       return () => clearTimeout(fetchData);
     }
 
-  }, []);
+  });
 
   return (
     ////////////////////////////thêm các trang Dev_CThanh////////////////////
