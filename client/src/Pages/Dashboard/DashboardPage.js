@@ -22,6 +22,7 @@ function artistsDisplay(artistsID) {
 }
 
 function DashboardPage() {
+  // Tạo các state và variable cần thiết
   var sound = new Howl({});
   var id = localStorage.getItem('data');
   const initialFormState = {
@@ -57,7 +58,6 @@ function DashboardPage() {
     name: '',
     release_date: '',
   }
-  
   const [dataUser, setDataUser] = useState(initialFormState);
   const [dataSong, setDataSong] = useState(initialFormStateSong);
   const [dataArtist, setDataArtist] = useState(initialFormStateArtist);
@@ -65,10 +65,10 @@ function DashboardPage() {
   const contentAddedRef = useRef(false);
   const [isContentAdded, setIsContentAdded] = useState(false);
 
-  // Function to fetch user data
+  // Hàm fetch user data
   const fetchUserData = async () => {
     try {
-      //Get user data
+      //Lấy user data
       const response = await api.get(`/api/users/${id}`);
       const userData = await response.json();
       setDataUser(userData);
@@ -100,7 +100,7 @@ function DashboardPage() {
         bestArtists.push(artistJSON);
       }
 
-      //Get Made for user
+      // Get Made for user
       const token = localStorage.getItem('access_token');
       const headers = {
         Authorization: `Bearer ${token}`
@@ -111,6 +111,7 @@ function DashboardPage() {
       setDataArtist(...artistMadeForUserJSON);
       artistMadeForUserList.push(...artistMadeForUserJSON);
 
+      // Get album for user
       const albumForUserList = [];
       for(let i=0; i<artistMadeForUserList.length; i++){
         const responseAlbum = await api.get(`/api/albums/artist/${artistMadeForUserList[i].id}/random`);
@@ -119,6 +120,7 @@ function DashboardPage() {
         albumForUserList.push(albumJSON);
       }
 
+      // Add content
       addContent(listHeadingName, moodBoosters, bestArtists, artistMadeForUserList, albumForUserList);
 
     } catch (error) {
@@ -128,7 +130,7 @@ function DashboardPage() {
     }
   };
 
-  // Function to fetch Artist data from Song
+  // Hàm fetch Artist data từ SongID
   const transSongToArtist = async (idSong) => {
     try {
       const response = await api.get(`/api/songs/${idSong}/artists`);
@@ -143,7 +145,7 @@ function DashboardPage() {
     }
   }
 
-  // Function to sort Artist by like
+  // Hàm sort Artist theo like
   const sortArtistByLike = async () => {
     try {
       const response = await api.get(`/api/artists`);
@@ -151,11 +153,13 @@ function DashboardPage() {
       const cntArtist = artistJSON.length;
       const id_likes = [];
       for(let i=0; i<cntArtist; i++){
+        //Lấy số lượng like của mỗi artist
         try{
           const response = await api.get(`/api/artists/${i+1}/likes`);
           const artistLikeJSON = await response.json();
           id_likes.push({ id: i+1, likes: artistLikeJSON.likes });
         }
+        //Nếu không có like thì gán số like = -1
         catch (error) {
           id_likes.push({ id: i+1, likes: -1 });
         }
@@ -170,11 +174,13 @@ function DashboardPage() {
     }
   }
 
+  // Hàm fetch Album data từ ArtistID
   const addContent = (listHeadingName, moodBoosters, bestArtists, artistMadeForUserList, albumForUserList) => {
     // Get content
     const content = document.querySelector('.content');
-    // Add event listener for see more button
+    // Thêm event cho nút play
     const seeMoreFunctions = [
+      // Hàm cho button "See More" của mood boosters
       function() {
         // Thực hiện hàm cho button "See More" đầu tiên
         console.log("See More button 1 clicked");
@@ -289,6 +295,7 @@ function DashboardPage() {
         content.appendChild(div);
         hideContentAndShowDiv('.music-dashboard-detail', '.music-dashboard');
       },
+      // Hàm cho button "See More" của Made for user
       function() {
         // Thực hiện hàm cho button "See More" thứ hai
         console.log("See More button 2 clicked");
@@ -363,11 +370,13 @@ function DashboardPage() {
         content.appendChild(div);
         hideContentAndShowDiv('.music-dashboard-detail', '.music-dashboard');
       },
+      // Hàm cho button "See More" của Recently played
       function() {
         // Thực hiện hàm cho button "See More" thứ ba
         console.log("See More button 3 clicked");
         // Thực hiện các hành động khác tại đây
-      },    
+      },
+      // Hàm cho button "See More" của Best artists  
       function() {
         // Thực hiện hàm cho button "See More" thứ tư
         console.log("See More button 4 clicked");
@@ -442,13 +451,16 @@ function DashboardPage() {
 
     // Add content
     for(let j=0; j<4; j++){
+      // Tạo cấu trúc cây DOM cho content
       const div = document.createElement('div');
       div.className = 'music-dashboard';
 
+      // Tạo phần tử div cho header của list
       const headerDiv = document.createElement('div');
       headerDiv.className = 'music-dashboard-list-header';
       const heading = document.createElement('h2');
       heading.textContent = listHeadingName[j];
+
       // Tạo phần tử div cho See More button
       const seeMoreDiv = document.createElement('div');
       seeMoreDiv.className = 'see-more-button';
@@ -463,10 +475,13 @@ function DashboardPage() {
       headerDiv.appendChild(seeMoreDiv);
       div.appendChild(headerDiv);
 
+      // Tạo phần tử ul cho list
       const ul = document.createElement('ul');
       ul.className = 'music-dashboard-list';
 
+      // Thêm các phần tử li vào ul
       for (let i = 0; i < 4; i++) {
+        // Thêm các phần tử cho mood boosters
         if(listHeadingName[j] === "Mood Boosters" ){
           const li = document.createElement('li');
           li.className = 'music-dashboard-item';
@@ -542,6 +557,7 @@ function DashboardPage() {
       
           ul.appendChild(li);            
         }
+        // Thêm các phần tử cho best artists
         else if(listHeadingName[j] === "Best artists"){
           const li = document.createElement('li');
           li.className = 'music-dashboard-item';
@@ -574,6 +590,7 @@ function DashboardPage() {
       
           ul.appendChild(li);
         }
+        // Thêm các phần tử cho Made for user
         else if(listHeadingName[j].includes('Made for ')){
           const li = document.createElement('li');
           li.className = 'music-dashboard-item';
@@ -609,6 +626,7 @@ function DashboardPage() {
       
           ul.appendChild(li);
         }
+        // Thêm các phần tử cho Recently played (chưa hoàn thành)
         else{
           const li = document.createElement('li');
           li.className = 'music-dashboard-item';
@@ -640,7 +658,7 @@ function DashboardPage() {
     }
   };
 
-  // Function to hide content and show div
+  // Hàm ẩn content và show div (hàm dành cho button "See More")
   function hideContentAndShowDiv(divToShow, divsToHide) {
     const content = document.querySelector('.content');
   
@@ -656,7 +674,8 @@ function DashboardPage() {
       divToDisplay.style.display = 'block';
     }
   }
-  // Function to show div and remove current div
+
+  // Hàm show div và xóa div hiện tại (hàm dành cho button "Close")
   function showDivAndRemoveCurrentDiv(divToShow, divToMove) {
     const content = document.querySelector('.content');
   
@@ -671,11 +690,12 @@ function DashboardPage() {
     divToRemove.parentNode.removeChild(divToRemove);
   }
 
-  // Function reset footer
+  // Hàm xóa footer
   function clearFooter() {
     const footer = document.querySelector('.footer');
     footer.innerHTML = '';
   }
+
   function volumeControl(value) {
     sound.volume(value);
   }
@@ -685,9 +705,8 @@ function DashboardPage() {
   }
 
 
-  // Function to add footer content
+  // Hàm add footer content
   const addFooterContent = (sound) => {
-
     // Tạo cấu trúc cây DOM cho footer
     const div = document.querySelector('.footer');
 
@@ -755,7 +774,6 @@ function DashboardPage() {
         sound.pause();
       }
       isPlaying = !isPlaying; // Đảo ngược trạng thái
-      // Thực hiện các hành động khác tại đây
     });
 
     btnPlaylistContainerDiv.appendChild(iconPlaySongImg);
@@ -870,18 +888,22 @@ function DashboardPage() {
     // Gắn playlistContainerDiv vào div.footer
     div.appendChild(playlistContainerDiv);
   };
-  // Function to reset footer
+
+  // Hàm reset footer
   function resetFooter(sound) {
+    // Xóa footer cũ
     clearFooter();
     // Lặp qua và unload tất cả các đối tượng Howl
     Howler._howls.slice().forEach(function(howl) {
       howl.unload();
     });
+    // Thêm footer mới
     addFooterContent(sound);
   }
 
-  // Function to add content album
+  // Hàm add content album
   async function addContentAlbum(album, artist) {
+    // Tạo cấu trúc cây DOM cho content
     const content = document.querySelector('.content');
     while (content.firstChild) {
       content.removeChild(content.firstChild);
@@ -962,6 +984,8 @@ function DashboardPage() {
     tableHeaderLi.appendChild(headerCol4);
 
     tableUl.appendChild(tableHeaderLi);
+
+    // Thêm sự kiện click cho nút play
     var playlist = []
     const rowData = await api.get(`/api/albums/${album.id}/songs`).then(response => response.json());
     setDataSong(...rowData);
@@ -969,13 +993,13 @@ function DashboardPage() {
       playlist.push({title: element.name, path: element.path});
     });
     playButton.addEventListener('click', function() {
-      // Initialize variables
+      // Tạo các biến cần thiết
       var currentTrack = 0;
       var sound = new Howl({
         src: [playlist[currentTrack].file],
         onend: function() {
           clearInterval(timestampInterval); // Khi bài hát kết thúc, dừng cập nhật thời gian
-          nextTrack(); // Play the next song automatically when one ends
+          nextTrack(); // Tự động phát bài tiếp theo khi một bài hát kết thúc
         },
         onplay: function() {
           // Bắt đầu cập nhật thời gian bài hát khi bắt đầu phát
@@ -1000,13 +1024,13 @@ function DashboardPage() {
           return `${minutes}:${seconds.toString().padStart(2, '0')}`;
       }
 
-      // Function to play a song
+      // Hàm play bài song
       function playTrack(index) {
         sound = new Howl({
           src: [playlist[index].path],
           html5: true, // Force to HTML5 so that the audio can stream in (best for large files).
           onend: function() {
-            nextTrack(); // Play the next song automatically when one ends
+            nextTrack(); // Tự động phát bài tiếp theo khi một bài hát kết thúc
             clearInterval(timestampInterval);
           },
           onplay: function() {
@@ -1019,49 +1043,49 @@ function DashboardPage() {
         if(sound.playing()) {
           sound.stop();
         }
-        // Update the title display
       }
+      // Hàm bài hát tiếp theo
       function nextTrack() {
-        currentTrack = (currentTrack + 1) % playlist.length; // Loop back to the first song if at the end
-        playTrack(currentTrack);
-        resetFooter(sound);
-        // Event listeners for the buttons
+        currentTrack = (currentTrack + 1) % playlist.length; // Cập nhật thứ tự bài hát tiếp theo
+        playTrack(currentTrack); // Cập nhật bài hát tiếp theo
+        resetFooter(sound); // Reset footer
+        // Event cho nút next và previous
         document.querySelector('.icon-next-song').addEventListener('click', function() {
           nextTrack();
         });
-        
-        document.querySelector('.icon-previous-song').addEventListener('click', function() {
-          prevTrack();
-        });
-      }
-      // Function to go to the previous song in the playlist
-      function prevTrack() {
-        currentTrack = (currentTrack - 1 + playlist.length) % playlist.length; // Loop back to the last song if at the beginning
-        playTrack(currentTrack);
-        resetFooter(sound);
-        // Event listeners for the buttons
-        document.querySelector('.icon-next-song').addEventListener('click', function() {
-          nextTrack();
-        });
-        
         document.querySelector('.icon-previous-song').addEventListener('click', function() {
           prevTrack();
         });
       }
 
-      // Start playing the first track
+      // Hàm bài hát trước đó
+      function prevTrack() {
+        currentTrack = (currentTrack - 1 + playlist.length) % playlist.length; // Cập nhật thứ tự bài hát trước đó
+        playTrack(currentTrack); // Cập nhật bài hát trước đó
+        resetFooter(sound); // Reset footer
+        // Event cho nút next và previous
+        document.querySelector('.icon-next-song').addEventListener('click', function() {
+          nextTrack();
+        });
+        document.querySelector('.icon-previous-song').addEventListener('click', function() {
+          prevTrack();
+        });
+      }
+
+      // Cập nhật bài hát hiện tại
       playTrack(currentTrack);
 
+      // Reset footer
       resetFooter(sound);
-      // Event listeners for the buttons
+      // Thêm sự kiện cho nút next và previous
       document.querySelector('.icon-next-song').addEventListener('click', function() {
         nextTrack();
       });
-      
       document.querySelector('.icon-previous-song').addEventListener('click', function() {
         prevTrack();
       });
 
+      // Hàm xáo trộn playlist
       function shufflePlaylist() {
         for (let i = playlist.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
@@ -1070,12 +1094,13 @@ function DashboardPage() {
         currentTrack = 0; // Reset to the first song in the shuffled playlist
         playTrack(currentTrack);
       }
-
       document.querySelector('.icon-mix-song').addEventListener('click', shufflePlaylist());
+
     });
     albumInfoButtonDiv.appendChild(playButton);
     albumInfoButtonDiv.appendChild(likeButton);
 
+    // Hiển thị các bài hát trong album
     for (let i = 0; i < rowData.length; i++) {
     const tableRowLi = document.createElement('li');
     tableRowLi.className = 'table-row';
@@ -1107,9 +1132,11 @@ function DashboardPage() {
     content.appendChild(albumDiv);
   }
   
-  // Function useEffect
+  // Hàm useEffect
   useEffect(() => {
     if (!isContentAdded && !contentAddedRef.current) {
+      const content = document.querySelector('.content');
+      content.innerHTML = '';
       fetchUserData();
       setIsContentAdded(true);
       contentAddedRef.current = true;

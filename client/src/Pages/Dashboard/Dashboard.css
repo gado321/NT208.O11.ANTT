@@ -217,7 +217,7 @@
     width: 100%;
     background-color: #6F65A9; 
     display: grid;
-    grid-template-columns: 1fr 3fr 1fr;
+    grid-template-columns: 1.5fr 3fr 1fr;
 }
 .playlist-container img {
     width: 50px;
