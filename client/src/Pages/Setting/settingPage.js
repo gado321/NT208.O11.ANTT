@@ -121,7 +121,7 @@ function EditProfile({setActiveTab}) {
     const nameLabel = document.createElement('label');
     nameLabel.htmlFor = 'edit-name';
     nameLabel.className = 'edit-profile-label';
-    nameLabel.textContent = 'name:';
+    nameLabel.textContent = 'Name:';
     const nameInput = document.createElement('input');
     nameInput.type = 'text';
     nameInput.id = 'edit-name';
@@ -356,6 +356,11 @@ function  SettingContent ({setActivePage, setActiveTab}) {
     const button = document.createElement('button');
     button.className = 'delete-account-button';
     button.textContent = 'Delete Account';
+    button.onclick = async function() {
+        const response = await api.delete(`/api/users/${localStorage.getItem('data')}`);
+        localStorage.clear();
+        window.location.href = '/';
+    };
     deleteAccount.appendChild(button);
     settingContent.appendChild(deleteAccount);
     content.appendChild(settingContent);
