@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import './Dashboard.css'
 const LoggedInLinks = () => {
@@ -35,7 +35,10 @@ const AdminDashboard = () => {
     if (window.location.pathname === '/admin/dashboard') {
         require('bootstrap/dist/css/bootstrap.min.css');
     }    
-
+    useEffect(() => {
+        const linkDashboard = document.querySelector('.link-home');
+        linkDashboard.href = "/admin/dashboard";
+    });
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
             <div className="container-fluid">

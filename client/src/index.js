@@ -59,7 +59,7 @@ function App() {
     <>
       <div className="container-page">
           <div className='nav-bar'>
-            <a href="/dashboard">
+            <a className="link-home" href="/dashboard">
               <img className="music-logo" src={musical_sound_music_logo} alt="logo"/>
             </a>
           </div>

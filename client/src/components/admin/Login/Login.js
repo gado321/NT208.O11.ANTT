@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from "react";
 import { Link } from "react-router-dom";
-import './Login.css';
 import {Form, Button} from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { login } from '../Auth';
@@ -32,6 +31,7 @@ const AdminLogin = () => {
 
     if (window.location.pathname === '/admin/login') { 
         require('bootstrap/dist/css/bootstrap.min.css');
+        require('./Login.css');
     }
 
     const { register, handleSubmit, reset, formState:{errors}} = useForm();
@@ -83,14 +83,16 @@ const AdminLogin = () => {
     }
 
     return (
-        <div className="container">
-            <div className="form">
-                <h3>Admin Login</h3>
-                <Form onSubmit={handleSubmit(loginAdmin)}>
+        <div className="admin-login-container">
+            <h1 className="admin-login-title">Admin Login</h1>
+            <div className="admin-login-form-container">
+
+                <Form className="admin-login-form" onSubmit={handleSubmit(loginAdmin)}>
                     <Form.Group>
-                        <Form.Label>Email address</Form.Label>
-                        <Form.Control type="email" 
-                            placeholder="Your admin email" 
+                        <Form.Label className="admin-login-form-label">Email address</Form.Label>
+                        <Form.Control className="admin-login-form-control"
+                            type="email" 
+                            placeholder="Enter your admin email" 
                             {...register('email', {required: true, maxLength: 50, pattern: /^\S+@\S+$/i})}
                         />
                         {errors.email && <p style={{color:'red'}}>Please enter a valid email.</p>}
@@ -98,20 +100,25 @@ const AdminLogin = () => {
                     <br/>
                     <Form.Group>
                         <Form.Label>Password</Form.Label>
-                        <Form.Control type="password" 
-                            placeholder="Your password" 
+                        <Form.Control className="admin-login-form-control"
+                            type="password" 
+                            placeholder="Enter your  password" 
                             {...register('password', {required: true, minLength: 8})}
                         />
                         {errors.password && <p style={{color:'red'}}>Password must have at least 8 characters.</p>}
                     </Form.Group>
                     <br/>
-                    <Form.Group>
+                    <Form.Group className="admin-login-forgotpassword-container">
+                        <p className="link-forgot-password">
+                            <Link to="/forgotpassword">Forgot Password</Link>
+                        </p>
+                    </Form.Group>
+                    <br/>
+                    <Form.Group className="admin-login-btnLogin-container">
                         <Button variant="primary" type="submit">Login</Button>
                     </Form.Group>
                 </Form>                    
-                <p className="text-center">
-                    <Link to="/forgot/password">Forgot Password</Link>
-                </p>
+
             </div>
         </div>
     );
