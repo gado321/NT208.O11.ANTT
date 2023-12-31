@@ -1024,7 +1024,6 @@ function DashboardPage() {
       function nextTrack() {
         currentTrack = (currentTrack + 1) % playlist.length; // Loop back to the first song if at the end
         playTrack(currentTrack);
-        alert(currentTrack);
         resetFooter(sound);
         // Event listeners for the buttons
         document.querySelector('.icon-next-song').addEventListener('click', function() {
@@ -1039,7 +1038,6 @@ function DashboardPage() {
       function prevTrack() {
         currentTrack = (currentTrack - 1 + playlist.length) % playlist.length; // Loop back to the last song if at the beginning
         playTrack(currentTrack);
-        alert(currentTrack);
         resetFooter(sound);
         // Event listeners for the buttons
         document.querySelector('.icon-next-song').addEventListener('click', function() {
