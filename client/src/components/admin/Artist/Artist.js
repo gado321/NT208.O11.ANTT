@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback} from 'react';
 import api from '../../../api'
 import { slugifyVietnamese, getExtension } from '../Utils';
+
 
 const Artist = () => {
     if (window.location.pathname === '/admin/artist') {
         require('bootstrap/dist/css/bootstrap.min.css');
+        require('./Artist.css')
     }
 
     const [artists, setArtists] = useState([]);
@@ -88,7 +90,7 @@ const Artist = () => {
         try {
             const data = JSON.stringify({ 
                 name: newArtist.name,
-                picture_path: '../data/images/artist/' + sanitizedName + '-' + newArtistId + '.' + getExtension(selectedArtistImage.name),
+                picture_path: './images/artist/' + sanitizedName + '-' + newArtistId + '.' + getExtension(selectedArtistImage.name),
             });
 
             const response = await api.post('/api/artists', data, { 
@@ -148,7 +150,7 @@ const Artist = () => {
         try {
             const putData = JSON.stringify({ 
                 name: selectedArtist.name,
-                picture_path: '../data/images/artist/' + sanitizedName + '-' + selectedArtist.id + '.' + getExtension(selectedArtistImage.name),
+                picture_path: './images/artist/' + sanitizedName + '-' + selectedArtist.id + '.' + getExtension(selectedArtistImage.name),
             });
             
             const response = await api.put(`/api/artists/${selectedArtist.id}`, putData, {
@@ -170,43 +172,75 @@ const Artist = () => {
         setSelectedArtistImage(event.target.files[0]);
     };
 
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+
+    const toggleDropdown = useCallback(() => {
+    setDropdownOpen(!dropdownOpen);
+    }, [dropdownOpen]);
+
     return (
-        <div>
-            {/* Search Ground */}
-            <div>
-                <input type="text" value={searchTerm} onChange={handleSearchChange} placeholder="Search for an artist..." />
+        <div className="container">
+            {/* Search Area */}
+            <div className="search-area">
+                <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    placeholder="Search for an artist..."
+                />
                 <button onClick={handleSearch}>Search</button>
             </div>
+    
+            {/* Artists Dropdown Button */}
+            <button onClick={toggleDropdown} className="artist-dropdown-btn">Artists List</button>
 
-            {/* Artist List */}
-            <div>
+            {/* Artists List Dropdown Menu */}
+            {dropdownOpen && (
+                <div className="artist-list-dropdown">
                 {artists.map((artist) => (
-                    <div key={artist.id}>
-                        {artist.name}
-                        <button onClick={() => handleEdit(artist)}>Edit</button>
-                        <button onClick={() => handleDelete(artist.id)}>Delete</button>
+                    <div key={artist.id} className="artist-item">
+                    <span className="artist-name">{artist.name}</span>
+                    <div>
+                        <button onClick={() => handleEdit(artist)} className="edit-btn">Edit</button>
+                        <button onClick={() => handleDelete(artist.id)} className="delete-btn">Delete</button>
+                    </div>
                     </div>
                 ))}
-            </div>
-
-            {/* Edit Ground */}
+                </div>
+            )}
+    
+            {/* Edit Area */}
             {selectedArtist && (
                 <form onSubmit={handleEditSubmit}>
-                    <input type="text" name="name" value={selectedArtist.name} onChange={(e) => handleChange(e, setSelectedArtist)} placeholder="Artist name" />
-                    <input type="file" onChange={handleArtistImageChange} accept="image/*" />
+                    <input
+                        type="text"
+                        name="name"
+                        value={selectedArtist.name}
+                        onChange={(e) => handleChange(e, setSelectedArtist)}
+                        placeholder="Artist name"
+                    />
+                    <input
+                        type="file"
+                        onChange={handleArtistImageChange}
+                        accept="image/*"
+                    />
                     <button type="submit">Update Artist</button>
                 </form>
             )}
-
-            {/* Create Ground */}
-            <div>
+    
+            {/* Create Area */}
+            <div className="create-new-artist">
                 <button onClick={handleCreateNewArtist}>Create New Artist</button>
                 {isCreating && (
                     <form onSubmit={handleCreateSubmit}>
-                        <input type="text" name="name" value={newArtist.name} onChange={(e) => handleChange(e, setNewArtist)} placeholder="Artist name" />
-                        <input type="file" onChange={handleArtistImageChange} accept="image/*" />
-                        {/* Artist multi-select dropdown for new song */}
-                        <button type="submit">Create Artist</button>
+                        <input
+                            type="text"
+                            name="name"
+                            value={newArtist.name}
+                            onChange={(e) => handleChange(e, setNewArtist)}
+                            placeholder="Artist name"
+                        />
+                        <button type="submit" className="update-btn">Create Artist</button>
                     </form>
                 )}
             </div>

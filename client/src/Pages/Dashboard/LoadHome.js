@@ -106,7 +106,7 @@ function LoadingDashboard() {
         Authorization: `Bearer ${token}`
       };
       const artistMadeForUser = await api.get(`/api/users/${id}/like_artists`, { headers });
-      const artistMadeForUserJSON = await artistMadeForUser.json();
+      const artistMadeForUserJSON = await artistMadeForUser.json(); 
       const artistMadeForUserList = [];
       setDataArtist(...artistMadeForUserJSON);
       artistMadeForUserList.push(...artistMadeForUserJSON);
@@ -235,12 +235,12 @@ function LoadingDashboard() {
             infoDiv.appendChild(title);
             infoDiv.appendChild(artist);
 
-            // Thêm thuộc tính data-music-path vào phần tử li
-            li.dataset.musicPath = moodBoosters[i].path;
+          // Thêm thuộc tính data-music-path vào phần tử li
+          li.dataset.musicPath = moodBoosters[i].path;
 
           // Thêm sự kiện click cho li
           li.addEventListener('click', () => {
-            sound = new Howl({
+              sound = new Howl({
               src: './song/music.mp3', // URL của file nhạc
               format: 'mp3', // Định dạng file nhạc
               autoplay: false, // Tắt chế độ tự động phát
@@ -276,6 +276,7 @@ function LoadingDashboard() {
                 return `${minutes}:${seconds.toString().padStart(2, '0')}`;
             }
             sound.stop();
+
             resetFooter(sound);
           });
         

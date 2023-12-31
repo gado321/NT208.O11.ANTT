@@ -18,7 +18,7 @@ import loudspeaker from "../Icon/loudspeaker.png";
 import mute from "../Icon/mute.png";
 import api from "../../api";
 import LoadingHome from "./LoadHome";
-
+import {addSettingContent, addProfileContent} from "./SettingContent"
 
 // Kiểm tra URL hiện tại và tải tệp CSS khi URL khớp với /dashboard
 if (window.location.pathname === '/dashboard') {
@@ -27,6 +27,7 @@ if (window.location.pathname === '/dashboard') {
 
 
 function DashboardPage() {
+
   var id = localStorage.getItem('data');
   const initialFormState = {
     id: '',
@@ -139,7 +140,7 @@ function DashboardPage() {
 
       const settingIcon = createNavItem('setting', setting, 'Setting');
       settingIcon.addEventListener('click', function() {
-        window.location.href = '/setting';
+        addSettingContent();
       });
       listNav.appendChild(settingIcon);
 
@@ -382,16 +383,22 @@ function DashboardPage() {
 
 
   useEffect(() => {
-    if (!isHeaderAdded && !headerAddedRef.current) {
-      fetchDisplay();
-      setIsHeaderAdded(true);
-      headerAddedRef.current = true;
+    if(!localStorage.getItem('access_token')) {
+      window.location.href = '/'; // Điều hướng về trang ban đầu của bạn
     }
-    const fetchData = setTimeout(() => {
-      setIsLoaded(true);
-      setIsFirstLoad(false); // Đánh dấu là không phải lần đầu tiên mở dashboard
-    }, 1000);
-    return () => clearTimeout(fetchData);
+    else {
+      if (!isHeaderAdded && !headerAddedRef.current) {
+        fetchDisplay();
+        setIsHeaderAdded(true);
+        headerAddedRef.current = true;
+      }
+      const fetchData = setTimeout(() => {
+        setIsLoaded(true);
+        setIsFirstLoad(false); // Đánh dấu là không phải lần đầu tiên mở dashboard
+      }, 1000);
+      return () => clearTimeout(fetchData);
+    }
+
   }, []);
 
   return (
