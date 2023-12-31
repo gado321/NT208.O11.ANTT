@@ -18,7 +18,7 @@ function EditProfile({setActiveTab}) {
         const fetchUserData = async () => {
           try {
             const response = await api.get(`/api/users/${localStorage.getItem('data')}`);
-            const userData = await response.json();
+            const userData = await response.json;
             setProfileUser({
               name: userData.name,
               email: userData.email,
@@ -46,7 +46,6 @@ function EditProfile({setActiveTab}) {
         ...ProfileUser,
         [name]: value,
       });
-      console.log(`Changed ${name} to ${value}`);
     };
     const validateForm = () => {
         const error = {};
@@ -79,7 +78,6 @@ function EditProfile({setActiveTab}) {
 
     // gửi giá trị cập nhật lên server
     const handleSubmit = async (event) => {
-        event.preventDefault();
         event.preventDefault();
         // Kiểm tra lỗi
         if (validateForm()) {

@@ -17,16 +17,20 @@ import queue from "../Icon/queue.png";
 import loudspeaker from "../Icon/loudspeaker.png";
 import mute from "../Icon/mute.png";
 import api from "../../api";
-import LoadingHome from "./LoadHome";
-import {addSettingContent, addProfileContent} from "./SettingContent"
-
+//////////////import các trang Dev_CThanh/////////////////////
+import DashboardPage from './DashboardPage';
+import SearchPage from './SearchPage';
+import FavouritesPage from './FavouritesPage';
+import ProfilePage from './ProfilePage';
+import SettingPage from "./settingPage";
+//////////////////////////////////////////////////////////
 // Kiểm tra URL hiện tại và tải tệp CSS khi URL khớp với /dashboard
 if (window.location.pathname === '/dashboard') {
     require('./Dashboard.css'); // Import tệp CSS
 }
 
-
-function DashboardPage() {
+//////đổi tên từ DashboardPage thành Dashboard Dev_CThanh////
+function Dashboard() {
 
   var id = localStorage.getItem('data');
   const initialFormState = {
@@ -59,7 +63,9 @@ function DashboardPage() {
   sound.title = 'Tháng Năm';
   sound.artist = 'Soobin Hoàng Sơn';
   sound.imagePath = 'images/anh-chua-thuong-em-den-vay-dau.jpg';
-
+  ///////////////thêm biến check trang Dev_Thanh///////////////////////
+  const [activepage, setActivePage] = useState('dashboard');
+  //////////////////////////////////
   const [dataUser, setDataUser] = useState(initialFormState);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
@@ -70,7 +76,7 @@ function DashboardPage() {
     try{
       //Get user data
       const response = await api.get(`/api/users/${id}`);
-      const userData = await response.json();
+      const userData = await response.json;
       setDataUser(userData);
 
       // Add header content
@@ -109,6 +115,7 @@ function DashboardPage() {
       modeSwitchContainer.appendChild(createNavBar());
   };
   // Function to create nav bar
+  ////////////////////////////////////////////Thay đổi biến khi click vào các button trang Dev_Thanh///////////////////////
   const createNavBar = () => {
       const navBar = document.createElement('div');
       navBar.className = 'nav-bar';
@@ -122,25 +129,31 @@ function DashboardPage() {
 
       const homeIcon = createNavItem('home', home, 'Home');
       homeIcon.addEventListener('click', function() {
-        window.location.href = '/dashboard';
+        setActivePage('dashboard');
       });
       listNav.appendChild(homeIcon);
 
       const searchIcon = createNavItem('search', search, 'Search');
       searchIcon.addEventListener('click', function() {
-        window.location.href = '/search';
+        setActivePage('search');
       });
       listNav.appendChild(searchIcon);
 
       const favouriteIcon = createNavItem('favourite', favourite, 'Favourites');
+      favouriteIcon.addEventListener('click', function() {
+        setActivePage('favourite');
+      });
       listNav.appendChild(favouriteIcon);
 
       const profileIcon = createNavItem('profile', profile, 'Profile');
+      profileIcon.addEventListener('click', function() {
+        setActivePage('profile');
+      });
       listNav.appendChild(profileIcon);
 
       const settingIcon = createNavItem('setting', setting, 'Setting');
       settingIcon.addEventListener('click', function() {
-        addSettingContent();
+        setActivePage('setting');
       });
       listNav.appendChild(settingIcon);
 
@@ -148,6 +161,7 @@ function DashboardPage() {
 
       return navBar;
   };
+  ///////////////////////////////////////////////////////////////////
   // Function to create nav item
   const createNavItem = (id, iconSrc, label) => {
     const ul = document.createElement('ul');
@@ -158,7 +172,7 @@ function DashboardPage() {
     img.alt = 'Music4Life';
 
     const a = document.createElement('a');
-    a.href = '#';
+    a.href = '';
     a.textContent = label;
 
     ul.appendChild(img);
@@ -402,17 +416,20 @@ function DashboardPage() {
   }, []);
 
   return (
+    ////////////////////////////thêm các trang Dev_CThanh////////////////////
     <>
     <React.StrictMode>
-      <link rel="stylesheet" type="text/css" href="./Dashboard.css" />
-      {isLoaded ? (
-        isFirstLoad ? <LoadingHome /> : null
-      ) : (
-        <LoadingHome />
-      )}
+        <link rel="stylesheet" type="text/css" href="./Dashboard.css"/>
+        {activepage === 'dashboard' && <DashboardPage setActivePage = {setActivePage} />}
+        {activepage === 'search' && <SearchPage setActivePage = {setActivePage} />}
+        {activepage === 'favourite' && <FavouritesPage setActivePage = {setActivePage} />}
+        {activepage === 'profile' && <ProfilePage setActivePage = {setActivePage} />}
+        {activepage === 'setting' && <SettingPage setActivePage = {setActivePage} />}
+
     </React.StrictMode>
     </>
+    ///////////////////////////////////////////////////////////////////////////
   );
 }
 
-export default DashboardPage;
+export default Dashboard;

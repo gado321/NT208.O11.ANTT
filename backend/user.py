@@ -77,7 +77,7 @@ class UserResource(Resource):
         user_to_update.update(
             name=data.get('name'),
             email=data.get('email'),
-            password=bcrypt.generate_password_hash(data.get('password')).decode('utf-8'),
+            # password=bcrypt.generate_password_hash(data.get('password')).decode('utf-8'),
             is_admin=data.get('is_admin'),
             last_login=data.get('last_login'),
             is_premium=data.get('is_premium'),

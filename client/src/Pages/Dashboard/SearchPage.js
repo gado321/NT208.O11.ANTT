@@ -1,26 +1,26 @@
 import React, { useState, useEffect, useRef } from "react";
-import {Howl, Howler} from 'howler';
-import favourite from "../Icon/favourite.png";
-import home from "../Icon/home.png";
-import profile from "../Icon/profile.png";
-import search from "../Icon/search.png";
-import setting from "../Icon/setting.png";
-import ring from "../Icon/ring.png";
-import like from "../Icon/like.png";
-import shuffle from "../Icon/shuffle.png";
-import skipForward from "../Icon/skip-forward.png";
-import play from "../Icon/play.png";
-import pause from "../Icon/pause.svg";
-import skipNext from "../Icon/skip-next.png";
-import repeat from "../Icon/repeat.png";
-import queue from "../Icon/queue.png";
-import loudspeaker from "../Icon/loudspeaker.png";
-import mute from "../Icon/mute.png";
+// import {Howl, Howler} from 'howler';
+// import favourite from "../Icon/favourite.png";
+// import home from "../Icon/home.png";
+// import profile from "../Icon/profile.png";
+// import search from "../Icon/search.png";
+// import setting from "../Icon/setting.png";
+// import ring from "../Icon/ring.png";
+// import like from "../Icon/like.png";
+// import shuffle from "../Icon/shuffle.png";
+// import skipForward from "../Icon/skip-forward.png";
+// import play from "../Icon/play.png";
+// import pause from "../Icon/pause.svg";
+// import skipNext from "../Icon/skip-next.png";
+// import repeat from "../Icon/repeat.png";
+// import queue from "../Icon/queue.png";
+// import loudspeaker from "../Icon/loudspeaker.png";
+// import mute from "../Icon/mute.png";
 import api from "../../api";
 
 
 // Kiểm tra URL hiện tại và tải tệp CSS khi URL khớp với /dashboard
-if (window.location.pathname === '/search') {
+if (window.location.pathname === '/dashboard') {
     require('../Dashboard/Dashboard.css'); // Import tệp CSS
 }
 
@@ -29,27 +29,13 @@ function SearchPage() {
   var id = localStorage.getItem('data');
   const [songs, setSongs] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const initialFormState = {
-    id: '',
-    name: '',
-    email: '',
-    password: '',
-    is_admin: '',
-    last_login: '',
-    is_premium: '',
-    picture_path: '',
-    gender: '',
-    date_of_birth: ''
-  };
 
-  const [dataUser, setDataUser] = useState(initialFormState);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [isFirstLoad, setIsFirstLoad] = useState(true);
-  const [isHeaderAdded, setIsHeaderAdded] = useState(false);
-  const headerAddedRef = useRef(false);
-
-  const fetchDisplay = async () =>{
+  const fetchDisplayContent = async () =>{
     try{
+      const content = document.querySelector('.content');
+      while (content.firstChild) {
+        content.removeChild(content.firstChild);
+      }
       addContent();
     }
     catch(error){
@@ -69,23 +55,27 @@ function SearchPage() {
         const searchButton = document.createElement('button');
         searchButton.textContent = 'Search';
 
-        const albumDiv = document.createElement('div');
-        albumDiv.className = 'Album';
+        if(document.querySelector('Album') != null){
+            document.querySelector('Album').removeChild(document.querySelector('Album'));
+        }
+        var albumDiv = document.createElement('div');
+        if(document.querySelector('Album') != null){
+            albumDiv = document.querySelector('Album');
+        }
+        else{
+            albumDiv = document.createElement('div');
+            albumDiv.className = 'Album';
+        }
+
     
         var rowData = [];
 
         searchButton.addEventListener('click', async function() {
-            if(document.querySelector('.Album-Detail') != null){
-                const albumDetailOld = document.querySelector('.Album-Detail');
-                while (albumDetailOld.firstChild) {
-                    albumDetailOld.removeChild(albumDetailOld.firstChild);
-                }
-            }
-
             const response = await api.get(`/api/songs/search/${encodeURIComponent(searchInput.value)}`);
             const data = await response.json();
             setSongs(data);
             rowData.push(...data);
+
             const albumDetailDiv = document.createElement('div');
             albumDetailDiv.className = 'Album-Detail';
         
@@ -154,6 +144,7 @@ function SearchPage() {
         
             albumDetailDiv.appendChild(tableUl);
         
+            albumDiv.innerHTML = '';
             albumDiv.appendChild(albumDetailDiv);
         
             content.appendChild(albumDiv);
@@ -189,14 +180,8 @@ function SearchPage() {
     };
 
   useEffect(() => {
-    if (!isHeaderAdded && !headerAddedRef.current) {
-      fetchDisplay();
-      setIsHeaderAdded(true);
-      headerAddedRef.current = true;
-    }
+    fetchDisplayContent();
     const fetchData = setTimeout(() => {
-      setIsLoaded(true);
-      setIsFirstLoad(false); // Đánh dấu là không phải lần đầu tiên mở dashboard
     }, 1000);
     return () => clearTimeout(fetchData);
   }, []);

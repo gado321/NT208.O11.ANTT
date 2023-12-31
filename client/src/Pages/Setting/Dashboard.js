@@ -21,7 +21,7 @@ import DashboardPage from './DashboardPage';
 import SearchPage from './SearchPage';
 import FavouritesPage from './FavouritesPage';
 import ProfilePage from './ProfilePage';
-import SettingPage from './SettingPage';
+import SettingPage from "./settingPage";
 
 // Kiểm tra URL hiện tại và tải tệp CSS khi URL khớp với /dashboard
 if (window.location.pathname === '/dashboard') {
