@@ -76,7 +76,7 @@ function Dashboard() {
     try{
       //Get user data
       const response = await api.get(`/api/users/${id}`);
-      const userData = await response.json();
+      const userData = await response.json;
       setDataUser(userData);
 
       // Add header content
