@@ -1,11 +1,30 @@
+import {useState, useEffect} from 'react';
+import api from '../../api';
 
-
-import React from 'react';
 if (window.location.pathname === '/dashboard') {
   require('./ProfilePage.css'); // Import tệp CSS
 }
 
-function addProfileContent({setActivePage}){
+function ProfilePage({setActivePage}){
+  const initProfile = {
+    name: "Guest",
+  };
+  const [ProfileUser, setProfileUser] = useState(initProfile);
+  const [formError, setFormError] = useState({});
+  useEffect(() => {
+      const fetchUserData = async () => {
+        try {
+          const response = await api.get(`/api/users/${localStorage.getItem('data')}`);
+          const userData = await response.json();
+          setProfileUser({
+            name: userData.name,
+          });
+        } catch (error) {
+          console.error("Failed to fetch user data:", error);
+        }
+      };
+      fetchUserData();
+    }, []);
     const content = document.querySelector('.content');
     content.innerHTML = '';
     const profileContent= document.createElement('div');
@@ -26,7 +45,8 @@ function addProfileContent({setActivePage}){
     profileInfo.className = 'profile-info';
     const profileName = document.createElement('div');
     profileName.className = 'profile-name';
-    profileName.textContent = 'Cong Thanh';
+    profileName.textContent = ProfileUser.name;
+    
     const editProfileButton = document.createElement('button');
     editProfileButton.className = 'edit-profile-button';
     editProfileButton.textContent = 'Edit Profile';
@@ -64,4 +84,4 @@ function addProfileContent({setActivePage}){
 
     content.appendChild(profileContent);
 };
-export default addProfileContent;
+export default ProfilePage;

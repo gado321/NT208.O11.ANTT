@@ -18,7 +18,7 @@ function EditProfile({setActiveTab}) {
         const fetchUserData = async () => {
           try {
             const response = await api.get(`/api/users/${localStorage.getItem('data')}`);
-            const userData = await response.json;
+            const userData = await response.json();
             setProfileUser({
               name: userData.name,
               email: userData.email,
