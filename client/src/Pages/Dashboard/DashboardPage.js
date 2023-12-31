@@ -20,7 +20,7 @@ if (window.location.pathname === '/dashboard') {
 function artistsDisplay(artistsID) {
   
 }
-//////////////////////Đổi tên hàm từ LoadingDashboard thành DashboardPage Dev_CThanh///////////////////////////
+
 function DashboardPage() {
   var sound = new Howl({});
   var id = localStorage.getItem('data');
@@ -1016,16 +1016,39 @@ function DashboardPage() {
         });
         sound.title = playlist[index].title;
         sound.imagePath = 'images/song/noi-nay-co-anh.jpg';
+        if(sound.playing()) {
+          sound.stop();
+        }
         // Update the title display
       }
       function nextTrack() {
         currentTrack = (currentTrack + 1) % playlist.length; // Loop back to the first song if at the end
         playTrack(currentTrack);
+        alert(currentTrack);
+        resetFooter(sound);
+        // Event listeners for the buttons
+        document.querySelector('.icon-next-song').addEventListener('click', function() {
+          nextTrack();
+        });
+        
+        document.querySelector('.icon-previous-song').addEventListener('click', function() {
+          prevTrack();
+        });
       }
       // Function to go to the previous song in the playlist
       function prevTrack() {
         currentTrack = (currentTrack - 1 + playlist.length) % playlist.length; // Loop back to the last song if at the beginning
         playTrack(currentTrack);
+        alert(currentTrack);
+        resetFooter(sound);
+        // Event listeners for the buttons
+        document.querySelector('.icon-next-song').addEventListener('click', function() {
+          nextTrack();
+        });
+        
+        document.querySelector('.icon-previous-song').addEventListener('click', function() {
+          prevTrack();
+        });
       }
 
       // Start playing the first track
